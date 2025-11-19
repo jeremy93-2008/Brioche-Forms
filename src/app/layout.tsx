@@ -1,4 +1,6 @@
 import React from "react";
+import { StackProvider, StackTheme } from "@stackframe/stack";
+import { stackClientApp } from "../stack/client";
 import type { Metadata } from "next";
 import {Roboto_Flex, Montserrat_Alternates} from "next/font/google";
 import "./globals.css";
@@ -29,7 +31,11 @@ export default function RootLayout({
       <body
         className={`${robotoFlex.variable} ${montserratAlternates.variable} antialiased`}
       >
-        {children}
+      <StackProvider app={stackClientApp}>
+          <StackTheme>
+              {children}]
+          </StackTheme>
+      </StackProvider>
       </body>
     </html>
   );
