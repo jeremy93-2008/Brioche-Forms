@@ -1,8 +1,13 @@
+'use client';
+import {useUser} from "@stackframe/stack";
 
 export default function Home() {
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-900 font-sans">
+    const user = useUser();
+    console.log(user);
 
+    return (
+    <div className="flex items-center justify-center text-white font-sans">
+       Hello, {user ? user.displayName : 'Guest'}!
     </div>
   );
 }
