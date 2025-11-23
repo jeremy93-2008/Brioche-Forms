@@ -1,15 +1,9 @@
-'use client'
-import { useUser } from '@stackframe/stack'
-import { redirect } from 'next/navigation'
 import { TopHeaderTemplate } from '@/_template/top_header/template'
 import { NoFormYetComponent } from '@/_components/shared/no-form-yet/component'
+import { stackServerApp } from '@/stack/server'
 
-export default function DashboardPage() {
-    const user = useUser()
-
-    if (!user) {
-        redirect('/')
-    }
+export default async function DashboardPage() {
+    const _user = await stackServerApp.getUser({ or: 'redirect' })
 
     return (
         <main className="flex flex-col justify-center font-sans">

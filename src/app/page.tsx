@@ -1,11 +1,10 @@
-'use client'
-import { useUser } from '@stackframe/stack'
 import { redirect } from 'next/navigation'
+import { stackServerApp } from '@/stack/server'
 import { GettingStartedTemplate } from '@/_template/getting_started/template'
 import Pattern from '@/assets/pattern.svg'
 
-export default function Home() {
-    const user = useUser()
+export default async function Home() {
+    const user = await stackServerApp.getUser()
 
     if (user) {
         redirect('dashboard')
