@@ -15,6 +15,20 @@
       "when": 1763806572174,
       "tag": "0001_modern_surge",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1763808191264,
+      "tag": "0002_outgoing_ink",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1763843756246,
+      "tag": "0003_foamy_spirit",
+      "breakpoints": true
     }
   ]
 }

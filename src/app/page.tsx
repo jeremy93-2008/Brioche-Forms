@@ -8,7 +8,7 @@ export default function Home() {
     const user = useUser()
 
     if (user) {
-        redirect('forms')
+        redirect('dashboard')
     }
 
     return (

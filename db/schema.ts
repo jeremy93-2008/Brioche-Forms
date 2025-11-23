@@ -11,6 +11,11 @@ export const formsTable = sqliteTable('forms', {
     description: text('description'),
     backgroundImage: text('background_image'),
     headerImage: text('header_image'),
+    isPublished: int('is_published').notNull(),
+    isDraft: int('is_draft').notNull(),
+    canModifyResponses: int('can_modify_responses').notNull(),
+    responseLimit: int('response_limit'),
+    responseLimitDate: int('response_limit_date'),
 })
 
 export const tagsFormsTable = sqliteTable('tags_forms', {
@@ -154,4 +159,15 @@ export const sharedFoldersTable = sqliteTable('shared_folders', {
     is_delete_allowed: int('is_delete_allowed').notNull(),
     is_share_allowed: int('is_share_allowed').notNull(),
     is_admin_allowed: int('is_admin_allowed').notNull(),
+})
+
+export const notificationsTable = sqliteTable('notifications', {
+    id: text('id').primaryKey(),
+    user_id: text('user_id').notNull(),
+    content: text('content').notNull(),
+    action_type: text('action_type').notNull(),
+    is_read: int('is_read').notNull(),
+    created_at: int('created_at').notNull(),
+    form_id: text('form_id').references(() => formsTable.id),
+    folder_id: text('folder_id').references(() => foldersTable.id),
 })
