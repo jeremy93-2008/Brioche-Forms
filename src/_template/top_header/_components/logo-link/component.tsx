@@ -5,7 +5,7 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/_components/ui/tooltip'
-import Brioche from '@/assets/brioche.svg'
+import Brioche from '@/_assets/brioche.svg'
 
 export function LogoLinkComponent() {
     return (

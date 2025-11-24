@@ -1,7 +1,7 @@
 import React from 'react'
 import { ThemeProvider } from 'next-themes'
 import { StackProvider, StackTheme } from '@stackframe/stack'
-import { stackClientApp } from '../stack/client'
+import { stackClientApp } from '@/_stack/client'
 import type { Metadata } from 'next'
 import { Montserrat_Alternates, Roboto_Flex } from 'next/font/google'
 import './globals.css'

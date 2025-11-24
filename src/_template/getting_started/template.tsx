@@ -3,7 +3,7 @@ import { Card } from '@/_components/ui/card'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import Brioche from '@/assets/brioche.svg'
+import Brioche from '@/_assets/brioche.svg'
 
 export function GettingStartedTemplate() {
     return (

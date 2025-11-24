@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
-import { stackServerApp } from '@/stack/server'
+import { stackServerApp } from '@/_stack/server'
 import { GettingStartedTemplate } from '@/_template/getting_started/template'
-import Pattern from '@/assets/pattern.svg'
+import Pattern from '@/_assets/pattern.svg'
 
 export default async function Home() {
     const user = await stackServerApp.getUser()
