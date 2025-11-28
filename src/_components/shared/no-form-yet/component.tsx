@@ -1,6 +1,5 @@
 'use client'
 import { useRouter } from 'next/navigation'
-import { useActionState, useEffect } from 'react'
 import {
     Empty,
     EmptyContent,
@@ -11,18 +10,26 @@ import {
 } from '@/_components/ui/empty'
 import { LoaderCircle, Table } from 'lucide-react'
 import { Button } from '@/_components/ui/button'
-import { createFormAction } from '@/_actions/form/create'
+import createFormAction from '@/_server/_actions/form/create'
+import { initialServerState, useServerAction } from '@/_hooks/useServerAction'
+import { IForm } from '../../../../db/schema'
+import { IReturnState } from '@/_hooks/useServerAction/types'
 
 export function NoFormYetComponent() {
     const router = useRouter()
-    const [state, formAction, pending] = useActionState<FormData>(
-        createFormAction,
-        new FormData()
-    )
 
-    useEffect(() => {
-        if (state && state.get('id')) router.push(`form/${state.get('id')}`)
-    }, [router, state])
+    const afterCallback = (state: IReturnState<Partial<IForm>>) => {
+        if (state.status === 'success') {
+            router.push('/form/' + state.data.id)
+        } else if (state.status === 'error') {
+            alert('Error al crear el formulario: ' + state.error.message)
+        }
+    }
+
+    const { isPending, handleAction } = useServerAction<
+        Partial<IForm>,
+        Partial<IForm>
+    >(createFormAction, initialServerState, afterCallback)
 
     return (
         <Empty>
@@ -41,18 +48,15 @@ export function NoFormYetComponent() {
             </EmptyHeader>
             <EmptyContent>
                 <div className="flex gap-2">
-                    <form action={formAction}>
-                        <Button
-                            type="submit"
-                            variant="secondary"
-                            disabled={pending}
-                        >
-                            {pending && (
-                                <LoaderCircle className="animate-spin" />
-                            )}
-                            Crear Formulario
-                        </Button>
-                    </form>
+                    <Button
+                        onClick={handleAction({})}
+                        type="submit"
+                        variant="secondary"
+                        disabled={isPending}
+                    >
+                        {isPending && <LoaderCircle className="animate-spin" />}
+                        Crear Formulario
+                    </Button>
                 </div>
             </EmptyContent>
         </Empty>
