@@ -1,5 +1,5 @@
 'use client'
-import { useRouter } from 'next/navigation'
+import { Button } from '@/_components/ui/button'
 import {
     Empty,
     EmptyContent,
@@ -8,12 +8,14 @@ import {
     EmptyMedia,
     EmptyTitle,
 } from '@/_components/ui/empty'
-import { LoaderCircle, Table } from 'lucide-react'
-import { Button } from '@/_components/ui/button'
+import {
+    type IReturnState,
+    useServerActionState,
+} from '@/_hooks/useServerActionState'
 import createFormAction from '@/_server/_actions/form/create'
-import { initialServerState, useServerAction } from '@/_hooks/useServerAction'
+import { LoaderCircle, Table } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { IForm } from '../../../../db/schema'
-import { IReturnState } from '@/_hooks/useServerAction/types'
 
 export function NoFormYetComponent() {
     const router = useRouter()
@@ -26,10 +28,10 @@ export function NoFormYetComponent() {
         }
     }
 
-    const { isPending, handleAction } = useServerAction<
+    const { isPending, handleAction } = useServerActionState<
         Partial<IForm>,
         Partial<IForm>
-    >(createFormAction, initialServerState, afterCallback)
+    >(createFormAction, afterCallback)
 
     return (
         <Empty>

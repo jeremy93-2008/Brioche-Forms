@@ -1,9 +1,9 @@
-import React from 'react'
-import { ThemeProvider } from 'next-themes'
-import { StackProvider, StackTheme } from '@stackframe/stack'
 import { stackClientApp } from '@/_stack/client'
+import { StackProvider, StackTheme } from '@stackframe/stack'
 import type { Metadata } from 'next'
+import { ThemeProvider } from 'next-themes'
 import { Montserrat_Alternates, Roboto_Flex } from 'next/font/google'
+import React from 'react'
 import './globals.css'
 
 const robotoFlex = Roboto_Flex({
@@ -30,6 +30,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
+            <link rel="icon" href="/brioche.svg" />
             <body
                 className={`${robotoFlex.variable} ${montserratAlternates.variable} antialiased bg-background text-foreground`}
             >
