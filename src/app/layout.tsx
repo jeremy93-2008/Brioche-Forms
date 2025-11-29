@@ -1,18 +1,20 @@
+import { Toaster } from '@/_components/ui/sonner'
 import { stackClientApp } from '@/_stack/client'
 import { StackProvider, StackTheme } from '@stackframe/stack'
 import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
-import { Montserrat_Alternates, Roboto_Flex } from 'next/font/google'
-import React from 'react'
+import { Montserrat_Alternates, Poppins } from 'next/font/google'
 import './globals.css'
+import React from 'react'
 
-const robotoFlex = Roboto_Flex({
-    variable: '--font-roboto-flex',
+const poppins = Poppins({
+    variable: '--font-poppins',
     subsets: ['latin'],
+    weight: ['400', '700'],
 })
 
 const montserratAlternates = Montserrat_Alternates({
-    variable: '--font-montserrat-alternates',
+    variable: '--font-montserrat',
     subsets: ['latin'],
     weight: ['400', '700'],
 })
@@ -32,7 +34,7 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <link rel="icon" href="/brioche.svg" />
             <body
-                className={`${robotoFlex.variable} ${montserratAlternates.variable} antialiased bg-background text-foreground`}
+                className={`${poppins.variable} ${montserratAlternates.variable} antialiased bg-background text-foreground`}
             >
                 <StackProvider app={stackClientApp}>
                     <StackTheme>
@@ -42,6 +44,7 @@ export default function RootLayout({
                             enableSystem
                             disableTransitionOnChange
                         >
+                            <Toaster />
                             {children}
                         </ThemeProvider>
                     </StackTheme>

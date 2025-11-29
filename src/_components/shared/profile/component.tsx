@@ -1,10 +1,10 @@
 'use client'
-import { UserButton, useUser } from '@stackframe/stack'
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from '@/_components/ui/tooltip'
+import { UserButton, useUser } from '@stackframe/stack'
 
 interface IProfileComponentProps {
     noWelcome?: boolean
@@ -21,7 +21,7 @@ export function ProfileComponent(props: IProfileComponentProps) {
                 <TooltipTrigger className="h-[34px]">
                     <UserButton />
                 </TooltipTrigger>
-                <TooltipContent>{`Logged in as ${user?.displayName}`}</TooltipContent>
+                <TooltipContent>{`Sesión iniciada como ${user?.displayName}`}</TooltipContent>
             </Tooltip>
         </div>
     )

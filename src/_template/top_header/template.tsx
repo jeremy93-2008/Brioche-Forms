@@ -1,7 +1,8 @@
 'use client'
-import { Separator } from '@/_components/ui/separator'
+import { NotificationsComponent } from '@/_components/shared/notifications/component'
 import { ProfileComponent } from '@/_components/shared/profile/component'
 import { WorkspaceSelectorComponent } from '@/_components/shared/workspace-selector/component'
+import { Separator } from '@/_components/ui/separator'
 
 import { LogoLinkComponent } from '@/_template/top_header/_components/logo-link/component'
 
@@ -15,6 +16,7 @@ export function TopHeaderTemplate() {
                 </div>
 
                 <div className="flex items-center gap-6 mx-3 font-montserrat">
+                    <NotificationsComponent />
                     <ProfileComponent />
                 </div>
             </section>

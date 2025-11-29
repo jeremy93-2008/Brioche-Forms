@@ -15,6 +15,7 @@ import {
 import createFormAction from '@/_server/_actions/form/create'
 import { LoaderCircle, Table } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { IForm } from '../../../../db/schema'
 
 export function NoFormYetComponent() {
@@ -24,7 +25,12 @@ export function NoFormYetComponent() {
         if (state.status === 'success') {
             router.push('/form/' + state.data.id)
         } else if (state.status === 'error') {
-            alert('Error al crear el formulario: ' + state.error.message)
+            toast.error(
+                'Error al crear el formulario: ' + state.error?.message,
+                {
+                    position: 'top-right',
+                }
+            )
         }
     }
 

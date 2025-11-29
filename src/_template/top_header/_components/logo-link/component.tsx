@@ -1,11 +1,11 @@
-import Link from 'next/link'
-import Image from 'next/image'
+import Brioche from '@/_assets/brioche.svg'
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from '@/_components/ui/tooltip'
-import Brioche from '@/_assets/brioche.svg'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export function LogoLinkComponent() {
     return (
@@ -16,7 +16,7 @@ export function LogoLinkComponent() {
                 </Link>
             </TooltipTrigger>
             <TooltipContent className="font-sans">
-                Click to go to your dashboard
+                Haz clic aquí para ir al inicio
             </TooltipContent>
         </Tooltip>
     )
