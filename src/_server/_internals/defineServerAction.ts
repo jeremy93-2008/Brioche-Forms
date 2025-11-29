@@ -15,26 +15,63 @@ import { IForm } from '../../../db/schema'
  * After all middlewares run, the handler receives the final input
  * plus the accumulated context and produces the action result.
  *
- * @template TInput - The type of the input data for the action.
+ * @template TData - The type of the input data for the action.
  * @template TCtx - The context type shared between middlewares and handler.
  * @param handler - The main action handler function.
  * @param middlewares - An array of middleware functions to be executed before the handler.
  * @returns A server action function ready to be used from the client.
  */
-export function defineServerAction<TInput, TCtx>(
+export function defineServerAction<TData, TCtx>(
+    handler: (data: TData, ctx: TCtx) => Promise<IReturnAction<Partial<TData>>>,
+    middlewares: ((
+        data: TData,
+        ctx: IMapCtx<TCtx>
+    ) => Promise<IReturnAction<TData> | void>)[]
+): (args: TData) => Promise<IReturnAction<Partial<TData>>>
+
+/**
+ * Defines a server action by wrapping a handler with a pipeline of middlewares.
+ *
+ * Middlewares run sequentially and may:
+ * - augment the action context,
+ * - validate or transform the input,
+ * - block execution by returning an error result.
+ *
+ * After all middlewares run, the handler receives the final input
+ * plus the accumulated context and produces the action result.
+ *
+ * @template TInput - The type of the input data for the action.
+ * @template TOutput - The type of the output data from the action.
+ * @template TCtx - The context type shared between middlewares and handler.
+ * @param handler - The main action handler function.
+ * @param middlewares - An array of middleware functions to be executed before the handler.
+ * @returns A server action function ready to be used from the client.
+ */
+export function defineServerAction<TInput, TOutput, TCtx>(
     handler: (
         data: TInput,
         ctx: TCtx
-    ) => Promise<IReturnAction<Partial<TInput>>>,
-    middlewares: (<TData>(
-        data: TData,
+    ) => Promise<IReturnAction<Partial<TOutput>>>,
+    middlewares: ((
+        data: TInput,
+        ctx: IMapCtx<TCtx>
+    ) => Promise<IReturnAction<TInput> | void>)[]
+): (args: TInput) => Promise<IReturnAction<Partial<TOutput>>>
+
+export function defineServerAction<TInput, TOutput, TCtx>(
+    handler: (
+        data: TInput,
+        ctx: TCtx
+    ) => Promise<IReturnAction<Partial<TOutput>>>,
+    middlewares: ((
+        data: TInput,
         ctx: IMapCtx<TCtx>
     ) => Promise<IReturnAction<TInput> | void>)[]
 ) {
     return async (args: TInput) => {
         const ctx = new Map() as IMapCtx<TCtx>
         for (const middleware of middlewares) {
-            const result = await middleware<TInput>(args, ctx)
+            const result = await middleware(args, ctx)
             if (result && result.status === 'error') {
                 return result
             }

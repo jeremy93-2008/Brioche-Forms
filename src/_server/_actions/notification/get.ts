@@ -26,7 +26,7 @@ const schema = createSelectSchema(notificationsTable, {
 async function get(
     _data: Partial<INotifications>,
     ctx: IMiddlewaresCtx
-): Promise<IReturnAction<Partial<INotifications>>> {
+): Promise<IReturnAction<Partial<INotifications[]>>> {
     const user = ctx.user
     const validatedFields = ctx.validatedFields
 
@@ -36,7 +36,7 @@ async function get(
             .from(notificationsTable)
             .where(eq(notificationsTable.id, validatedFields.data.id))
 
-        return { status: 'success', data: result[0] }
+        return { status: 'success', data: result }
     }
 
     const ownNotifications = await db.query.notificationsTable.findMany({
@@ -64,7 +64,8 @@ async function get(
     return { status: 'success', data: result }
 }
 
-export default defineServerAction<Partial<INotifications>, IMiddlewaresCtx>(
-    get,
-    [requireAuth(), requireValidation(schema)]
-)
+export default defineServerAction<
+    Partial<INotifications>,
+    Partial<INotifications>[],
+    IMiddlewaresCtx
+>(get, [requireAuth(), requireValidation(schema)])
