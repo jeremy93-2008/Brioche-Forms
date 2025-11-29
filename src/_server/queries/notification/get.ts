@@ -1,12 +1,12 @@
 'use server'
 
-import type { IReturnAction } from '@/_server/_actions/types'
 import {
-    defineServerAction,
+    defineServerFunction,
     IMiddlewaresCtx,
-} from '@/_server/_internals/defineServerAction'
+} from '@/_server/_internals/defineServerFunction'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
+import type { IReturnAction } from '@/_server/actions/types'
 import { eq } from 'drizzle-orm'
 import { createSelectSchema } from 'drizzle-zod'
 import { db } from '../../../../db'
@@ -64,7 +64,7 @@ async function get(
     return { status: 'success', data: result }
 }
 
-export default defineServerAction<
+export default defineServerFunction<
     Partial<INotification>,
     Partial<INotification>[],
     IMiddlewaresCtx<INotification>

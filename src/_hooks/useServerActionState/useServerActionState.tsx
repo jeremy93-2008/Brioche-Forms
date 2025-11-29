@@ -1,5 +1,5 @@
 import { IReturnState } from '@/_hooks/useServerActionState/types'
-import { IReturnAction } from '@/_server/_actions/types'
+import { IReturnAction } from '@/_server/actions/types'
 import { useState } from 'react'
 
 /**

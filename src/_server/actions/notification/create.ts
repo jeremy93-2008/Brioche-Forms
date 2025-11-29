@@ -1,12 +1,12 @@
 'use server'
 
-import type { IReturnAction } from '@/_server/_actions/types'
 import {
-    defineServerAction,
+    defineServerFunction,
     IMiddlewaresCtx,
-} from '@/_server/_internals/defineServerAction'
+} from '@/_server/_internals/defineServerFunction'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
+import type { IReturnAction } from '@/_server/actions/types'
 import { createInsertSchema } from 'drizzle-zod'
 import { v7 as uuidv7 } from 'uuid'
 import { db } from '../../../../db'
@@ -82,7 +82,7 @@ async function create(
     }
 }
 
-export default defineServerAction<
+export default defineServerFunction<
     Partial<INotificationsWithUsers>,
     IMiddlewaresCtx<INotificationsWithUsers>
 >(create, [requireAuth(), requireValidation(schema)])

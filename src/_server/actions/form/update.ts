@@ -1,11 +1,11 @@
 'use server'
-import { type IReturnAction } from '@/_server/_actions/types'
-import { defineServerAction } from '@/_server/_internals/defineServerAction'
+import { defineServerFunction } from '@/_server/_internals/defineServerFunction'
 import { IAuthCtx, requireAuth } from '@/_server/_middlewares/requireAuth'
 import {
     IValidationCtx,
     requireValidation,
 } from '@/_server/_middlewares/requireValidation'
+import { type IReturnAction } from '@/_server/actions/types'
 import { eq } from 'drizzle-orm'
 import { createUpdateSchema } from 'drizzle-zod'
 import { db } from '../../../../db'
@@ -51,7 +51,7 @@ async function editForm(
 
 type IEditFormCtx = IAuthCtx & IValidationCtx<Partial<IForm>>
 
-export default defineServerAction<Partial<IForm>, IEditFormCtx>(editForm, [
+export default defineServerFunction<Partial<IForm>, IEditFormCtx>(editForm, [
     requireAuth(),
     requireValidation(schema),
 ])

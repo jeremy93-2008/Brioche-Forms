@@ -12,7 +12,7 @@ import {
     type IReturnState,
     useServerActionState,
 } from '@/_hooks/useServerActionState'
-import createFormAction from '@/_server/_actions/form/create'
+import createFormAction from '@/_server/actions/form/create'
 import { LoaderCircle, Table } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'

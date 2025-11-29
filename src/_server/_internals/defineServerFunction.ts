@@ -1,10 +1,10 @@
-import { IReturnAction } from '@/_server/_actions/types'
 import { IMapCtx } from '@/_server/_internals/types'
 import { IAuthCtx } from '@/_server/_middlewares/requireAuth'
 import { IValidationCtx } from '@/_server/_middlewares/requireValidation'
+import { IReturnAction } from '@/_server/actions/types'
 
 /**
- * Defines a server action by wrapping a handler with a pipeline of middlewares.
+ * Defines a server function by wrapping a handler with a pipeline of middlewares.
  *
  * Middlewares run sequentially and may:
  * - augment the action context,
@@ -18,9 +18,9 @@ import { IValidationCtx } from '@/_server/_middlewares/requireValidation'
  * @template TCtx - The context type shared between middlewares and handler.
  * @param handler - The main action handler function.
  * @param middlewares - An array of middleware functions to be executed before the handler.
- * @returns A server action function ready to be used from the client.
+ * @returns A server function ready to be used from the client.
  */
-export function defineServerAction<TData, TCtx>(
+export function defineServerFunction<TData, TCtx>(
     handler: (data: TData, ctx: TCtx) => Promise<IReturnAction<Partial<TData>>>,
     middlewares: ((
         data: TData,
@@ -29,7 +29,7 @@ export function defineServerAction<TData, TCtx>(
 ): (args: TData) => Promise<IReturnAction<Partial<TData>>>
 
 /**
- * Defines a server action by wrapping a handler with a pipeline of middlewares.
+ * Defines a server function by wrapping a handler with a pipeline of middlewares.
  *
  * Middlewares run sequentially and may:
  * - augment the action context,
@@ -44,9 +44,9 @@ export function defineServerAction<TData, TCtx>(
  * @template TCtx - The context type shared between middlewares and handler.
  * @param handler - The main action handler function.
  * @param middlewares - An array of middleware functions to be executed before the handler.
- * @returns A server action function ready to be used from the client.
+ * @returns A server function ready to be used from the client.
  */
-export function defineServerAction<TInput, TOutput, TCtx>(
+export function defineServerFunction<TInput, TOutput, TCtx>(
     handler: (
         data: TInput,
         ctx: TCtx
@@ -57,7 +57,7 @@ export function defineServerAction<TInput, TOutput, TCtx>(
     ) => Promise<IReturnAction<TInput> | void>)[]
 ): (args: TInput) => Promise<IReturnAction<Partial<TOutput>>>
 
-export function defineServerAction<TInput, TOutput, TCtx>(
+export function defineServerFunction<TInput, TOutput, TCtx>(
     handler: (
         data: TInput,
         ctx: TCtx
