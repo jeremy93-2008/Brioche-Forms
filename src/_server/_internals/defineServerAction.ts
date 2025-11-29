@@ -2,7 +2,6 @@ import { IReturnAction } from '@/_server/_actions/types'
 import { IMapCtx } from '@/_server/_internals/types'
 import { IAuthCtx } from '@/_server/_middlewares/requireAuth'
 import { IValidationCtx } from '@/_server/_middlewares/requireValidation'
-import { IForm } from '../../../db/schema'
 
 /**
  * Defines a server action by wrapping a handler with a pipeline of middlewares.
@@ -80,4 +79,4 @@ export function defineServerAction<TInput, TOutput, TCtx>(
     }
 }
 
-export type IMiddlewaresCtx = IAuthCtx & IValidationCtx<Partial<IForm>>
+export type IMiddlewaresCtx<TData> = IAuthCtx & IValidationCtx<Partial<TData>>

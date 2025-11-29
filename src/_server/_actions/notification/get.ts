@@ -10,7 +10,7 @@ import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { eq } from 'drizzle-orm'
 import { createSelectSchema } from 'drizzle-zod'
 import { db } from '../../../../db'
-import { INotifications, notificationsTable } from '../../../../db/schema'
+import { INotification, notificationsTable } from '../../../../db/schema'
 
 const schema = createSelectSchema(notificationsTable, {
     id: (schema) => schema.nullable(),
@@ -24,9 +24,9 @@ const schema = createSelectSchema(notificationsTable, {
 }).partial()
 
 async function get(
-    _data: Partial<INotifications>,
-    ctx: IMiddlewaresCtx
-): Promise<IReturnAction<Partial<INotifications[]>>> {
+    _data: Partial<INotification>,
+    ctx: IMiddlewaresCtx<INotification>
+): Promise<IReturnAction<Partial<INotification[]>>> {
     const user = ctx.user
     const validatedFields = ctx.validatedFields
 
@@ -65,7 +65,7 @@ async function get(
 }
 
 export default defineServerAction<
-    Partial<INotifications>,
-    Partial<INotifications>[],
-    IMiddlewaresCtx
+    Partial<INotification>,
+    Partial<INotification>[],
+    IMiddlewaresCtx<INotification>
 >(get, [requireAuth(), requireValidation(schema)])

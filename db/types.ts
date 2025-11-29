@@ -9,8 +9,6 @@ import {
     questionsTable,
     responsesTable,
     sectionsTable,
-    sharedFoldersTable,
-    sharedFormsTable,
     sharedNotificationsTable,
     tagsFormsTable,
     tagsTable,
@@ -19,19 +17,17 @@ import {
 } from './tables'
 
 export type IForm = typeof formsTable.$inferSelect
-export type ITagsForms = typeof tagsFormsTable.$inferSelect
-export type ITags = typeof tagsTable.$inferSelect
-export type IFolders = typeof foldersTable.$inferSelect
-export type ISections = typeof sectionsTable.$inferSelect
-export type ITexts = typeof textsTable.$inferSelect
-export type IImages = typeof imagesTable.$inferSelect
-export type IVideos = typeof videosTable.$inferSelect
-export type IQuestions = typeof questionsTable.$inferSelect
-export type IChoices = typeof choicesTable.$inferSelect
-export type IResponses = typeof responsesTable.$inferSelect
-export type IMultipleChoices = typeof multipleChoicesTable.$inferSelect
-export type IAnswers = typeof answersTable.$inferSelect
-export type ISharedForms = typeof sharedFormsTable.$inferSelect
-export type ISharedFolders = typeof sharedFoldersTable.$inferSelect
-export type INotifications = typeof notificationsTable.$inferSelect
-export type ISharedNotifications = typeof sharedNotificationsTable.$inferSelect
+export type ITagsForm = typeof tagsFormsTable.$inferSelect
+export type IFolder = typeof foldersTable.$inferSelect
+export type ISection = typeof sectionsTable.$inferSelect
+export type IQuestion = typeof questionsTable.$inferSelect
+export type IChoice = typeof choicesTable.$inferSelect
+export type IMultipleChoice = typeof multipleChoicesTable.$inferSelect
+export type IText = typeof textsTable.$inferSelect
+export type IVideo = typeof videosTable.$inferSelect
+export type IImage = typeof imagesTable.$inferSelect
+export type IResponse = typeof responsesTable.$inferSelect
+export type IAnswer = typeof answersTable.$inferSelect
+export type ITag = typeof tagsTable.$inferSelect
+export type INotification = typeof notificationsTable.$inferSelect
+export type ISharedNotification = typeof sharedNotificationsTable.$inferSelect

@@ -1,15 +1,15 @@
 'use server'
+import { type IReturnAction } from '@/_server/_actions/types'
+import {
+    defineServerAction,
+    IMiddlewaresCtx,
+} from '@/_server/_internals/defineServerAction'
+import { requireAuth } from '@/_server/_middlewares/requireAuth'
+import { requireValidation } from '@/_server/_middlewares/requireValidation'
+import { createInsertSchema } from 'drizzle-zod'
 import { v7 as uuidv7 } from 'uuid'
 import { db } from '../../../../db'
 import { formsTable, IForm } from '../../../../db/schema'
-import { createInsertSchema } from 'drizzle-zod'
-import { type IReturnAction } from '@/_server/_actions/types'
-import { IAuthCtx, requireAuth } from '@/_server/_middlewares/requireAuth'
-import {
-    IValidationCtx,
-    requireValidation,
-} from '@/_server/_middlewares/requireValidation'
-import { defineServerAction } from '@/_server/_internals/defineServerAction'
 
 const schema = createInsertSchema(formsTable, {
     description: (schema) => schema.nullable(),
@@ -23,8 +23,8 @@ const schema = createInsertSchema(formsTable, {
 }).partial()
 
 export async function createForm(
-    data: Partial<IForm>,
-    ctx: ICreateFormCtx
+    _data: Partial<IForm>,
+    ctx: IMiddlewaresCtx<Partial<IForm>>
 ): Promise<IReturnAction<Partial<IForm>>> {
     const user = ctx.user
     const validatedFields = ctx.validatedFields
@@ -54,9 +54,7 @@ export async function createForm(
     return { status: 'success', data: { id: form_id } }
 }
 
-type ICreateFormCtx = IAuthCtx & IValidationCtx<Partial<IForm>>
-
-export default defineServerAction<Partial<IForm>, ICreateFormCtx>(createForm, [
-    requireAuth(),
-    requireValidation(schema),
-])
+export default defineServerAction<
+    Partial<IForm>,
+    IMiddlewaresCtx<Partial<IForm>>
+>(createForm, [requireAuth(), requireValidation(schema)])
