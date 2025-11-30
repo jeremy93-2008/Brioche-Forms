@@ -4,8 +4,8 @@ import { StackProvider, StackTheme } from '@stackframe/stack'
 import type { Metadata } from 'next'
 import { ThemeProvider } from 'next-themes'
 import { Montserrat_Alternates, Poppins } from 'next/font/google'
-import './globals.css'
 import React from 'react'
+import './globals.css'
 
 const poppins = Poppins({
     variable: '--font-poppins',

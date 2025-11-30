@@ -1,4 +1,3 @@
-'use client'
 import { NotificationsComponent } from '@/_components/shared/notifications/component'
 import { ProfileComponent } from '@/_components/shared/profile/component'
 import { WorkspaceSelectorComponent } from '@/_components/shared/workspace-selector/component'

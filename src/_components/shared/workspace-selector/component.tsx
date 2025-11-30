@@ -7,11 +7,11 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/_components/ui/select'
+import { stackServerApp } from '@/_stack/server'
 import { Layers } from 'lucide-react'
-import { useUser } from '@stackframe/stack'
 
-export function WorkspaceSelectorComponent() {
-    const user = useUser()
+export async function WorkspaceSelectorComponent() {
+    const user = await stackServerApp.getUser()
 
     return (
         <Select defaultValue="(root)">

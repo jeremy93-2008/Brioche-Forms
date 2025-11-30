@@ -1,21 +1,8 @@
-'use client'
-import React, { createContext } from 'react'
-import { CurrentUser, useUser } from '@stackframe/stack'
+import { stackServerApp } from '@/_stack/server'
+import React from 'react'
 
-function useProtectedPage() {
-    const user = useUser({ or: 'redirect' })
+export async function ProtectedPage(props: React.PropsWithChildren) {
+    await stackServerApp.getUser({ or: 'redirect' })
 
-    return { currentUser: user }
-}
-
-export const ProtectedPageContext = createContext<CurrentUser | null>(null)
-
-export function ProtectedPage(props: React.PropsWithChildren) {
-    const user = useProtectedPage().currentUser
-
-    return (
-        <ProtectedPageContext value={user}>
-            {props.children}
-        </ProtectedPageContext>
-    )
+    return props.children
 }

@@ -26,7 +26,7 @@ export function defineServerFunction<TData, TCtx>(
         data: TData,
         ctx: IMapCtx<TCtx>
     ) => Promise<IReturnAction<TData> | void>)[]
-): (args: TData) => Promise<IReturnAction<Partial<TData>>>
+): (args: TData) => Promise<IReturnAction<TData>>
 
 /**
  * Defines a server function by wrapping a handler with a pipeline of middlewares.
@@ -55,7 +55,7 @@ export function defineServerFunction<TInput, TOutput, TCtx>(
         data: TInput,
         ctx: IMapCtx<TCtx>
     ) => Promise<IReturnAction<TInput> | void>)[]
-): (args: TInput) => Promise<IReturnAction<Partial<TOutput>>>
+): (args: TInput) => Promise<IReturnAction<TOutput>>
 
 export function defineServerFunction<TInput, TOutput, TCtx>(
     handler: (
