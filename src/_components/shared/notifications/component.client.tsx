@@ -1,3 +1,4 @@
+'use client'
 import {
     Popover,
     PopoverContent,
@@ -8,12 +9,16 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/_components/ui/tooltip'
-import GetNotifications from '@/_server/queries/notification/get'
+import { IReturnAction } from '@/_server/actions/types'
 import { Bell } from 'lucide-react'
+import { INotification } from '../../../../db/types'
 
-export async function NotificationsComponent() {
-    const result = await GetNotifications({})
+interface NotificationClientProps {
+    result: IReturnAction<INotification[]>
+}
 
+export function NotificationsClientComponent(props: NotificationClientProps) {
+    const { result } = props
     return (
         <section className="h-5">
             <Tooltip>

@@ -25,19 +25,14 @@ export function NoFormYetComponent() {
         if (state.status === 'success') {
             router.push('/form/' + state.data.id)
         } else if (state.status === 'error') {
-            toast.error(
-                'Error al crear el formulario: ' + state.error?.message,
-                {
-                    position: 'top-right',
-                }
-            )
+            toast.error('Error al crear el formulario: ' + state.error?.message)
         }
     }
 
-    const { isPending, handleAction } = useServerActionState<
-        Partial<IForm>,
-        Partial<IForm>
-    >(createFormAction, afterCallback)
+    const { isPending, handleAction } = useServerActionState<Partial<IForm>>(
+        createFormAction,
+        afterCallback
+    )
 
     return (
         <Empty>

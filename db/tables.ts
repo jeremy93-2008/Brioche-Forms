@@ -71,7 +71,7 @@ export const imagesTable = sqliteTable('images', {
     order: text('order').notNull(),
 })
 
-export const videosTable = sqliteTable('images', {
+export const videosTable = sqliteTable('videos', {
     id: text('id').primaryKey(),
     section_id: text('section_id')
         .notNull()

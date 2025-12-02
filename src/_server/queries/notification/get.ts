@@ -7,7 +7,7 @@ import {
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import type { IReturnAction } from '@/_server/actions/types'
-import { eq } from 'drizzle-orm'
+import { and, eq } from 'drizzle-orm'
 import { createSelectSchema } from 'drizzle-zod'
 import { db } from '../../../../db'
 import { INotification, notificationsTable } from '../../../../db/schema'
@@ -34,7 +34,12 @@ async function get(
         const result = await db
             .select()
             .from(notificationsTable)
-            .where(eq(notificationsTable.id, validatedFields.data.id))
+            .where(
+                and(
+                    eq(notificationsTable.id, validatedFields.data.id),
+                    eq(notificationsTable.user_id, user.id)
+                )
+            )
 
         return { status: 'success', data: result }
     }
@@ -57,15 +62,26 @@ async function get(
         (shared) => shared.notification
     )
 
-    const result = [...ownNotifications, ...mappedSharedNotifications].sort(
-        (a, b) => a.created_at - b.created_at
-    )
+    const result = [...ownNotifications, ...mappedSharedNotifications]
+        .sort((a, b) => a.created_at - b.created_at)
+        .filter((notification) => {
+            for (const [key, value] of Object.entries(validatedFields)) {
+                if (
+                    notification[key as keyof INotification]
+                        ?.toString()
+                        .includes(value.toString())
+                ) {
+                    return false
+                }
+            }
+            return true
+        })
 
     return { status: 'success', data: result }
 }
 
 export default defineServerFunction<
     Partial<INotification>,
-    Partial<INotification>[],
+    INotification[],
     IMiddlewaresCtx<INotification>
 >(get, [requireAuth(), requireValidation(schema)])

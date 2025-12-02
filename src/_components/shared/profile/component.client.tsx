@@ -1,18 +1,18 @@
+'use client'
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from '@/_components/ui/tooltip'
-import { stackServerApp } from '@/_stack/server'
-import { UserButton } from '@stackframe/stack'
+import { UserButton, useUser } from '@stackframe/stack'
 
 interface IProfileComponentProps {
     noWelcome?: boolean
 }
 
-export async function ProfileComponent(props: IProfileComponentProps) {
+export function ProfileComponent(props: IProfileComponentProps) {
     const { noWelcome } = props
-    const user = await stackServerApp.getUser()
+    const user = useUser()
 
     return (
         <div className="flex flex-row flex-wrap items-center gap-6">

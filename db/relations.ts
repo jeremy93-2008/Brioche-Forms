@@ -21,7 +21,7 @@ import {
 
 // FORMS ↔ FOLDERS / TAGS / SECTIONS / RESPONSES / SHARED / NOTIFICATIONS
 
-const formsRelations = relations(formsTable, ({ one, many }) => ({
+export const formsRelations = relations(formsTable, ({ one, many }) => ({
     folder: one(foldersTable, {
         fields: [formsTable.folder_id],
         references: [foldersTable.id],
