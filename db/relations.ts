@@ -7,6 +7,7 @@ import {
     imagesTable,
     multipleChoicesTable,
     notificationsTable,
+    pagesTable,
     questionsTable,
     responsesTable,
     sectionsTable,
@@ -19,7 +20,7 @@ import {
     videosTable,
 } from './tables'
 
-// FORMS ↔ FOLDERS / TAGS / SECTIONS / RESPONSES / SHARED / NOTIFICATIONS
+// FORMS ↔ FOLDERS / TAGS / PAGES / RESPONSES / SHARED / NOTIFICATIONS
 
 export const formsRelations = relations(formsTable, ({ one, many }) => ({
     folder: one(foldersTable, {
@@ -27,7 +28,7 @@ export const formsRelations = relations(formsTable, ({ one, many }) => ({
         references: [foldersTable.id],
     }),
     tagsForms: many(tagsFormsTable),
-    sections: many(sectionsTable),
+    pages: many(pagesTable),
     responses: many(responsesTable),
     sharedForms: many(sharedFormsTable),
     notifications: many(notificationsTable),
@@ -56,17 +57,25 @@ export const tagsFormsRelations = relations(tagsFormsTable, ({ one }) => ({
     }),
 }))
 
-// SECTIONS ↔ FORMS / TEXTS / IMAGES / VIDEOS / QUESTIONS
+// SECTIONS ↔ FORMS / PAGES / TEXTS / IMAGES / VIDEOS / QUESTIONS
 
 export const sectionsRelations = relations(sectionsTable, ({ one, many }) => ({
-    form: one(formsTable, {
-        fields: [sectionsTable.form_id],
-        references: [formsTable.id],
+    page: one(pagesTable, {
+        fields: [sectionsTable.page_id],
+        references: [pagesTable.id],
     }),
     texts: many(textsTable),
     images: many(imagesTable),
     videos: many(videosTable),
     questions: many(questionsTable),
+}))
+
+export const pagesRelations = relations(pagesTable, ({ one, many }) => ({
+    form: one(formsTable, {
+        fields: [pagesTable.form_id],
+        references: [formsTable.id],
+    }),
+    sections: many(sectionsTable),
 }))
 
 export const textsRelations = relations(textsTable, ({ one }) => ({

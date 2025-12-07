@@ -13,7 +13,7 @@ export default async function DashboardPage() {
                 <TopHeaderTemplate />
                 <section className="flex mt-34 flex-wrap">
                     {result.status === 'success' && result.data.length > 0 ? (
-                        <ListOfFormsTemplate />
+                        <ListOfFormsTemplate data={result.data} />
                     ) : (
                         <NoFormYetComponent />
                     )}

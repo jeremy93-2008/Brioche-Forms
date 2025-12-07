@@ -13,7 +13,7 @@ import {
     useServerActionState,
 } from '@/_hooks/useServerActionState'
 import createFormAction from '@/_server/actions/form/create'
-import { LoaderCircle, Table } from 'lucide-react'
+import { Table } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { IForm } from '../../../../db/schema'
@@ -55,9 +55,8 @@ export function NoFormYetComponent() {
                         onClick={handleAction({})}
                         type="submit"
                         variant="secondary"
-                        disabled={isPending}
+                        isLoading={isPending}
                     >
-                        {isPending && <LoaderCircle className="animate-spin" />}
                         Crear Formulario
                     </Button>
                 </div>

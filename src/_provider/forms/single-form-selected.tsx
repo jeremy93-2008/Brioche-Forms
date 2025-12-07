@@ -1,11 +1,11 @@
 'use client'
+import { IFullForm } from '@/_server/queries/form/get'
 import React, { createContext } from 'react'
-import { type IForm } from '../../../db/schema'
 
-export const SingleFormSelectedContext = createContext<IForm | null>(null)
+export const SingleFormSelectedContext = createContext<IFullForm | null>(null)
 
 interface IFormSelectedProviderProps extends React.PropsWithChildren {
-    value: IForm
+    value: IFullForm
 }
 
 export function SingleFormSelectedProvider(props: IFormSelectedProviderProps) {

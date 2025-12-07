@@ -6,6 +6,7 @@ export const formsTable = sqliteTable('forms', {
     createdAt: int('created_at').notNull(),
     updatedAt: int('updated_at').notNull(),
     author_id: text('author_id').notNull(),
+    author_name: text('author_name').notNull().default(''),
     backgroundColor: text('background_color').notNull(),
     folder_id: text('folder_id').references(() => foldersTable.id),
     description: text('description'),
@@ -34,22 +35,32 @@ export const tagsTable = sqliteTable('tags', {
     color: text('color').notNull(),
 })
 
+export const pagesTable = sqliteTable('pages', {
+    id: text('id').primaryKey(),
+    form_id: text('form_id')
+        .notNull()
+        .references(() => formsTable.id),
+    title: text('title').notNull(),
+    order: text('order').notNull(),
+    conditions: text('conditions'),
+})
+
 export const foldersTable = sqliteTable('folders', {
     id: text('id').primaryKey(),
     name: text('name').notNull(),
     createdAt: int('created_at').notNull(),
     updatedAt: int('updated_at').notNull(),
     author_id: text('author_id').notNull(),
+    author_name: text('author_name').notNull().default(''),
 })
 
 export const sectionsTable = sqliteTable('sections', {
     id: text('id').primaryKey(),
-    form_id: text('form_id')
-        .notNull()
-        .references(() => formsTable.id),
     title: text('title').notNull(),
     description: text('description'),
     order: text('order').notNull(),
+    conditions: text('conditions'),
+    page_id: text('page_id').references(() => pagesTable.id),
 })
 
 export const textsTable = sqliteTable('texts', {

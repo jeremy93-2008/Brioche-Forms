@@ -6,10 +6,17 @@ import {
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { type IReturnAction } from '@/_server/actions/types'
+import { stackServerApp } from '@/_stack/server'
 import { createInsertSchema } from 'drizzle-zod'
 import { v7 as uuidv7 } from 'uuid'
 import { db } from '../../../../db'
-import { formsTable, IForm } from '../../../../db/schema'
+import {
+    formsTable,
+    IForm,
+    pagesTable,
+    sectionsTable,
+    textsTable,
+} from '../../../../db/schema'
 
 const schema = createInsertSchema(formsTable, {
     description: (schema) => schema.nullable(),
@@ -30,18 +37,51 @@ export async function createForm(
     const validatedFields = ctx.validatedFields
 
     const form_id = uuidv7()
+    const page_id = uuidv7()
+    const section_id = uuidv7()
+    const text_id = uuidv7()
 
-    const result = await db.insert(formsTable).values({
-        id: form_id,
-        title: validatedFields.data?.title || 'Untitled Form',
-        description: validatedFields.data?.description || '',
-        createdAt: validatedFields.data?.createdAt ?? Date.now(),
-        updatedAt: validatedFields.data?.updatedAt ?? Date.now(),
-        backgroundColor: validatedFields.data?.backgroundColor ?? '#FFFFFF',
-        isDraft: validatedFields.data?.isDraft ?? 1,
-        isPublished: validatedFields.data?.isPublished ?? 0,
-        canModifyResponses: validatedFields.data?.canModifyResponses ?? 1,
-        author_id: user.id,
+    const stackUser = await stackServerApp.getUser(user.id)
+
+    const result = await db.transaction(async (tx) => {
+        const form_result = await tx.insert(formsTable).values({
+            id: form_id,
+            title: validatedFields.data?.title || 'Untitled Form',
+            description: validatedFields.data?.description || '',
+            createdAt: validatedFields.data?.createdAt ?? Date.now(),
+            updatedAt: validatedFields.data?.updatedAt ?? Date.now(),
+            backgroundColor: validatedFields.data?.backgroundColor ?? '#FFFFFF',
+            isDraft: validatedFields.data?.isDraft ?? 1,
+            isPublished: validatedFields.data?.isPublished ?? 0,
+            canModifyResponses: validatedFields.data?.canModifyResponses ?? 1,
+            author_id: user.id,
+            author_name: stackUser?.displayName ?? '',
+        })
+
+        await tx.insert(pagesTable).values({
+            id: page_id,
+            title: 'Page 1',
+            order: '1',
+            form_id,
+        })
+
+        await tx.insert(sectionsTable).values({
+            id: section_id,
+            title: 'Section 1',
+            description: '',
+            order: '1',
+            page_id,
+        })
+
+        await tx.insert(textsTable).values({
+            id: text_id,
+            section_id,
+            content:
+                '## Welcome to your new form! \n Start by adding questions.',
+            order: '1',
+        })
+
+        return form_result
     })
 
     if (result.rowsAffected === 0) {

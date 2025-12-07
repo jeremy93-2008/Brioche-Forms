@@ -7,7 +7,7 @@ import {
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import type { IReturnAction } from '@/_server/actions/types'
-import { and, eq, ilike } from 'drizzle-orm'
+import { and, eq, like } from 'drizzle-orm'
 import { createSelectSchema } from 'drizzle-zod'
 import { db } from '../../../../db'
 import { formsTable, IForm } from '../../../../db/schema'
@@ -33,7 +33,7 @@ const schema = createSelectSchema(formsTable, {
 async function get(
     _data: Partial<IForm>,
     ctx: IMiddlewaresCtx<IForm>
-): Promise<IReturnAction<Awaited<ReturnType<typeof getFullForms>>>> {
+): Promise<IReturnAction<IFullForm[]>> {
     const user = ctx.user
     const validatedFields = ctx.validatedFields
 
@@ -50,7 +50,7 @@ async function getFullForms(props: IMiddlewaresCtx<IForm>) {
             ...Object.entries(validatedFields.data ?? {})
                 .filter(([key, value]) => key && value)
                 .map(([key, value]) =>
-                    ilike(formsTable[key as keyof IForm], value as string)
+                    like(formsTable[key as keyof IForm], value as string)
                 ),
             eq(formsTable.author_id, user.id)
         ),
@@ -62,23 +62,27 @@ async function getFullForms(props: IMiddlewaresCtx<IForm>) {
                 },
             },
             sharedForms: true,
-            sections: {
+            pages: {
                 with: {
-                    texts: true,
-                    images: true,
-                    videos: true,
-                    questions: {
+                    sections: {
                         with: {
-                            choices: {
+                            texts: true,
+                            images: true,
+                            videos: true,
+                            questions: {
                                 with: {
-                                    multipleChoices: true,
-                                },
-                            },
-                            answers: {
-                                with: {
-                                    choice: {
+                                    choices: {
                                         with: {
                                             multipleChoices: true,
+                                        },
+                                    },
+                                    answers: {
+                                        with: {
+                                            choice: {
+                                                with: {
+                                                    multipleChoices: true,
+                                                },
+                                            },
                                         },
                                     },
                                 },
@@ -92,8 +96,10 @@ async function getFullForms(props: IMiddlewaresCtx<IForm>) {
     })
 }
 
+export type IFullForm = Awaited<ReturnType<typeof getFullForms>>[number]
+
 export default defineServerFunction<
     Partial<IForm>,
-    Awaited<ReturnType<typeof getFullForms>>,
+    IFullForm[],
     IMiddlewaresCtx<IForm>
 >(get, [requireAuth(), requireValidation(schema)])
