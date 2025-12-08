@@ -17,6 +17,8 @@ export const formsTable = sqliteTable('forms', {
     canModifyResponses: int('can_modify_responses').notNull(),
     responseLimit: int('response_limit'),
     responseLimitDate: int('response_limit_date'),
+    acceptResponses: int('accept_responses').notNull().default(1),
+    messageIfNotAcceptResponses: text('message_if_not_accept_responses'),
 })
 
 export const tagsFormsTable = sqliteTable('tags_forms', {

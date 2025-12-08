@@ -36,7 +36,7 @@ async function editForm(
 
     const result = await db
         .update(formsTable)
-        .set(validatedFields!.data)
+        .set({ ...validatedFields!.data, updatedAt: new Date().getTime() })
         .where(eq(formsTable.id, validatedFields!.data?.id))
 
     if (result.rowsAffected === 0) {

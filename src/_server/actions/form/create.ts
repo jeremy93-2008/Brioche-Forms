@@ -54,20 +54,23 @@ export async function createForm(
             isDraft: validatedFields.data?.isDraft ?? 1,
             isPublished: validatedFields.data?.isPublished ?? 0,
             canModifyResponses: validatedFields.data?.canModifyResponses ?? 1,
+            acceptResponses: 1,
+            messageIfNotAcceptResponses:
+                'Este formulario no acepta respuestas en este momento.',
             author_id: user.id,
             author_name: stackUser?.displayName ?? '',
         })
 
         await tx.insert(pagesTable).values({
             id: page_id,
-            title: 'Page 1',
+            title: 'Página 1',
             order: '1',
             form_id,
         })
 
         await tx.insert(sectionsTable).values({
             id: section_id,
-            title: 'Section 1',
+            title: 'Sección 1',
             description: '',
             order: '1',
             page_id,
@@ -77,7 +80,7 @@ export async function createForm(
             id: text_id,
             section_id,
             content:
-                '## Welcome to your new form! \n Start by adding questions.',
+                '## Bienvenido a tu formulario! \n Empieza añadiendo una nueva sección o editando esta.',
             order: '1',
         })
 
