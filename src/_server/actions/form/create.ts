@@ -74,6 +74,7 @@ export async function createForm(
             description: '',
             order: '1',
             page_id,
+            form_id,
         })
 
         await tx.insert(textsTable).values({
@@ -82,6 +83,7 @@ export async function createForm(
             content:
                 '## Bienvenido a tu formulario! \n Empieza añadiendo una nueva sección o editando esta.',
             order: '1',
+            form_id,
         })
 
         return form_result

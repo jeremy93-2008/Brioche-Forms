@@ -6,17 +6,21 @@ CREATE TABLE `answers` (
 	`short_answer` text,
 	`long_answer` text,
 	`date_answer` integer,
+	`form_id` text NOT NULL,
 	FOREIGN KEY (`response_id`) REFERENCES `responses`(`id`) ON UPDATE no action ON DELETE no action,
 	FOREIGN KEY (`question_id`) REFERENCES `questions`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`choice_id`) REFERENCES `choices`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`choice_id`) REFERENCES `choices`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`form_id`) REFERENCES `forms`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `choices` (
 	`id` text PRIMARY KEY NOT NULL,
 	`question_id` text NOT NULL,
+	`form_id` text NOT NULL,
 	`content` text NOT NULL,
 	`order` text NOT NULL,
-	FOREIGN KEY (`question_id`) REFERENCES `questions`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`question_id`) REFERENCES `questions`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`form_id`) REFERENCES `forms`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `folders` (
@@ -24,7 +28,8 @@ CREATE TABLE `folders` (
 	`name` text NOT NULL,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
-	`author_id` text NOT NULL
+	`author_id` text NOT NULL,
+	`author_name` text DEFAULT '' NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE `forms` (
@@ -33,6 +38,7 @@ CREATE TABLE `forms` (
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
 	`author_id` text NOT NULL,
+	`author_name` text DEFAULT '' NOT NULL,
 	`background_color` text NOT NULL,
 	`folder_id` text,
 	`description` text,
@@ -43,24 +49,30 @@ CREATE TABLE `forms` (
 	`can_modify_responses` integer NOT NULL,
 	`response_limit` integer,
 	`response_limit_date` integer,
+	`accept_responses` integer DEFAULT 1 NOT NULL,
+	`message_if_not_accept_responses` text,
 	FOREIGN KEY (`folder_id`) REFERENCES `folders`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `images` (
 	`id` text PRIMARY KEY NOT NULL,
 	`section_id` text NOT NULL,
+	`form_id` text NOT NULL,
 	`url` text NOT NULL,
 	`caption` text,
 	`order` text NOT NULL,
-	FOREIGN KEY (`section_id`) REFERENCES `sections`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`section_id`) REFERENCES `sections`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`form_id`) REFERENCES `forms`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `multiple_choices` (
 	`id` text PRIMARY KEY NOT NULL,
 	`answer_id` text NOT NULL,
 	`choice_id` text NOT NULL,
+	`form_id` text NOT NULL,
 	FOREIGN KEY (`answer_id`) REFERENCES `answers`(`id`) ON UPDATE no action ON DELETE no action,
-	FOREIGN KEY (`choice_id`) REFERENCES `choices`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`choice_id`) REFERENCES `choices`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`form_id`) REFERENCES `forms`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `notifications` (
@@ -81,18 +93,21 @@ CREATE TABLE `pages` (
 	`form_id` text NOT NULL,
 	`title` text NOT NULL,
 	`order` text NOT NULL,
+	`conditions` text,
 	FOREIGN KEY (`form_id`) REFERENCES `forms`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `questions` (
 	`id` text PRIMARY KEY NOT NULL,
 	`section_id` text NOT NULL,
+	`form_id` text NOT NULL,
 	`name` text NOT NULL,
 	`content` text NOT NULL,
 	`type` text NOT NULL,
 	`is_required` integer NOT NULL,
 	`order` text NOT NULL,
-	FOREIGN KEY (`section_id`) REFERENCES `sections`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`section_id`) REFERENCES `sections`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`form_id`) REFERENCES `forms`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `responses` (
@@ -108,8 +123,11 @@ CREATE TABLE `sections` (
 	`title` text NOT NULL,
 	`description` text,
 	`order` text NOT NULL,
+	`conditions` text,
 	`page_id` text,
-	FOREIGN KEY (`page_id`) REFERENCES `pages`(`id`) ON UPDATE no action ON DELETE no action
+	`form_id` text NOT NULL,
+	FOREIGN KEY (`page_id`) REFERENCES `pages`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`form_id`) REFERENCES `forms`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `shared_folders` (
@@ -160,16 +178,20 @@ CREATE TABLE `tags` (
 CREATE TABLE `texts` (
 	`id` text PRIMARY KEY NOT NULL,
 	`section_id` text NOT NULL,
+	`form_id` text NOT NULL,
 	`content` text NOT NULL,
 	`order` text NOT NULL,
-	FOREIGN KEY (`section_id`) REFERENCES `sections`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`section_id`) REFERENCES `sections`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`form_id`) REFERENCES `forms`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `videos` (
 	`id` text PRIMARY KEY NOT NULL,
 	`section_id` text NOT NULL,
+	`form_id` text NOT NULL,
 	`url` text NOT NULL,
 	`caption` text,
 	`order` text NOT NULL,
-	FOREIGN KEY (`section_id`) REFERENCES `sections`(`id`) ON UPDATE no action ON DELETE no action
+	FOREIGN KEY (`section_id`) REFERENCES `sections`(`id`) ON UPDATE no action ON DELETE no action,
+	FOREIGN KEY (`form_id`) REFERENCES `forms`(`id`) ON UPDATE no action ON DELETE no action
 );

@@ -1,10 +1,11 @@
 'use server'
-import { defineServerFunction } from '@/_server/_internals/defineServerFunction'
-import { IAuthCtx, requireAuth } from '@/_server/_middlewares/requireAuth'
 import {
-    IValidationCtx,
-    requireValidation,
-} from '@/_server/_middlewares/requireValidation'
+    defineServerFunction,
+    IMiddlewaresAccessCtx,
+} from '@/_server/_internals/defineServerFunction'
+import { requireAuth } from '@/_server/_middlewares/requireAuth'
+import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
+import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { type IReturnAction } from '@/_server/actions/types'
 import { eq } from 'drizzle-orm'
 import { createUpdateSchema } from 'drizzle-zod'
@@ -24,7 +25,7 @@ const schema = createUpdateSchema(formsTable, {
 
 async function editForm(
     _data: Partial<IForm>,
-    ctx: IEditFormCtx
+    ctx: IMiddlewaresAccessCtx<Partial<IForm>>
 ): Promise<IReturnAction<Partial<IForm>>> {
     const validatedFields = ctx.validatedFields
 
@@ -49,9 +50,11 @@ async function editForm(
     return { status: 'success', data: result.rows[0] as unknown as IForm }
 }
 
-type IEditFormCtx = IAuthCtx & IValidationCtx<Partial<IForm>>
-
-export default defineServerFunction<Partial<IForm>, IEditFormCtx>(editForm, [
+export default defineServerFunction<
+    Partial<IForm>,
+    IMiddlewaresAccessCtx<Partial<IForm>>
+>(editForm, [
     requireAuth(),
     requireValidation(schema),
+    requireResourceAccess(['read', 'write'], { form_id_field: 'id' }),
 ])

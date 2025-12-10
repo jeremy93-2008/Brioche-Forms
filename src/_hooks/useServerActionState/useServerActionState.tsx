@@ -64,6 +64,7 @@ export function useServerActionState<K, T>(
             if (afterCallback) {
                 afterCallback(result)
             }
+            return result
         } catch (error: unknown) {
             const errorMessage = {
                 status: 'error',
@@ -80,6 +81,7 @@ export function useServerActionState<K, T>(
             if (afterCallback) {
                 afterCallback(errorMessage)
             }
+            return errorMessage
         }
     }
 

@@ -8,22 +8,21 @@ import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAcc
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { type IReturnAction } from '@/_server/actions/types'
 import { and, eq } from 'drizzle-orm'
-import { createUpdateSchema } from 'drizzle-zod'
+import z from 'zod'
 import { db } from '../../../../db'
-import { IPage, pagesTable } from '../../../../db/schema'
+import { pagesTable } from '../../../../db/schema'
 
-const schema = createUpdateSchema(pagesTable, {
-    id: (schema) => schema.min(3),
-    title: (schema) => schema.nullable(),
-    order: (schema) => schema.nullable(),
-    conditions: (schema) => schema.nullable(),
-    form_id: (schema) => schema.min(3),
-}).partial()
+const schema = z.object({
+    id: z.string().min(3),
+    form_id: z.string().min(3),
+})
 
-async function editPage(
-    _data: Partial<IPage>,
-    ctx: IMiddlewaresAccessCtx<IPage>
-): Promise<IReturnAction<Partial<IPage>>> {
+export type IDeletePage = z.infer<typeof schema>
+
+async function deletePage(
+    _data: Partial<IDeletePage>,
+    ctx: IMiddlewaresAccessCtx<IDeletePage>
+): Promise<IReturnAction<Partial<IDeletePage>>> {
     const validatedFields = ctx.validatedFields
 
     if (!validatedFields!.data?.id || !validatedFields!.data.form_id)
@@ -33,8 +32,7 @@ async function editPage(
         }
 
     const result = await db
-        .update(pagesTable)
-        .set(validatedFields!.data)
+        .delete(pagesTable)
         .where(
             and(
                 eq(pagesTable.id, validatedFields!.data.id),
@@ -45,18 +43,24 @@ async function editPage(
     if (result.rowsAffected === 0) {
         return {
             status: 'error',
-            error: { message: 'Failed to create page' },
+            error: { message: 'Failed to delete page' },
         }
     }
 
-    return { status: 'success', data: result.rows[0] as unknown as IPage }
+    return {
+        status: 'success',
+        data: {
+            id: validatedFields!.data.id,
+            form_id: validatedFields!.data.form_id,
+        },
+    }
 }
 
 export default defineServerFunction<
-    Partial<IPage>,
-    IMiddlewaresAccessCtx<IPage>
->(editPage, [
+    Partial<IDeletePage>,
+    IMiddlewaresAccessCtx<IDeletePage>
+>(deletePage, [
     requireAuth(),
     requireValidation(schema),
-    requireResourceAccess(['read', 'write']),
+    requireResourceAccess(['read', 'write', 'delete']),
 ])

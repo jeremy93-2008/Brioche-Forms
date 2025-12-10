@@ -1,5 +1,6 @@
 import { IMapCtx } from '@/_server/_internals/types'
 import { IAuthCtx } from '@/_server/_middlewares/requireAuth'
+import { IPermissionCtx } from '@/_server/_middlewares/requireResourceAccess'
 import { IValidationCtx } from '@/_server/_middlewares/requireValidation'
 import { IReturnAction } from '@/_server/actions/types'
 
@@ -80,3 +81,7 @@ export function defineServerFunction<TInput, TOutput, TCtx>(
 }
 
 export type IMiddlewaresCtx<TData> = IAuthCtx & IValidationCtx<Partial<TData>>
+
+export type IMiddlewaresAccessCtx<TData> = IAuthCtx &
+    IValidationCtx<Partial<TData>> &
+    IPermissionCtx

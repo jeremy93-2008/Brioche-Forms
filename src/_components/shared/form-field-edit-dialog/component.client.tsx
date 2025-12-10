@@ -15,6 +15,7 @@ import { useServerActionState } from '@/_hooks/useServerActionState'
 import { IReturnAction } from '@/_server/actions/types'
 import React, { createContext, use, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 const FormFieldEditDialogCtx = createContext({
     isOpen: false,
@@ -31,6 +32,24 @@ const FormFieldEditDialogCtx = createContext({
     serverAction: (arg: any) => Promise<IReturnAction<any>>
     saveButtonText?: string
     cancelButtonText?: string
+    saveButtonVariant?:
+        | 'secondary'
+        | 'link'
+        | 'default'
+        | 'destructive'
+        | 'outline'
+        | 'ghost'
+        | null
+    cancelButtonVariant?:
+        | 'secondary'
+        | 'link'
+        | 'default'
+        | 'destructive'
+        | 'outline'
+        | 'ghost'
+        | null
+    successMessage?: string
+    errorMessage?: string
 })
 
 interface IFormFieldEditDialogProps extends React.PropsWithChildren {
@@ -38,6 +57,24 @@ interface IFormFieldEditDialogProps extends React.PropsWithChildren {
     serverAction: (arg: any) => Promise<IReturnAction<any>>
     saveButtonText?: string
     cancelButtonText?: string
+    saveButtonVariant?:
+        | 'secondary'
+        | 'link'
+        | 'default'
+        | 'destructive'
+        | 'outline'
+        | 'ghost'
+        | null
+    cancelButtonVariant?:
+        | 'secondary'
+        | 'link'
+        | 'default'
+        | 'destructive'
+        | 'outline'
+        | 'ghost'
+        | null
+    successMessage?: string
+    errorMessage?: string
 }
 
 type IFormFieldEditDialogContentChildrenOpts = {
@@ -53,7 +90,16 @@ interface IFormFieldEditDialogContentProps<T> {
 }
 
 export function FormFieldEditDialog(props: IFormFieldEditDialogProps) {
-    const { title, serverAction, saveButtonText, cancelButtonText } = props
+    const {
+        title,
+        serverAction,
+        saveButtonText,
+        cancelButtonText,
+        saveButtonVariant,
+        cancelButtonVariant,
+        successMessage,
+        errorMessage,
+    } = props
 
     const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -66,6 +112,10 @@ export function FormFieldEditDialog(props: IFormFieldEditDialogProps) {
                 serverAction,
                 saveButtonText,
                 cancelButtonText,
+                saveButtonVariant,
+                cancelButtonVariant,
+                successMessage,
+                errorMessage,
             }}
         >
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -89,6 +139,10 @@ export function FormFieldEditDialogContent<T>(
         serverAction,
         saveButtonText,
         cancelButtonText,
+        saveButtonVariant,
+        cancelButtonVariant,
+        successMessage,
+        errorMessage,
     } = use(FormFieldEditDialogCtx)
 
     const { isPending, runAction: runEditFormAction } =
@@ -98,7 +152,15 @@ export function FormFieldEditDialogContent<T>(
 
     const onEditTitle = async (data: Partial<T>) => {
         if (isPending) return
-        await runEditFormAction(data)
+        const result = (await runEditFormAction(
+            data
+        )) as unknown as IReturnAction<T>
+        if (result.status === 'success') {
+            toast.success(successMessage ?? 'Cambios guardados correctamente')
+        }
+        if (result.status === 'error') {
+            toast.error(errorMessage ?? result.error.message)
+        }
         setIsDialogOpen(false)
     }
 
@@ -117,13 +179,13 @@ export function FormFieldEditDialogContent<T>(
                 </DialogDescription>
                 <DialogFooter className="mt-4">
                     <DialogClose asChild>
-                        <Button variant="outline">
+                        <Button variant={cancelButtonVariant ?? 'outline'}>
                             {cancelButtonText ?? 'Cancelar'}
                         </Button>
                     </DialogClose>
                     <Button
                         onClick={form.handleSubmit(onEditTitle)}
-                        variant="secondary"
+                        variant={saveButtonVariant ?? 'secondary'}
                         isLoading={isPending}
                     >
                         {saveButtonText ?? 'Guardar'}

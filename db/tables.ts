@@ -8,7 +8,9 @@ export const formsTable = sqliteTable('forms', {
     author_id: text('author_id').notNull(),
     author_name: text('author_name').notNull().default(''),
     backgroundColor: text('background_color').notNull(),
-    folder_id: text('folder_id').references(() => foldersTable.id),
+    folder_id: text('folder_id').references(() => foldersTable.id, {
+        onDelete: 'cascade',
+    }),
     description: text('description'),
     backgroundImage: text('background_image'),
     headerImage: text('header_image'),
@@ -41,7 +43,9 @@ export const pagesTable = sqliteTable('pages', {
     id: text('id').primaryKey(),
     form_id: text('form_id')
         .notNull()
-        .references(() => formsTable.id),
+        .references(() => formsTable.id, {
+            onDelete: 'cascade',
+        }),
     title: text('title').notNull(),
     order: text('order').notNull(),
     conditions: text('conditions'),
@@ -62,14 +66,28 @@ export const sectionsTable = sqliteTable('sections', {
     description: text('description'),
     order: text('order').notNull(),
     conditions: text('conditions'),
-    page_id: text('page_id').references(() => pagesTable.id),
+    page_id: text('page_id').references(() => pagesTable.id, {
+        onDelete: 'cascade',
+    }),
+    form_id: text('form_id')
+        .notNull()
+        .references(() => formsTable.id, {
+            onDelete: 'cascade',
+        }),
 })
 
 export const textsTable = sqliteTable('texts', {
     id: text('id').primaryKey(),
     section_id: text('section_id')
         .notNull()
-        .references(() => sectionsTable.id),
+        .references(() => sectionsTable.id, {
+            onDelete: 'cascade',
+        }),
+    form_id: text('form_id')
+        .notNull()
+        .references(() => formsTable.id, {
+            onDelete: 'cascade',
+        }),
     content: text('content').notNull(),
     order: text('order').notNull(),
 })
@@ -78,7 +96,14 @@ export const imagesTable = sqliteTable('images', {
     id: text('id').primaryKey(),
     section_id: text('section_id')
         .notNull()
-        .references(() => sectionsTable.id),
+        .references(() => sectionsTable.id, {
+            onDelete: 'cascade',
+        }),
+    form_id: text('form_id')
+        .notNull()
+        .references(() => formsTable.id, {
+            onDelete: 'cascade',
+        }),
     url: text('url').notNull(),
     caption: text('caption'),
     order: text('order').notNull(),
@@ -88,7 +113,14 @@ export const videosTable = sqliteTable('videos', {
     id: text('id').primaryKey(),
     section_id: text('section_id')
         .notNull()
-        .references(() => sectionsTable.id),
+        .references(() => sectionsTable.id, {
+            onDelete: 'cascade',
+        }),
+    form_id: text('form_id')
+        .notNull()
+        .references(() => formsTable.id, {
+            onDelete: 'cascade',
+        }),
     url: text('url').notNull(),
     caption: text('caption'),
     order: text('order').notNull(),
@@ -98,7 +130,14 @@ export const questionsTable = sqliteTable('questions', {
     id: text('id').primaryKey(),
     section_id: text('section_id')
         .notNull()
-        .references(() => sectionsTable.id),
+        .references(() => sectionsTable.id, {
+            onDelete: 'cascade',
+        }),
+    form_id: text('form_id')
+        .notNull()
+        .references(() => formsTable.id, {
+            onDelete: 'cascade',
+        }),
     name: text('name').notNull(),
     content: text('content').notNull(),
     type: text('type').notNull(), // "single_choice", "multiple_choice", "short_answer", etc.
@@ -110,7 +149,14 @@ export const choicesTable = sqliteTable('choices', {
     id: text('id').primaryKey(),
     question_id: text('question_id')
         .notNull()
-        .references(() => questionsTable.id),
+        .references(() => questionsTable.id, {
+            onDelete: 'cascade',
+        }),
+    form_id: text('form_id')
+        .notNull()
+        .references(() => formsTable.id, {
+            onDelete: 'cascade',
+        }),
     content: text('content').notNull(),
     order: text('order').notNull(),
 })
@@ -119,7 +165,9 @@ export const responsesTable = sqliteTable('responses', {
     id: text('id').primaryKey(),
     form_id: text('form_id')
         .notNull()
-        .references(() => formsTable.id),
+        .references(() => formsTable.id, {
+            onDelete: 'cascade',
+        }),
     respondent_id: text('respondent_id').notNull(),
     submitted_at: int('submitted_at').notNull(),
 })
@@ -128,24 +176,42 @@ export const multipleChoicesTable = sqliteTable('multiple_choices', {
     id: text('id').primaryKey(),
     answer_id: text('answer_id')
         .notNull()
-        .references(() => answersTable.id),
+        .references(() => answersTable.id, {
+            onDelete: 'cascade',
+        }),
     choice_id: text('choice_id')
         .notNull()
-        .references(() => choicesTable.id),
+        .references(() => choicesTable.id, {
+            onDelete: 'cascade',
+        }),
+    form_id: text('form_id')
+        .notNull()
+        .references(() => formsTable.id, {
+            onDelete: 'cascade',
+        }),
 })
 
 export const answersTable = sqliteTable('answers', {
     id: text('id').primaryKey(),
     response_id: text('response_id')
         .notNull()
-        .references(() => responsesTable.id),
+        .references(() => responsesTable.id, {
+            onDelete: 'cascade',
+        }),
     question_id: text('question_id')
         .notNull()
-        .references(() => questionsTable.id),
+        .references(() => questionsTable.id, {
+            onDelete: 'cascade',
+        }),
     choice_id: text('choice_id').references(() => choicesTable.id),
     short_answer: text('short_answer'),
     long_answer: text('long_answer'),
     date_answer: int('date_answer'),
+    form_id: text('form_id')
+        .notNull()
+        .references(() => formsTable.id, {
+            onDelete: 'cascade',
+        }),
 })
 
 export const sharedFormsTable = sqliteTable('shared_forms', {

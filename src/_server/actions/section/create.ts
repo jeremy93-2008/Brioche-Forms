@@ -11,47 +11,50 @@ import type { IReturnAction } from '@/_server/actions/types'
 import { createInsertSchema } from 'drizzle-zod'
 import { v7 as uuidv7 } from 'uuid'
 import { db } from '../../../../db'
-import { IPage, pagesTable } from '../../../../db/schema'
+import { ISection, sectionsTable } from '../../../../db/schema'
 
-const schema = createInsertSchema(pagesTable, {
-    id: (schema) => schema.nullable(),
+const schema = createInsertSchema(sectionsTable, {
+    id: (schema) => schema.min(3),
     title: (schema) => schema.nullable(),
     order: (schema) => schema.nullable(),
     conditions: (schema) => schema.nullable(),
+    description: (schema) => schema.nullable(),
+    page_id: (schema) => schema.min(3),
     form_id: (schema) => schema.min(3),
-}).partial()
+})
 
 async function create(
-    _data: Partial<IPage>,
-    ctx: IMiddlewaresAccessCtx<IPage>
-): Promise<IReturnAction<Partial<IPage>>> {
+    _data: Partial<ISection>,
+    ctx: IMiddlewaresAccessCtx<ISection>
+): Promise<IReturnAction<Partial<ISection>>> {
     const validatedFields = ctx.validatedFields
 
-    const pageId = uuidv7()
+    const sectionId = uuidv7()
 
-    if (!validatedFields.data?.form_id)
+    if (!validatedFields.data?.page_id || !validatedFields.data?.form_id)
         return {
             status: 'error',
-            error: { message: 'Form ID is required' },
+            error: { message: 'Page ID and Form ID are required' },
         }
 
-    await db.insert(pagesTable).values({
-        id: pageId,
+    await db.insert(sectionsTable).values({
+        id: sectionId,
         title: validatedFields.data?.title || '',
         order: validatedFields.data?.order || '0',
         conditions: validatedFields.data?.conditions || '',
+        page_id: validatedFields.data?.page_id,
         form_id: validatedFields.data?.form_id,
     })
 
     return {
         status: 'success',
-        data: { id: pageId },
+        data: { id: sectionId },
     }
 }
 
 export default defineServerFunction<
-    Partial<IPage>,
-    IMiddlewaresAccessCtx<IPage>
+    Partial<ISection>,
+    IMiddlewaresAccessCtx<ISection>
 >(create, [
     requireAuth(),
     requireValidation(schema),
