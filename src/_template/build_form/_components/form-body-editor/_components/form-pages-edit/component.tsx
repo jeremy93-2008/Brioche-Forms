@@ -1,4 +1,5 @@
 'use client'
+import { Card } from '@/_components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/_components/ui/tabs'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
 import { IFullForm } from '@/_server/queries/form/get'
@@ -57,13 +58,17 @@ export function FormPagesEditComponent() {
             </TabsList>
             {data.pages.map((page) => (
                 <TabsContent key={page.id} value={page.id}>
-                    <section className="flex flex-1 flex-col border rounded-lg">
+                    <section className="flex flex-1 flex-col">
                         {page.sections.map((section) => (
                             <FormSectionEditComponent
                                 key={section.id}
                                 data={section}
+                                formId={data.id}
                             />
                         ))}
+                        <Card className="mt-3 px-4 py-2">
+                            <h2>Añadir nueva sección</h2>
+                        </Card>
                     </section>
                 </TabsContent>
             ))}

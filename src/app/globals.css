@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
+@source "../node_modules/@blocknote/shadcn";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -197,4 +198,8 @@ body {
     body {
         @apply bg-background text-foreground;
     }
+}
+
+.bn-editor {
+    --bn-colors-editor-background: var(--color-card);
 }

@@ -16,7 +16,9 @@ export function ProfileComponent(props: IProfileComponentProps) {
 
     return (
         <div className="flex flex-row flex-wrap items-center gap-6">
-            {!noWelcome && <span>Hi, {user?.displayName?.split(' ')[0]}</span>}
+            {!noWelcome && (
+                <span>Hola, {user?.displayName?.split(' ')[0]}</span>
+            )}
             <Tooltip>
                 <TooltipTrigger asChild>
                     <div className="h-[34px]">

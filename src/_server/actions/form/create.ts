@@ -1,4 +1,5 @@
 'use server'
+import { SectionConstants } from '@/_server/_constants/section'
 import {
     defineServerFunction,
     IMiddlewaresCtx,
@@ -80,8 +81,7 @@ export async function createForm(
         await tx.insert(textsTable).values({
             id: text_id,
             section_id,
-            content:
-                '## Bienvenido a tu formulario! \n Empieza añadiendo una nueva sección o editando esta.',
+            content: SectionConstants.defaultContent,
             order: '1',
             form_id,
         })

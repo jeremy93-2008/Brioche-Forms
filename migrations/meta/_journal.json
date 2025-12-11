@@ -15,6 +15,13 @@
       "when": 1765245988622,
       "tag": "0001_motionless_madrox",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1765438537453,
+      "tag": "0002_perpetual_blindfold",
+      "breakpoints": true
     }
   ]
 }

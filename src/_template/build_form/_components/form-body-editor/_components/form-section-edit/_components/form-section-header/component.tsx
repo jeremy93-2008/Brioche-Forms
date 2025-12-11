@@ -1,0 +1,98 @@
+import {
+    FormFieldEditDialog,
+    FormFieldEditDialogContent,
+    FormFieldEditDialogTrigger,
+} from '@/_components/shared/form-field-edit-dialog/component.client'
+import { Button } from '@/_components/ui/button'
+import { Input } from '@/_components/ui/input'
+import DeleteSectionAction from '@/_server/actions/section/delete'
+import EditSectionAction from '@/_server/actions/section/update'
+import { IFullForm } from '@/_server/queries/form/get'
+import { Pen, Trash } from 'lucide-react'
+import { ISection } from '../../../../../../../../../db/types'
+
+interface IFormSectionEditNameComponentProps {
+    data: IFullForm['pages'][0]['sections'][0]
+    formId: string
+}
+
+export function FormSectionHeaderComponent(
+    props: IFormSectionEditNameComponentProps
+) {
+    const { data, formId } = props
+
+    return (
+        <section className="flex items-center group">
+            <FormFieldEditDialog
+                title="Renombrar Sección"
+                serverAction={EditSectionAction}
+            >
+                <FormFieldEditDialogTrigger>
+                    <Button className="text-sm" variant="link">
+                        <h3>{data.title || 'Sección sin título'}</h3>
+                        <Pen className="opacity-0 transition-opacity group-hover:opacity-100 " />
+                    </Button>
+                </FormFieldEditDialogTrigger>
+                <FormFieldEditDialogContent<ISection>>
+                    {({ register }, { handleKeyUp }) => (
+                        <>
+                            <input
+                                type="hidden"
+                                value={data.id}
+                                {...register('id')}
+                            />
+                            <input
+                                type="hidden"
+                                value={formId}
+                                {...register('form_id')}
+                            />
+                            <Input
+                                className="text-secondary"
+                                defaultValue={data.title ?? ''}
+                                autoFocus
+                                onKeyUp={handleKeyUp}
+                                {...register('title')}
+                            />
+                        </>
+                    )}
+                </FormFieldEditDialogContent>
+            </FormFieldEditDialog>
+            <FormFieldEditDialog
+                title="Eliminar Sección"
+                serverAction={DeleteSectionAction}
+                saveButtonText="Eliminar"
+                saveButtonVariant="destructive"
+            >
+                <FormFieldEditDialogTrigger>
+                    <Button
+                        className="text-sm opacity-0 transition-opacity group-hover:opacity-100 delay-75"
+                        variant="ghost"
+                        size="xs"
+                    >
+                        <Trash color="red" />
+                    </Button>
+                </FormFieldEditDialogTrigger>
+                <FormFieldEditDialogContent<ISection>>
+                    {({ register }) => (
+                        <>
+                            <input
+                                type="hidden"
+                                value={data.id}
+                                {...register('id')}
+                            />
+                            <input
+                                type="hidden"
+                                value={formId}
+                                {...register('form_id')}
+                            />
+                            <span>
+                                ¿Estás seguro de que deseas eliminar esta
+                                sección?
+                            </span>
+                        </>
+                    )}
+                </FormFieldEditDialogContent>
+            </FormFieldEditDialog>
+        </section>
+    )
+}

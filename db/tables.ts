@@ -126,6 +126,18 @@ export const videosTable = sqliteTable('videos', {
     order: text('order').notNull(),
 })
 
+/* Question types:
+- single_choice
+- multiple_choice
+- short_answer
+- long_answer
+- short_answer:date
+- short_answer:phone
+- short_answer:email
+- short_answer:rating
+- short_answer:opinion_scale
+*/
+
 export const questionsTable = sqliteTable('questions', {
     id: text('id').primaryKey(),
     section_id: text('section_id')
@@ -140,7 +152,7 @@ export const questionsTable = sqliteTable('questions', {
         }),
     name: text('name').notNull(),
     content: text('content').notNull(),
-    type: text('type').notNull(), // "single_choice", "multiple_choice", "short_answer", etc.
+    type: text('type').notNull(),
     is_required: int('is_required').notNull(),
     order: text('order').notNull(),
 })
@@ -169,6 +181,7 @@ export const responsesTable = sqliteTable('responses', {
             onDelete: 'cascade',
         }),
     respondent_id: text('respondent_id').notNull(),
+    respondent_name: text('respondent_name').notNull().default(''),
     submitted_at: int('submitted_at').notNull(),
 })
 

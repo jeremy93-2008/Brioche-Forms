@@ -1,0 +1,1 @@
+ALTER TABLE `responses` ADD `respondent_name` text DEFAULT '' NOT NULL;
