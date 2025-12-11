@@ -65,7 +65,7 @@ export async function createForm(
         await tx.insert(pagesTable).values({
             id: page_id,
             title: 'Página 1',
-            order: '1',
+            order: '0',
             form_id,
         })
 
@@ -73,7 +73,7 @@ export async function createForm(
             id: section_id,
             title: 'Sección 1',
             description: '',
-            order: '1',
+            order: '0',
             page_id,
             form_id,
         })
@@ -82,7 +82,7 @@ export async function createForm(
             id: text_id,
             section_id,
             content: SectionConstants.defaultContent,
-            order: '1',
+            order: '0',
             form_id,
         })
 

@@ -37,7 +37,7 @@ async function create(
 
     await db.insert(textsTable).values({
         id: textId,
-        order: validatedFields.data?.order ?? '1',
+        order: validatedFields.data?.order ?? '0',
         content: validatedFields.data?.content ?? '',
         section_id: validatedFields.data?.section_id ?? '',
         form_id: validatedFields.data?.form_id,
