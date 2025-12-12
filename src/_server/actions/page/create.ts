@@ -8,10 +8,11 @@ import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import type { IReturnAction } from '@/_server/actions/types'
+import { eq } from 'drizzle-orm'
 import { createInsertSchema } from 'drizzle-zod'
 import { v7 as uuidv7 } from 'uuid'
 import { db } from '../../../../db'
-import { IPage, pagesTable } from '../../../../db/schema'
+import { formsTable, IPage, pagesTable } from '../../../../db/schema'
 
 const schema = createInsertSchema(pagesTable, {
     id: (schema) => schema.nullable(),
@@ -35,12 +36,22 @@ async function create(
             error: { message: 'Form ID is required' },
         }
 
-    await db.insert(pagesTable).values({
-        id: pageId,
-        title: validatedFields.data?.title || '',
-        order: validatedFields.data?.order || '0',
-        conditions: validatedFields.data?.conditions || '',
-        form_id: validatedFields.data?.form_id,
+    await db.transaction(async (tx) => {
+        if (!validatedFields.data?.form_id) return
+
+        await tx.insert(pagesTable).values({
+            id: pageId,
+            title: validatedFields.data?.title || '',
+            order: validatedFields.data?.order || '0',
+            conditions: validatedFields.data?.conditions || '',
+            form_id: validatedFields.data?.form_id,
+        })
+        await tx
+            .update(formsTable)
+            .set({
+                updatedAt: new Date().getTime(),
+            })
+            .where(eq(formsTable.id, validatedFields.data?.form_id))
     })
 
     return {

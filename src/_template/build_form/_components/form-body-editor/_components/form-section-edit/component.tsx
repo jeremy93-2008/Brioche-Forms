@@ -28,7 +28,7 @@ export function FormSectionEditComponent(
     }, [data])
 
     return (
-        <Card className="py-0">
+        <Card className="py-0 mb-2">
             <div className="mx-4 my-4 py-2 px-2">
                 <FormSectionHeaderComponent data={data} formId={formId} />
                 {typeOfSection === 'question' && (

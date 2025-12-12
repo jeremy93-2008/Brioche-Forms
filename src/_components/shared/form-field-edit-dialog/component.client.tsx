@@ -11,11 +11,12 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/_components/ui/dialog'
+import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
 import { IReturnAction } from '@/_server/actions/types'
+import { showToastFromResult } from '@/_utils/showToastFromResult'
 import React, { createContext, use, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
 
 const FormFieldEditDialogCtx = createContext({
     isOpen: false,
@@ -155,12 +156,16 @@ export function FormFieldEditDialogContent<T>(
         const result = (await runEditFormAction(
             data
         )) as unknown as IReturnAction<T>
-        if (result.status === 'success') {
-            toast.success(successMessage ?? 'Cambios guardados correctamente')
-        }
-        if (result.status === 'error') {
-            toast.error(errorMessage ?? result.error.message)
-        }
+
+        showToastFromResult(
+            result,
+            successMessage ?? ToastMessages.genericSuccess,
+            errorMessage ??
+                (result.status === 'error'
+                    ? result.error.message
+                    : ToastMessages.genericError)
+        )
+
         setIsDialogOpen(false)
     }
 

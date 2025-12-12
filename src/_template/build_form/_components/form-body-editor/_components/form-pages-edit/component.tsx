@@ -1,9 +1,9 @@
 'use client'
-import { Card } from '@/_components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/_components/ui/tabs'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
 import { IFullForm } from '@/_server/queries/form/get'
 import { PageCreateFieldDialogComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-field-dialog/component'
+import { PageCreateSectionCardComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/component'
 import { PageDeleteFieldDialogComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-delete-field-dialog/component'
 import { PageEditFieldDialogComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-edit-field-dialog/component'
 import { FormSectionEditComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/component'
@@ -66,9 +66,7 @@ export function FormPagesEditComponent() {
                                 formId={data.id}
                             />
                         ))}
-                        <Card className="mt-3 px-4 py-2">
-                            <h2>Añadir nueva sección</h2>
-                        </Card>
+                        <PageCreateSectionCardComponent />
                     </section>
                 </TabsContent>
             ))}
