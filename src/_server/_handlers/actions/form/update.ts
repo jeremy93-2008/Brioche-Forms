@@ -1,16 +1,16 @@
 'use server'
 import {
-    defineServerFunction,
+    defineServerRequest,
     IMiddlewaresAccessCtx,
-} from '@/_server/_internals/defineServerFunction'
+} from '@/_server/__internals/defineServerRequest'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { type IReturnAction } from '@/_server/actions/types'
+import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { eq } from 'drizzle-orm'
 import { createUpdateSchema } from 'drizzle-zod'
-import { db } from '../../../../db'
-import { formsTable, IForm } from '../../../../db/schema'
+import { db } from '../../../../../db'
+import { formsTable, IForm } from '../../../../../db/schema'
 
 const schema = createUpdateSchema(formsTable, {
     description: (schema) => schema.nullable(),
@@ -50,7 +50,7 @@ async function editForm(
     return { status: 'success', data: result.rows[0] as unknown as IForm }
 }
 
-export default defineServerFunction<
+export default defineServerRequest<
     Partial<IForm>,
     IMiddlewaresAccessCtx<Partial<IForm>>
 >(editForm, [

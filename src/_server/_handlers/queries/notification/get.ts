@@ -1,16 +1,16 @@
 'use server'
 
 import {
-    defineServerFunction,
+    defineServerRequest,
     IMiddlewaresCtx,
-} from '@/_server/_internals/defineServerFunction'
+} from '@/_server/__internals/defineServerRequest'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import type { IReturnAction } from '@/_server/actions/types'
+import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { and, eq } from 'drizzle-orm'
 import { createSelectSchema } from 'drizzle-zod'
-import { db } from '../../../../db'
-import { INotification, notificationsTable } from '../../../../db/schema'
+import { db } from '../../../../../db'
+import { INotification, notificationsTable } from '../../../../../db/schema'
 
 const schema = createSelectSchema(notificationsTable, {
     id: (schema) => schema.nullable(),
@@ -80,7 +80,7 @@ async function get(
     return { status: 'success', data: result }
 }
 
-export default defineServerFunction<
+export default defineServerRequest<
     Partial<INotification>,
     INotification[],
     IMiddlewaresCtx<INotification>

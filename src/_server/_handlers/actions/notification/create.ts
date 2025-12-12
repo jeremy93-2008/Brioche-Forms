@@ -1,20 +1,20 @@
 'use server'
 
 import {
-    defineServerFunction,
+    defineServerRequest,
     IMiddlewaresCtx,
-} from '@/_server/_internals/defineServerFunction'
+} from '@/_server/__internals/defineServerRequest'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import type { IReturnAction } from '@/_server/actions/types'
+import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { createInsertSchema } from 'drizzle-zod'
 import { v7 as uuidv7 } from 'uuid'
-import { db } from '../../../../db'
+import { db } from '../../../../../db'
 import {
     INotification,
     notificationsTable,
     sharedNotificationsTable,
-} from '../../../../db/schema'
+} from '../../../../../db/schema'
 
 const schema = createInsertSchema(notificationsTable, {
     id: (schema) => schema.nullable(),
@@ -82,7 +82,7 @@ async function create(
     }
 }
 
-export default defineServerFunction<
+export default defineServerRequest<
     Partial<INotificationsWithUsers>,
     IMiddlewaresCtx<INotificationsWithUsers>
 >(create, [requireAuth(), requireValidation(schema)])

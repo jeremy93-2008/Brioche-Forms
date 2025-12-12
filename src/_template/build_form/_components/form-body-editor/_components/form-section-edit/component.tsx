@@ -1,5 +1,5 @@
 import { Card } from '@/_components/ui/card'
-import { IFullForm } from '@/_server/queries/form/get'
+import { IFullForm } from '@/_server/_handlers/queries/form/get'
 import { FormSectionHeaderComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-header/component'
 import { FormSectionImageEditComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-image-edit/component'
 import { FormSectionQuestionEditComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-question-edit/component'

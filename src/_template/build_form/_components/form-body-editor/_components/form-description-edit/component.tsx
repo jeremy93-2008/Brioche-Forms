@@ -7,7 +7,7 @@ import {
 import { Button } from '@/_components/ui/button'
 import { Textarea } from '@/_components/ui/textarea'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
-import EditFormAction from '@/_server/actions/form/update'
+import EditFormAction from '@/_server/_handlers/actions/form/update'
 import { Pen } from 'lucide-react'
 import { use } from 'react'
 import { type IForm } from '../../../../../../../db/types'

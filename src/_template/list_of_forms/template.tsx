@@ -1,7 +1,7 @@
 import initialPoster from '@/_assets/initial-poster.jpg'
 import { Button } from '@/_components/ui/button'
 import { Card } from '@/_components/ui/card'
-import { IFullForm } from '@/_server/queries/form/get'
+import { IFullForm } from '@/_server/_handlers/queries/form/get'
 import { Pencil } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'

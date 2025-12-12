@@ -1,16 +1,16 @@
 'use server'
 import {
-    defineServerFunction,
+    defineServerRequest,
     IMiddlewaresAccessCtx,
-} from '@/_server/_internals/defineServerFunction'
+} from '@/_server/__internals/defineServerRequest'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { type IReturnAction } from '@/_server/actions/types'
+import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { and, eq } from 'drizzle-orm'
 import z from 'zod'
-import { db } from '../../../../db'
-import { textsTable } from '../../../../db/schema'
+import { db } from '../../../../../db'
+import { textsTable } from '../../../../../db/schema'
 
 const schema = z.object({
     id: z.string().min(3),
@@ -56,7 +56,7 @@ async function deleteText(
     }
 }
 
-export default defineServerFunction<
+export default defineServerRequest<
     Partial<IDeleteText>,
     IMiddlewaresAccessCtx<IDeleteText>
 >(deleteText, [

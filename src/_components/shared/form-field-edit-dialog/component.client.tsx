@@ -13,7 +13,7 @@ import {
 } from '@/_components/ui/dialog'
 import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
-import { IReturnAction } from '@/_server/actions/types'
+import { IReturnAction } from '@/_server/_handlers/actions/types'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
 import React, { createContext, use, useState } from 'react'
 import { useForm } from 'react-hook-form'

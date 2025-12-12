@@ -1,44 +1,44 @@
 'use server'
 import {
-    defineServerFunction,
+    defineServerRequest,
     IMiddlewaresAccessCtx,
-} from '@/_server/_internals/defineServerFunction'
+} from '@/_server/__internals/defineServerRequest'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { type IReturnAction } from '@/_server/actions/types'
+import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { and, eq } from 'drizzle-orm'
 import { createUpdateSchema } from 'drizzle-zod'
-import { db } from '../../../../db'
-import { IText, textsTable } from '../../../../db/schema'
+import { db } from '../../../../../db'
+import { ISection, sectionsTable } from '../../../../../db/schema'
 
-const schema = createUpdateSchema(textsTable, {
+const schema = createUpdateSchema(sectionsTable, {
     id: (schema) => schema.min(3),
-    content: (schema) => schema.nullable(),
+    title: (schema) => schema.nullable(),
     order: (schema) => schema.nullable(),
-    section_id: (schema) => schema.nullable(),
+    conditions: (schema) => schema.nullable(),
     form_id: (schema) => schema.min(3),
 }).partial()
 
-async function editText(
-    _data: Partial<IText>,
-    ctx: IMiddlewaresAccessCtx<IText>
-): Promise<IReturnAction<Partial<IText>>> {
+async function editSection(
+    _data: Partial<ISection>,
+    ctx: IMiddlewaresAccessCtx<ISection>
+): Promise<IReturnAction<Partial<ISection>>> {
     const validatedFields = ctx.validatedFields
 
     if (!validatedFields!.data?.id || !validatedFields!.data.form_id)
         return {
             status: 'error',
-            error: { message: 'Text ID and Form ID are required' },
+            error: { message: 'Section ID and Form ID are required' },
         }
 
     const result = await db
-        .update(textsTable)
+        .update(sectionsTable)
         .set(validatedFields!.data)
         .where(
             and(
-                eq(textsTable.id, validatedFields!.data.id),
-                eq(textsTable.form_id, validatedFields!.data.form_id!)
+                eq(sectionsTable.id, validatedFields!.data.id),
+                eq(sectionsTable.form_id, validatedFields!.data.form_id!)
             )
         )
 
@@ -49,13 +49,13 @@ async function editText(
         }
     }
 
-    return { status: 'success', data: result.rows[0] as unknown as IText }
+    return { status: 'success', data: result.rows[0] as unknown as ISection }
 }
 
-export default defineServerFunction<
-    Partial<IText>,
-    IMiddlewaresAccessCtx<IText>
->(editText, [
+export default defineServerRequest<
+    Partial<ISection>,
+    IMiddlewaresAccessCtx<ISection>
+>(editSection, [
     requireAuth(),
     requireValidation(schema),
     requireResourceAccess(['read', 'write']),

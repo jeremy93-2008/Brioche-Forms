@@ -9,7 +9,7 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from '@/_components/ui/tooltip'
-import { IReturnAction } from '@/_server/actions/types'
+import { IReturnAction } from '@/_server/_handlers/actions/types'
 import { Bell } from 'lucide-react'
 import { INotification } from '../../../../db/types'
 

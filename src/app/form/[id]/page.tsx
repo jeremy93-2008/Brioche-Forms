@@ -1,6 +1,6 @@
 import { SingleFormSelectedProvider } from '@/_provider/forms/single-form-selected'
 import { ProtectedPage } from '@/_provider/protected-page'
-import GetForms from '@/_server/queries/form/get'
+import GetForms from '@/_server/_handlers/queries/form/get'
 import { BuildFormTemplate } from '@/_template/build_form/template'
 import { TopHeaderTemplate } from '@/_template/top_header/template'
 

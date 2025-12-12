@@ -1,5 +1,5 @@
 import { ZodObject, ZodSafeParseResult } from 'zod'
-import { IMapCtx } from '@/_server/_internals/types'
+import { IMapCtx } from '@/_server/__internals/types'
 
 export function requireValidation<TCtx extends IValidationCtx<any>>(
     schema: ZodObject

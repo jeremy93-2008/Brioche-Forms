@@ -5,9 +5,9 @@ import {
 } from '@/_components/shared/form-field-edit-dialog/component.client'
 import { Button } from '@/_components/ui/button'
 import { Input } from '@/_components/ui/input'
-import DeleteSectionAction from '@/_server/actions/section/delete'
-import EditSectionAction from '@/_server/actions/section/update'
-import { IFullForm } from '@/_server/queries/form/get'
+import DeleteSectionAction from '@/_server/_handlers/actions/section/delete'
+import EditSectionAction from '@/_server/_handlers/actions/section/update'
+import { IFullForm } from '@/_server/_handlers/queries/form/get'
 import { Pen, Trash } from 'lucide-react'
 import { ISection } from '../../../../../../../../../db/types'
 

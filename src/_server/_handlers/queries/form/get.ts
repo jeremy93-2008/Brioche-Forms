@@ -1,16 +1,16 @@
 'use server'
 
 import {
-    defineServerFunction,
+    defineServerRequest,
     IMiddlewaresCtx,
-} from '@/_server/_internals/defineServerFunction'
+} from '@/_server/__internals/defineServerRequest'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import type { IReturnAction } from '@/_server/actions/types'
+import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { and, eq, like } from 'drizzle-orm'
 import { createSelectSchema } from 'drizzle-zod'
-import { db } from '../../../../db'
-import { formsTable, IForm } from '../../../../db/schema'
+import { db } from '../../../../../db'
+import { formsTable, IForm } from '../../../../../db/schema'
 
 const schema = createSelectSchema(formsTable, {
     id: (schema) => schema.nullable(),
@@ -98,7 +98,7 @@ async function getFullForms(props: IMiddlewaresCtx<IForm>) {
 
 export type IFullForm = Awaited<ReturnType<typeof getFullForms>>[number]
 
-export default defineServerFunction<
+export default defineServerRequest<
     Partial<IForm>,
     IFullForm[],
     IMiddlewaresCtx<IForm>

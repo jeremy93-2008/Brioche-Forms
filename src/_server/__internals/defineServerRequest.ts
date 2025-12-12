@@ -1,8 +1,9 @@
-import { IMapCtx } from '@/_server/_internals/types'
+import { composeServerFunction } from '@/_server/__internals/composeServerFunction'
+import { IMapCtx } from '@/_server/__internals/types'
 import { IAuthCtx } from '@/_server/_middlewares/requireAuth'
 import { IPermissionCtx } from '@/_server/_middlewares/requireResourceAccess'
 import { IValidationCtx } from '@/_server/_middlewares/requireValidation'
-import { IReturnAction } from '@/_server/actions/types'
+import { IReturnAction } from '@/_server/_handlers/actions/types'
 
 /**
  * Defines a server function by wrapping a handler with a pipeline of middlewares.
@@ -21,7 +22,7 @@ import { IReturnAction } from '@/_server/actions/types'
  * @param middlewares - An array of middleware functions to be executed before the handler.
  * @returns A server function ready to be used from the client.
  */
-export function defineServerFunction<TData, TCtx>(
+export function defineServerRequest<TData, TCtx>(
     handler: (data: TData, ctx: TCtx) => Promise<IReturnAction<Partial<TData>>>,
     middlewares: ((
         data: TData,
@@ -47,7 +48,7 @@ export function defineServerFunction<TData, TCtx>(
  * @param middlewares - An array of middleware functions to be executed before the handler.
  * @returns A server function ready to be used from the client.
  */
-export function defineServerFunction<TInput, TOutput, TCtx>(
+export function defineServerRequest<TInput, TOutput, TCtx>(
     handler: (
         data: TInput,
         ctx: TCtx
@@ -58,7 +59,7 @@ export function defineServerFunction<TInput, TOutput, TCtx>(
     ) => Promise<IReturnAction<TInput> | void>)[]
 ): (args: TInput) => Promise<IReturnAction<TOutput>>
 
-export function defineServerFunction<TInput, TOutput, TCtx>(
+export function defineServerRequest<TInput, TOutput, TCtx>(
     handler: (
         data: TInput,
         ctx: TCtx
@@ -68,16 +69,7 @@ export function defineServerFunction<TInput, TOutput, TCtx>(
         ctx: IMapCtx<TCtx>
     ) => Promise<IReturnAction<TInput> | void>)[]
 ) {
-    return async (args: TInput) => {
-        const ctx = new Map() as IMapCtx<TCtx>
-        for (const middleware of middlewares) {
-            const result = await middleware(args, ctx)
-            if (result && result.status === 'error') {
-                return result
-            }
-        }
-        return handler(args, Object.fromEntries(ctx) as TCtx)
-    }
+    return composeServerFunction<TInput, TOutput, TCtx>(handler, middlewares)
 }
 
 export type IMiddlewaresCtx<TData> = IAuthCtx & IValidationCtx<Partial<TData>>

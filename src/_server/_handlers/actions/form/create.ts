@@ -1,23 +1,23 @@
 'use server'
 import { SectionConstants } from '@/_server/_constants/section'
 import {
-    defineServerFunction,
+    defineServerRequest,
     IMiddlewaresCtx,
-} from '@/_server/_internals/defineServerFunction'
+} from '@/_server/__internals/defineServerRequest'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { type IReturnAction } from '@/_server/actions/types'
+import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { stackServerApp } from '@/_stack/server'
 import { createInsertSchema } from 'drizzle-zod'
 import { v7 as uuidv7 } from 'uuid'
-import { db } from '../../../../db'
+import { db } from '../../../../../db'
 import {
     formsTable,
     IForm,
     pagesTable,
     sectionsTable,
     textsTable,
-} from '../../../../db/schema'
+} from '../../../../../db/schema'
 
 const schema = createInsertSchema(formsTable, {
     description: (schema) => schema.nullable(),
@@ -99,7 +99,7 @@ export async function createForm(
     return { status: 'success', data: { id: form_id } }
 }
 
-export default defineServerFunction<
+export default defineServerRequest<
     Partial<IForm>,
     IMiddlewaresCtx<Partial<IForm>>
 >(createForm, [requireAuth(), requireValidation(schema)])

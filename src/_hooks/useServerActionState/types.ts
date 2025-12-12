@@ -1,4 +1,4 @@
-import { IReturnAction } from '@/_server/actions/types'
+import { IReturnAction } from '@/_server/_handlers/actions/types'
 
 export type IReturnState<T> = IReturnAction<T> | { status: 'loading' }
 

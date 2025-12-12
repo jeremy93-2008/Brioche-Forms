@@ -1,17 +1,17 @@
 'use server'
 
 import {
-    defineServerFunction,
+    defineServerRequest,
     IMiddlewaresAccessCtx,
-} from '@/_server/_internals/defineServerFunction'
+} from '@/_server/__internals/defineServerRequest'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import type { IReturnAction } from '@/_server/actions/types'
+import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { createInsertSchema } from 'drizzle-zod'
 import { v7 as uuidv7 } from 'uuid'
-import { db } from '../../../../db'
-import { ISection, sectionsTable } from '../../../../db/schema'
+import { db } from '../../../../../db'
+import { ISection, sectionsTable } from '../../../../../db/schema'
 
 const schema = createInsertSchema(sectionsTable, {
     id: (schema) => schema.min(3),
@@ -52,7 +52,7 @@ async function create(
     }
 }
 
-export default defineServerFunction<
+export default defineServerRequest<
     Partial<ISection>,
     IMiddlewaresAccessCtx<ISection>
 >(create, [

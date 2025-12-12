@@ -1,4 +1,4 @@
-import { IMapCtx } from '@/_server/_internals/types'
+import { IMapCtx } from '@/_server/__internals/types'
 import {
     IPermissionCtx,
     IRoles,
