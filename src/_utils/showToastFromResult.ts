@@ -1,5 +1,5 @@
 import { ToastMessages } from '@/_constants/toast'
-import { type IReturnAction } from '@/_server/actions/types'
+import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { toast } from 'sonner'
 
 export function showToastFromResult<T>(

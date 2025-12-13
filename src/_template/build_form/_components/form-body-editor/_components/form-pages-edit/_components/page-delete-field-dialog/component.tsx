@@ -5,7 +5,7 @@ import {
     FormFieldEditDialogTrigger,
 } from '@/_components/shared/form-field-edit-dialog/component.client'
 import { Button } from '@/_components/ui/button'
-import DeletePageAction from '@/_server/actions/page/delete'
+import DeletePageAction from '@/_server/_handlers/actions/page/delete'
 import { Trash } from 'lucide-react'
 import { IPage } from '../../../../../../../../../db/types'
 

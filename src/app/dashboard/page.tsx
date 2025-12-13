@@ -1,6 +1,6 @@
 import { NoFormYetComponent } from '@/_components/shared/no-form-yet/component.client'
 import { ProtectedPage } from '@/_provider/protected-page'
-import GetForms from '@/_server/queries/form/get'
+import GetForms from '@/_server/_handlers/queries/form/get'
 import { ListOfFormsTemplate } from '@/_template/list_of_forms/template'
 import { TopHeaderTemplate } from '@/_template/top_header/template'
 

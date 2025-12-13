@@ -1,5 +1,5 @@
 'use client'
-import { IFullForm } from '@/_server/queries/form/get'
+import { IFullForm } from '@/_server/_handlers/queries/form/get'
 import React, { createContext } from 'react'
 
 export const SingleFormSelectedContext = createContext<IFullForm | null>(null)

@@ -6,7 +6,7 @@ import {
 } from '@/_components/shared/form-field-edit-dialog/component.client'
 import { Button } from '@/_components/ui/button'
 import { Input } from '@/_components/ui/input'
-import CreatePageAction from '@/_server/actions/page/create'
+import CreatePageAction from '@/_server/_handlers/actions/page/create'
 import { Plus } from 'lucide-react'
 import { IPage } from '../../../../../../../../../db/types'
 

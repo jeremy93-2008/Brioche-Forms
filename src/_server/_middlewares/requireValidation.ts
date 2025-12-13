@@ -1,10 +1,13 @@
+import { IMapCtx } from '@/_server/__internals/types'
 import { ZodObject, ZodSafeParseResult } from 'zod'
-import { IMapCtx } from '@/_server/_internals/types'
 
 export function requireValidation<TCtx extends IValidationCtx<any>>(
     schema: ZodObject
 ) {
-    return async <TData>(data: TData, ctx: IMapCtx<TCtx>) => {
+    return async function executeValidation<TData>(
+        data: TData,
+        ctx: IMapCtx<TCtx>
+    ) {
         const validatedFields = schema.safeParse(data)
         ctx.set('validatedFields', validatedFields)
         if (!validatedFields.success) {

@@ -3,7 +3,7 @@ import {
     IUseServerActionStateReturn,
     IUseServerActionUniqueStateReturn,
 } from '@/_hooks/useServerActionState/types'
-import { IReturnAction } from '@/_server/actions/types'
+import { IReturnAction } from '@/_server/_handlers/actions/types'
 import { useState } from 'react'
 
 /**
