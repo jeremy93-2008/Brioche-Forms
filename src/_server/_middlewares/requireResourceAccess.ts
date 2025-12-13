@@ -8,10 +8,9 @@ export function requireResourceAccess<TCtx extends IPermissionCtx>(
     roles: IRoles | IRoles[],
     opts?: IOpts
 ) {
-    return async <TData extends Record<string, any>>(
-        data: TData,
-        ctx: IMapCtx<TCtx>
-    ) => {
+    return async function executeRessourceAccess<
+        TData extends Record<string, any>,
+    >(data: TData, ctx: IMapCtx<TCtx>) {
         const user = await stackServerApp.getUser()
 
         const folder_id = (data[opts?.folder_id_field || 'folder_id'] ??

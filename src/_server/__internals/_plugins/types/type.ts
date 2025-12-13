@@ -3,12 +3,21 @@ import { IBasicEnv } from '@/_server/__internals/createServer'
 export interface IServerPluginReturn<Name extends string, Env extends object> {
     name: Name
     cb: () => Env
+    hooks?: Partial<IBasicEnv['hooks']>
+}
+
+export type IServerPluginBuilderOptions = {
+    handlerName: string
+    middlewareNames: string[]
 }
 
 export type IServerPluginBuilder<
     Name extends string = string,
     Piece extends object = object,
-> = () => IServerPluginReturn<Name, Piece>
+> = (
+    env: IBasicEnv,
+    opts: IServerPluginBuilderOptions
+) => IServerPluginReturn<Name, Piece>
 
 export type IServerPluginEnvFromBuilder<
     Bs extends readonly IServerPluginBuilder[],

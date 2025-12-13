@@ -1,4 +1,4 @@
-import { IServerPluginBuilder } from '@/_server/__internals/_plugins/type'
+import { IServerPluginBuilder } from '@/_server/__internals/_plugins/types/type'
 import { createEnv } from '@/_server/__internals/_utils/createEnv'
 import { IMapCtx } from '@/_server/__internals/types'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
@@ -28,7 +28,10 @@ export function composeServerFunction<
     envBuilders: Bs
 ) {
     return async (args: TInput) => {
-        const env = createEnv<Bs>(envBuilders)
+        const env = createEnv<Bs>(envBuilders, {
+            handlerName: handler.name,
+            middlewareNames: middlewares.map((m) => m.name),
+        })
 
         try {
             await runHooks(env.hooks.beforeRequest)

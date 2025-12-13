@@ -1,7 +1,9 @@
 import {
     IServerPluginBuilder,
+    IServerPluginBuilderOptions,
     IServerPluginReturn,
-} from '@/_server/__internals/_plugins/type'
+} from '@/_server/__internals/_plugins/types/type'
+import { mergeHooks } from '@/_server/__internals/_utils/mergeHooks'
 import { IBasicEnv } from '@/_server/__internals/createServer'
 import { v7 as uuidv7 } from 'uuid'
 
@@ -23,7 +25,8 @@ type EnvFromBuilders<Bs extends readonly any[]> = UnionToIntersection<
 >
 
 export function createEnv<const Bs extends readonly IServerPluginBuilder[]>(
-    envBuilders: Bs
+    envBuilders: Bs,
+    opts: IServerPluginBuilderOptions
 ): IBasicEnv & EnvFromBuilders<Bs> {
     const env: IBasicEnv & Record<string, unknown> = {
         request: { id: uuidv7(), timestamp: Date.now() },
@@ -38,8 +41,14 @@ export function createEnv<const Bs extends readonly IServerPluginBuilder[]>(
     }
 
     for (const buildEnv of envBuilders) {
-        const plg = buildEnv()
+        const plg = buildEnv(env, opts)
+        // We invoke the callback to get the environment piece
         env[plg.name] = plg.cb()
+
+        // We register hooks if any
+        if (plg.hooks) {
+            mergeHooks(env.hooks, plg.hooks)
+        }
     }
 
     return env as IBasicEnv & EnvFromBuilders<Bs>

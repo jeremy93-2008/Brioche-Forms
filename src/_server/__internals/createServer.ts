@@ -1,8 +1,7 @@
 import {
     IServerPluginBuilder,
     IServerPluginEnvFromBuilder,
-    IServerPluginReturn,
-} from '@/_server/__internals/_plugins/type'
+} from '@/_server/__internals/_plugins/types/type'
 import {
     composeServerFunction,
     ComposeServerFunctionHandler,
@@ -32,8 +31,6 @@ export function createServer<
 >() {
     const envBuilders = [] as IServerPluginBuilder[]
 
-    let pluginSealed = false
-
     let _handler: ComposeServerFunctionHandler<
         TInput,
         TOutput,
@@ -51,13 +48,8 @@ export function createServer<
     const getServer = () => {
         return {
             use: <Name extends string, EnvPiece extends object>(
-                plugin: () => IServerPluginReturn<Name, EnvPiece>
+                plugin: IServerPluginBuilder<Name, EnvPiece>
             ) => {
-                if (pluginSealed) {
-                    throw new Error(
-                        'Cannot add plugins after defining middlewares or handler.'
-                    )
-                }
                 envBuilders.push(plugin as IServerPluginBuilder)
                 return getServer() as unknown as ReturnType<
                     typeof createServer<
@@ -75,7 +67,6 @@ export function createServer<
                     IServerPluginEnvFromBuilder<Bs>
                 >[]
             ) => {
-                pluginSealed = true
                 _middlewares.push(...middlewares)
                 return getServer()
             },
@@ -87,7 +78,6 @@ export function createServer<
                     IServerPluginEnvFromBuilder<Bs>
                 >
             ) => {
-                pluginSealed = true
                 _handler = handler
                 return getServer()
             },

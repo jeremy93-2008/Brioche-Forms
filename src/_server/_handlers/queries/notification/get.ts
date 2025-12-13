@@ -4,9 +4,9 @@ import {
     defineServerRequest,
     IMiddlewaresCtx,
 } from '@/_server/__internals/defineServerRequest'
+import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { and, eq } from 'drizzle-orm'
 import { createSelectSchema } from 'drizzle-zod'
 import { db } from '../../../../../db'
@@ -23,7 +23,7 @@ const schema = createSelectSchema(notificationsTable, {
     user_id: (schema) => schema.nullable(),
 }).partial()
 
-async function get(
+async function getNotifications(
     _data: Partial<INotification>,
     ctx: IMiddlewaresCtx<INotification>
 ): Promise<IReturnAction<Partial<INotification[]>>> {
@@ -84,4 +84,4 @@ export default defineServerRequest<
     Partial<INotification>,
     INotification[],
     IMiddlewaresCtx<INotification>
->(get, [requireAuth(), requireValidation(schema)])
+>(getNotifications, [requireAuth(), requireValidation(schema)])

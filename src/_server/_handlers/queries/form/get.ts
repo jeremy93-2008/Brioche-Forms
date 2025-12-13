@@ -4,9 +4,9 @@ import {
     defineServerRequest,
     IMiddlewaresCtx,
 } from '@/_server/__internals/defineServerRequest'
+import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { and, eq, like } from 'drizzle-orm'
 import { createSelectSchema } from 'drizzle-zod'
 import { db } from '../../../../../db'
@@ -30,19 +30,19 @@ const schema = createSelectSchema(formsTable, {
     title: (schema) => schema.nullable(),
 }).partial()
 
-async function get(
+async function getFullForms(
     _data: Partial<IForm>,
     ctx: IMiddlewaresCtx<IForm>
 ): Promise<IReturnAction<IFullForm[]>> {
     const user = ctx.user
     const validatedFields = ctx.validatedFields
 
-    const result = await getFullForms({ user, validatedFields })
+    const result = await getFullFormsCore({ user, validatedFields })
 
     return { status: 'success', data: result }
 }
 
-async function getFullForms(props: IMiddlewaresCtx<IForm>) {
+async function getFullFormsCore(props: IMiddlewaresCtx<IForm>) {
     const { user, validatedFields } = props
 
     return await db.query.formsTable.findMany({
@@ -96,10 +96,10 @@ async function getFullForms(props: IMiddlewaresCtx<IForm>) {
     })
 }
 
-export type IFullForm = Awaited<ReturnType<typeof getFullForms>>[number]
+export type IFullForm = Awaited<ReturnType<typeof getFullFormsCore>>[number]
 
 export default defineServerRequest<
     Partial<IForm>,
     IFullForm[],
     IMiddlewaresCtx<IForm>
->(get, [requireAuth(), requireValidation(schema)])
+>(getFullForms, [requireAuth(), requireValidation(schema)])
