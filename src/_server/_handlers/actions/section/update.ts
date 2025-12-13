@@ -2,14 +2,15 @@
 import {
     defineServerRequest,
     IMiddlewaresAccessCtx,
+    ServerEnv,
 } from '@/_server/__internals/defineServerRequest'
+import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { type IReturnAction } from '@/_server/_handlers/actions/types'
-import { and, eq } from 'drizzle-orm'
+import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { editSection } from '@/_server/domains/section/editSection'
 import { createUpdateSchema } from 'drizzle-zod'
-import { db } from '../../../../../db'
 import { ISection, sectionsTable } from '../../../../../db/schema'
 
 const schema = createUpdateSchema(sectionsTable, {
@@ -20,42 +21,24 @@ const schema = createUpdateSchema(sectionsTable, {
     form_id: (schema) => schema.min(3),
 }).partial()
 
-async function editSection(
+async function editSectionHandler(
     _data: Partial<ISection>,
-    ctx: IMiddlewaresAccessCtx<ISection>
+    ctx: IMiddlewaresAccessCtx<ISection>,
+    env: ServerEnv
 ): Promise<IReturnAction<Partial<ISection>>> {
     const validatedFields = ctx.validatedFields
+    const data = validatedFields.data! as Required<ISection>
+    const formId = data.form_id!
 
-    if (!validatedFields!.data?.id || !validatedFields!.data.form_id)
-        return {
-            status: 'error',
-            error: { message: 'Section ID and Form ID are required' },
-        }
+    const result = await withFormContext(env)(formId, () => editSection(data))
 
-    const result = await db
-        .update(sectionsTable)
-        .set(validatedFields!.data)
-        .where(
-            and(
-                eq(sectionsTable.id, validatedFields!.data.id),
-                eq(sectionsTable.form_id, validatedFields!.data.form_id!)
-            )
-        )
-
-    if (result.rowsAffected === 0) {
-        return {
-            status: 'error',
-            error: { message: 'Failed to create section' },
-        }
-    }
-
-    return { status: 'success', data: result.rows[0] as unknown as ISection }
+    return { status: 'success', data: result }
 }
 
 export default defineServerRequest<
     Partial<ISection>,
     IMiddlewaresAccessCtx<ISection>
->(editSection, [
+>(editSectionHandler, [
     requireAuth(),
     requireValidation(schema),
     requireResourceAccess(['read', 'write']),

@@ -2,15 +2,15 @@
 import {
     defineServerRequest,
     IMiddlewaresAccessCtx,
+    ServerEnv,
 } from '@/_server/__internals/defineServerRequest'
+import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { type IReturnAction } from '@/_server/_handlers/actions/types'
-import { and, eq } from 'drizzle-orm'
+import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { deleteSection } from '@/_server/domains/section/deleteSection'
 import z from 'zod'
-import { db } from '../../../../../db'
-import { sectionsTable } from '../../../../../db/schema'
 
 const schema = z.object({
     id: z.string().min(3),
@@ -19,47 +19,27 @@ const schema = z.object({
 
 export type IDeleteSection = z.infer<typeof schema>
 
-async function deleteSection(
+async function deleteSectionHandler(
     _data: Partial<IDeleteSection>,
-    ctx: IMiddlewaresAccessCtx<IDeleteSection>
+    ctx: IMiddlewaresAccessCtx<IDeleteSection>,
+    env: ServerEnv
 ): Promise<IReturnAction<Partial<IDeleteSection>>> {
     const validatedFields = ctx.validatedFields
+    const data = validatedFields.data! as Required<IDeleteSection>
+    const formId = data.form_id!
 
-    if (!validatedFields!.data?.id || !validatedFields!.data.form_id)
-        return {
-            status: 'error',
-            error: { message: 'Sections ID and Form ID are required' },
-        }
-
-    const result = await db
-        .delete(sectionsTable)
-        .where(
-            and(
-                eq(sectionsTable.id, validatedFields!.data.id),
-                eq(sectionsTable.form_id, validatedFields!.data.form_id!)
-            )
-        )
-
-    if (result.rowsAffected === 0) {
-        return {
-            status: 'error',
-            error: { message: 'Failed to delete section' },
-        }
-    }
+    const result = await withFormContext(env)(formId, () => deleteSection(data))
 
     return {
         status: 'success',
-        data: {
-            id: validatedFields!.data.id,
-            form_id: validatedFields!.data.form_id,
-        },
+        data: result,
     }
 }
 
 export default defineServerRequest<
     Partial<IDeleteSection>,
     IMiddlewaresAccessCtx<IDeleteSection>
->(deleteSection, [
+>(deleteSectionHandler, [
     requireAuth(),
     requireValidation(schema),
     requireResourceAccess(['read', 'write', 'delete']),

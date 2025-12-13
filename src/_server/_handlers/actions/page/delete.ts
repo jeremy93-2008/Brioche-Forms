@@ -2,15 +2,15 @@
 import {
     defineServerRequest,
     IMiddlewaresAccessCtx,
+    ServerEnv,
 } from '@/_server/__internals/defineServerRequest'
+import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { type IReturnAction } from '@/_server/_handlers/actions/types'
-import { and, eq } from 'drizzle-orm'
+import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { deletePage } from '@/_server/domains/page/deletePage'
 import z from 'zod'
-import { db } from '../../../../../db'
-import { pagesTable } from '../../../../../db/schema'
 
 const schema = z.object({
     id: z.string().min(3),
@@ -19,47 +19,27 @@ const schema = z.object({
 
 export type IDeletePage = z.infer<typeof schema>
 
-async function deletePage(
+async function deletePageHandler(
     _data: Partial<IDeletePage>,
-    ctx: IMiddlewaresAccessCtx<IDeletePage>
+    ctx: IMiddlewaresAccessCtx<IDeletePage>,
+    env: ServerEnv
 ): Promise<IReturnAction<Partial<IDeletePage>>> {
     const validatedFields = ctx.validatedFields
+    const data = validatedFields.data! as Required<IDeletePage>
+    const formId = data.form_id!
 
-    if (!validatedFields!.data?.id || !validatedFields!.data.form_id)
-        return {
-            status: 'error',
-            error: { message: 'Page ID and Form ID are required' },
-        }
-
-    const result = await db
-        .delete(pagesTable)
-        .where(
-            and(
-                eq(pagesTable.id, validatedFields!.data.id),
-                eq(pagesTable.form_id, validatedFields!.data.form_id!)
-            )
-        )
-
-    if (result.rowsAffected === 0) {
-        return {
-            status: 'error',
-            error: { message: 'Failed to delete page' },
-        }
-    }
+    const result = await withFormContext(env)(formId, () => deletePage(data))
 
     return {
         status: 'success',
-        data: {
-            id: validatedFields!.data.id,
-            form_id: validatedFields!.data.form_id,
-        },
+        data: result,
     }
 }
 
 export default defineServerRequest<
     Partial<IDeletePage>,
     IMiddlewaresAccessCtx<IDeletePage>
->(deletePage, [
+>(deletePageHandler, [
     requireAuth(),
     requireValidation(schema),
     requireResourceAccess(['read', 'write', 'delete']),

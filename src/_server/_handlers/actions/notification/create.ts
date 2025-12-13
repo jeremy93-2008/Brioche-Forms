@@ -29,7 +29,7 @@ schema.extend({
     users: schema.array().optional(),
 })
 
-async function create(
+async function createNotificationHandler(
     _data: Partial<INotificationsWithUsers>,
     ctx: IMiddlewaresCtx<INotificationsWithUsers>
 ): Promise<IReturnAction<Partial<INotificationsWithUsers>>> {
@@ -47,4 +47,4 @@ async function create(
 export default defineServerRequest<
     Partial<INotificationsWithUsers>,
     IMiddlewaresCtx<INotificationsWithUsers>
->(create, [requireAuth(), requireValidation(schema)])
+>(createNotificationHandler, [requireAuth(), requireValidation(schema)])

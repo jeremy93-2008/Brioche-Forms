@@ -3,57 +3,56 @@
 import {
     defineServerRequest,
     IMiddlewaresAccessCtx,
+    ServerEnv,
 } from '@/_server/__internals/defineServerRequest'
+import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import type { IReturnAction } from '@/_server/_handlers/actions/types'
+import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { createTextSection } from '@/_server/domains/section/text/createTextSection'
 import { createInsertSchema } from 'drizzle-zod'
-import { v7 as uuidv7 } from 'uuid'
-import { db } from '../../../../../db'
-import { ISection, IText, textsTable } from '../../../../../db/schema'
+import z from 'zod'
+import { textsTable } from '../../../../../db/schema'
 
 const schema = createInsertSchema(textsTable, {
     id: (schema) => schema.min(3),
     content: (schema) => schema.nullable(),
     order: (schema) => schema.nullable(),
-    section_id: (schema) => schema.min(3),
+    section_id: (schema) => schema.nullable(),
     form_id: (schema) => schema.min(3),
 })
 
-async function create(
-    _data: Partial<IText>,
-    ctx: IMiddlewaresAccessCtx<IText>
-): Promise<IReturnAction<Partial<ISection>>> {
+const extendSchema = schema.extend({
+    page_id: z.string().min(3),
+})
+
+export type ITextWithPageId = z.infer<typeof extendSchema>
+
+async function createTextSectionHandler(
+    _data: Partial<ITextWithPageId>,
+    ctx: IMiddlewaresAccessCtx<ITextWithPageId>,
+    env: ServerEnv
+): Promise<IReturnAction<Partial<ITextWithPageId>>> {
     const validatedFields = ctx.validatedFields
+    const data = validatedFields.data! as Required<ITextWithPageId>
+    const formId = data.form_id!
 
-    const textId = uuidv7()
-
-    if (!validatedFields.data?.section_id || !validatedFields.data?.form_id)
-        return {
-            status: 'error',
-            error: { message: 'Section ID and Form ID are required' },
-        }
-
-    await db.insert(textsTable).values({
-        id: textId,
-        order: validatedFields.data?.order ?? '0',
-        content: validatedFields.data?.content ?? '',
-        section_id: validatedFields.data?.section_id ?? '',
-        form_id: validatedFields.data?.form_id,
-    })
+    const result = await withFormContext(env)(formId, () =>
+        createTextSection(data, { withNewSection: true })
+    )
 
     return {
         status: 'success',
-        data: { id: textId },
+        data: result,
     }
 }
 
 export default defineServerRequest<
-    Partial<IText>,
-    IMiddlewaresAccessCtx<IText>
->(create, [
+    Partial<ITextWithPageId>,
+    IMiddlewaresAccessCtx<ITextWithPageId>
+>(createTextSectionHandler, [
     requireAuth(),
-    requireValidation(schema),
+    requireValidation(extendSchema),
     requireResourceAccess(['read', 'write']),
 ])

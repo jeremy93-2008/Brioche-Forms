@@ -23,7 +23,7 @@ const schema = createUpdateSchema(formsTable, {
     author_id: (schema) => schema.nullable(),
 }).partial()
 
-async function editFormHandler(
+async function updateFormHandler(
     _data: Partial<IForm>,
     ctx: IMiddlewaresAccessCtx<Partial<IForm>>
 ): Promise<IReturnAction<Partial<IForm>>> {
@@ -38,7 +38,7 @@ async function editFormHandler(
 export default defineServerRequest<
     Partial<IForm>,
     IMiddlewaresAccessCtx<Partial<IForm>>
->(editFormHandler, [
+>(updateFormHandler, [
     requireAuth(),
     requireValidation(schema),
     requireResourceAccess(['read', 'write'], { form_id_field: 'id' }),

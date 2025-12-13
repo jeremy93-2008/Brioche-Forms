@@ -3,14 +3,15 @@
 import {
     defineServerRequest,
     IMiddlewaresAccessCtx,
+    ServerEnv,
 } from '@/_server/__internals/defineServerRequest'
+import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import type { IReturnAction } from '@/_server/_handlers/actions/types'
+import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { createSection } from '@/_server/domains/section/createSection'
 import { createInsertSchema } from 'drizzle-zod'
-import { v7 as uuidv7 } from 'uuid'
-import { db } from '../../../../../db'
 import { ISection, sectionsTable } from '../../../../../db/schema'
 
 const schema = createInsertSchema(sectionsTable, {
@@ -23,39 +24,27 @@ const schema = createInsertSchema(sectionsTable, {
     form_id: (schema) => schema.min(3),
 })
 
-async function create(
+async function createSectionHandler(
     _data: Partial<ISection>,
-    ctx: IMiddlewaresAccessCtx<ISection>
+    ctx: IMiddlewaresAccessCtx<ISection>,
+    env: ServerEnv
 ): Promise<IReturnAction<Partial<ISection>>> {
     const validatedFields = ctx.validatedFields
+    const data = validatedFields.data! as Required<ISection>
+    const formId = data.form_id!
 
-    const sectionId = uuidv7()
-
-    if (!validatedFields.data?.page_id || !validatedFields.data?.form_id)
-        return {
-            status: 'error',
-            error: { message: 'Page ID and Form ID are required' },
-        }
-
-    await db.insert(sectionsTable).values({
-        id: sectionId,
-        title: validatedFields.data?.title || '',
-        order: validatedFields.data?.order || '0',
-        conditions: validatedFields.data?.conditions || '',
-        page_id: validatedFields.data?.page_id,
-        form_id: validatedFields.data?.form_id,
-    })
+    const result = await withFormContext(env)(formId, () => createSection(data))
 
     return {
         status: 'success',
-        data: { id: sectionId },
+        data: result,
     }
 }
 
 export default defineServerRequest<
     Partial<ISection>,
     IMiddlewaresAccessCtx<ISection>
->(create, [
+>(createSectionHandler, [
     requireAuth(),
     requireValidation(schema),
     requireResourceAccess(['read', 'write']),

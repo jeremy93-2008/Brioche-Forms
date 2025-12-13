@@ -10,7 +10,7 @@ import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
-import { createPage } from '@/_server/domains/pages/createPage'
+import { createPage } from '@/_server/domains/page/createPage'
 import { createInsertSchema } from 'drizzle-zod'
 import { IPage, pagesTable } from '../../../../../db/schema'
 
