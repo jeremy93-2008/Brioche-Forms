@@ -1,7 +1,7 @@
 'use client'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/_components/ui/tabs'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
-import { IFullForm } from '@/_server/_handlers/queries/form/get'
+import { IFullForm } from '@/_server/domains/form/getFullForms'
 import { PageCreateFieldDialogComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-field-dialog/component'
 import { PageCreateSectionCardComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/component'
 import { PageDeleteFieldDialogComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-delete-field-dialog/component'

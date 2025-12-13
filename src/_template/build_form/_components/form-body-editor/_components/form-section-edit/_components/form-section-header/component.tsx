@@ -7,7 +7,7 @@ import { Button } from '@/_components/ui/button'
 import { Input } from '@/_components/ui/input'
 import DeleteSectionAction from '@/_server/_handlers/actions/section/delete'
 import EditSectionAction from '@/_server/_handlers/actions/section/update'
-import { IFullForm } from '@/_server/_handlers/queries/form/get'
+import { IFullForm } from '@/_server/domains/form/getFullForms'
 import { Pen, Trash } from 'lucide-react'
 import { ISection } from '../../../../../../../../../db/types'
 
