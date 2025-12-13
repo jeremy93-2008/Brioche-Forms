@@ -1,9 +1,18 @@
-import { composeServerFunction } from '@/_server/__internals/composeServerFunction'
-import { IMapCtx } from '@/_server/__internals/types'
+import { EventsPlugin } from '@/_server/__internals/_plugins/EventsPlugin'
+import {
+    IServerPluginBuilder,
+    IServerPluginEnvFromBuilder,
+} from '@/_server/__internals/_plugins/type'
+import {
+    ComposeServerFunctionHandler,
+    ComposeServerFunctionMiddleware,
+} from '@/_server/__internals/composeServerFunction'
+import { createServer } from '@/_server/__internals/createServer'
+import { FormModifiedAt } from '@/_server/_events/FormModifiedAt'
+import { IReturnAction } from '@/_server/_handlers/actions/types'
 import { IAuthCtx } from '@/_server/_middlewares/requireAuth'
 import { IPermissionCtx } from '@/_server/_middlewares/requireResourceAccess'
 import { IValidationCtx } from '@/_server/_middlewares/requireValidation'
-import { IReturnAction } from '@/_server/_handlers/actions/types'
 
 /**
  * Defines a server function by wrapping a handler with a pipeline of middlewares.
@@ -22,12 +31,22 @@ import { IReturnAction } from '@/_server/_handlers/actions/types'
  * @param middlewares - An array of middleware functions to be executed before the handler.
  * @returns A server function ready to be used from the client.
  */
-export function defineServerRequest<TData, TCtx>(
-    handler: (data: TData, ctx: TCtx) => Promise<IReturnAction<Partial<TData>>>,
-    middlewares: ((
-        data: TData,
-        ctx: IMapCtx<TCtx>
-    ) => Promise<IReturnAction<TData> | void>)[]
+export function defineServerRequest<
+    TData,
+    TCtx,
+    const Bs extends readonly IServerPluginBuilder[] = [],
+>(
+    handler: ComposeServerFunctionHandler<
+        TData,
+        TData,
+        TCtx,
+        IServerPluginEnvFromBuilder<Bs>
+    >,
+    middlewares: ComposeServerFunctionMiddleware<
+        TData,
+        TCtx,
+        IServerPluginEnvFromBuilder<Bs>
+    >[]
 ): (args: TData) => Promise<IReturnAction<TData>>
 
 /**
@@ -48,28 +67,48 @@ export function defineServerRequest<TData, TCtx>(
  * @param middlewares - An array of middleware functions to be executed before the handler.
  * @returns A server function ready to be used from the client.
  */
-export function defineServerRequest<TInput, TOutput, TCtx>(
-    handler: (
-        data: TInput,
-        ctx: TCtx
-    ) => Promise<IReturnAction<Partial<TOutput>>>,
-    middlewares: ((
-        data: TInput,
-        ctx: IMapCtx<TCtx>
-    ) => Promise<IReturnAction<TInput> | void>)[]
+export function defineServerRequest<
+    TInput,
+    TOutput,
+    TCtx,
+    const Bs extends readonly IServerPluginBuilder[] = [],
+>(
+    handler: ComposeServerFunctionHandler<
+        TInput,
+        TOutput,
+        TCtx,
+        IServerPluginEnvFromBuilder<Bs>
+    >,
+    middlewares: ComposeServerFunctionMiddleware<
+        TInput,
+        TCtx,
+        IServerPluginEnvFromBuilder<Bs>
+    >[]
 ): (args: TInput) => Promise<IReturnAction<TOutput>>
 
-export function defineServerRequest<TInput, TOutput, TCtx>(
-    handler: (
-        data: TInput,
-        ctx: TCtx
-    ) => Promise<IReturnAction<Partial<TOutput>>>,
-    middlewares: ((
-        data: TInput,
-        ctx: IMapCtx<TCtx>
-    ) => Promise<IReturnAction<TInput> | void>)[]
+export function defineServerRequest<
+    TInput,
+    TOutput,
+    TCtx,
+    const Bs extends readonly IServerPluginBuilder[] = [],
+>(
+    handler: ComposeServerFunctionHandler<
+        TInput,
+        TOutput,
+        TCtx,
+        IServerPluginEnvFromBuilder<Bs>
+    >,
+    middlewares: ComposeServerFunctionMiddleware<
+        TInput,
+        TCtx,
+        IServerPluginEnvFromBuilder<Bs>
+    >[]
 ) {
-    return composeServerFunction<TInput, TOutput, TCtx>(handler, middlewares)
+    return createServer<TInput, TOutput, TCtx, Bs>()
+        .use(EventsPlugin({ event: FormModifiedAt }))
+        .middlewares(...middlewares)
+        .handler(handler)
+        .execute()
 }
 
 export type IMiddlewaresCtx<TData> = IAuthCtx & IValidationCtx<Partial<TData>>
