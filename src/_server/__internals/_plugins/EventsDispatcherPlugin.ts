@@ -2,7 +2,7 @@ import { IServerPluginBuilder } from '@/_server/__internals/_plugins/types/type'
 
 type MaybePromise<T> = T | Promise<T>
 
-type AnyEventsHandler<P = unknown> = (payload: P) => MaybePromise<void>
+type AnyEventsHandler<P = unknown> = (payload: P) => MaybePromise<any>
 type AnyEventsObject<P = unknown> = { handler: AnyEventsHandler<P> }
 type AnyEventsValue<P = unknown> = AnyEventsHandler<P> | AnyEventsObject<P>
 
@@ -15,13 +15,11 @@ type PayloadOfValue<V> =
           ? P
           : never
 
-type Subscriber<P> = (payload: P) => MaybePromise<void>
-
 interface IEventsPluginReturnCb<E> {
     dispatch: <K extends keyof E>(
         name: K,
         payload: PayloadOfValue<E[K]>
-    ) => Promise<void>
+    ) => Promise<any>
     events: Array<{
         name: keyof E
         handler: any
@@ -51,9 +49,9 @@ export function EventsDispatcherPlugin<const E extends EventsMap>(
                 const event = events[name]
                 if (event) {
                     if (typeof event === 'function') {
-                        await event(payload)
+                        return event(payload)
                     } else {
-                        await (event as AnyEventsObject).handler(payload)
+                        return (event as AnyEventsObject).handler(payload)
                     }
                 }
             }

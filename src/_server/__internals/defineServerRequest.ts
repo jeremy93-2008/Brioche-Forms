@@ -9,7 +9,7 @@ import {
     ComposeServerFunctionMiddleware,
 } from '@/_server/__internals/composeServerFunction'
 import { createServer } from '@/_server/__internals/createServer'
-import { FormTouched } from '@/_server/_events/FormTouched'
+import { FormUpdated } from '@/_server/_events/FormUpdated'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
 import { IAuthCtx } from '@/_server/_middlewares/requireAuth'
 import { IPermissionCtx } from '@/_server/_middlewares/requireResourceAccess'
@@ -42,17 +42,8 @@ export function defineServerRequest<
     TCtx,
     const Bs extends readonly IServerPluginBuilder[] = [],
 >(
-    handler: ComposeServerFunctionHandler<
-        TData,
-        TData,
-        TCtx,
-        IServerPluginEnvFromBuilder<Bs>
-    >,
-    middlewares: ComposeServerFunctionMiddleware<
-        TData,
-        TCtx,
-        IServerPluginEnvFromBuilder<Bs>
-    >[]
+    handler: ComposeServerFunctionHandler<TData, TData, TCtx, ServerEnv>,
+    middlewares: ComposeServerFunctionMiddleware<TData, TCtx, ServerEnv>[]
 ): (args: TData) => Promise<IReturnAction<TData>>
 
 /**
@@ -84,17 +75,8 @@ export function defineServerRequest<
     TCtx,
     const Bs extends readonly IServerPluginBuilder[] = [],
 >(
-    handler: ComposeServerFunctionHandler<
-        TInput,
-        TOutput,
-        TCtx,
-        IServerPluginEnvFromBuilder<Bs>
-    >,
-    middlewares: ComposeServerFunctionMiddleware<
-        TInput,
-        TCtx,
-        IServerPluginEnvFromBuilder<Bs>
-    >[]
+    handler: ComposeServerFunctionHandler<TInput, TOutput, TCtx, ServerEnv>,
+    middlewares: ComposeServerFunctionMiddleware<TInput, TCtx, ServerEnv>[]
 ): (args: TInput) => Promise<IReturnAction<TOutput>>
 
 export function defineServerRequest<
@@ -103,25 +85,24 @@ export function defineServerRequest<
     TCtx,
     const Bs extends readonly IServerPluginBuilder[] = [],
 >(
-    handler: ComposeServerFunctionHandler<
-        TInput,
-        TOutput,
-        TCtx,
-        IServerPluginEnvFromBuilder<Bs>
-    >,
-    middlewares: ComposeServerFunctionMiddleware<
-        TInput,
-        TCtx,
-        IServerPluginEnvFromBuilder<Bs>
-    >[]
+    handler: ComposeServerFunctionHandler<TInput, TOutput, TCtx, ServerEnv>,
+    middlewares: ComposeServerFunctionMiddleware<TInput, TCtx, ServerEnv>[]
 ) {
     return createServer<TInput, TOutput, TCtx, Bs>()
         .use(LoggingPlugin({ level: 'debug' }))
-        .use(EventsDispatcherPlugin({ formTouched: FormTouched }))
+        .use(EventsDispatcherPlugin({ formUpdated: FormUpdated }))
         .middlewares(...middlewares)
         .handler(handler)
         .execute()
 }
+
+type DefaultBuilders = readonly [
+    ReturnType<typeof LoggingPlugin>,
+    ReturnType<typeof EventsDispatcherPlugin>,
+]
+
+export type ServerEnv<Bs extends readonly IServerPluginBuilder[] = []> =
+    IServerPluginEnvFromBuilder<[...DefaultBuilders, ...Bs]>
 
 export type IMiddlewaresCtx<TData> = IAuthCtx & IValidationCtx<Partial<TData>>
 

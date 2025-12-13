@@ -1,12 +1,10 @@
-import {
-    IServerPluginBuilder,
-    IServerPluginEnvFromBuilder,
-} from '@/_server/__internals/_plugins/types/type'
+import { IServerPluginBuilder } from '@/_server/__internals/_plugins/types/type'
 import {
     composeServerFunction,
     ComposeServerFunctionHandler,
     ComposeServerFunctionMiddleware,
 } from '@/_server/__internals/composeServerFunction'
+import { ServerEnv } from '@/_server/__internals/defineServerRequest'
 
 export interface IBasicEnv {
     request: {
@@ -35,14 +33,14 @@ export function createServer<
         TInput,
         TOutput,
         TCtx,
-        IServerPluginEnvFromBuilder<Bs>
+        ServerEnv
     > = async () => {
         return { status: 'success', data: {} }
     }
     const _middlewares: ComposeServerFunctionMiddleware<
         TInput,
         TCtx,
-        IServerPluginEnvFromBuilder<Bs>
+        ServerEnv
     >[] = []
 
     const getServer = () => {
@@ -64,7 +62,7 @@ export function createServer<
                 ...middlewares: ComposeServerFunctionMiddleware<
                     TInput,
                     TCtx,
-                    IServerPluginEnvFromBuilder<Bs>
+                    ServerEnv
                 >[]
             ) => {
                 _middlewares.push(...middlewares)
@@ -75,7 +73,7 @@ export function createServer<
                     TInput,
                     TOutput,
                     TCtx,
-                    IServerPluginEnvFromBuilder<Bs>
+                    ServerEnv
                 >
             ) => {
                 _handler = handler
@@ -86,7 +84,7 @@ export function createServer<
                     TInput,
                     TOutput,
                     TCtx,
-                    IServerPluginEnvFromBuilder<Bs>,
+                    ServerEnv,
                     Bs
                 >(_handler, _middlewares, envBuilders as unknown as Bs)
             },

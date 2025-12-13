@@ -37,6 +37,7 @@ export function LoggingPlugin(opts?: {
         return {
             name: 'logging',
             cb: () => ({
+                level,
                 info,
                 error,
                 debug,

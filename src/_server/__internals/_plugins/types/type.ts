@@ -14,10 +14,7 @@ export type IServerPluginBuilderOptions = {
 export type IServerPluginBuilder<
     Name extends string = string,
     Piece extends object = object,
-> = (
-    env: IBasicEnv,
-    opts: IServerPluginBuilderOptions
-) => IServerPluginReturn<Name, Piece>
+> = (...args: any[]) => IServerPluginReturn<Name, Piece>
 
 export type IServerPluginEnvFromBuilder<
     Bs extends readonly IServerPluginBuilder[],
@@ -30,10 +27,9 @@ type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
     ? I
     : never
 
-type EnvFromBuilder<B> = B extends () => IServerPluginReturn<
-    infer Name,
-    infer Piece
->
+type EnvFromBuilder<B> = B extends (
+    ...args: any[]
+) => IServerPluginReturn<infer Name, infer Piece>
     ? Record<Name, Piece>
     : {}
 

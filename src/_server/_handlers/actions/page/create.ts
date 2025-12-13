@@ -3,16 +3,16 @@
 import {
     defineServerRequest,
     IMiddlewaresAccessCtx,
+    ServerEnv,
 } from '@/_server/__internals/defineServerRequest'
+import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import type { IReturnAction } from '@/_server/_handlers/actions/types'
-import { eq } from 'drizzle-orm'
+import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { createPage } from '@/_server/domains/pages/createPage'
 import { createInsertSchema } from 'drizzle-zod'
-import { v7 as uuidv7 } from 'uuid'
-import { db } from '../../../../../db'
-import { formsTable, IPage, pagesTable } from '../../../../../db/schema'
+import { IPage, pagesTable } from '../../../../../db/schema'
 
 const schema = createInsertSchema(pagesTable, {
     id: (schema) => schema.nullable(),
@@ -22,48 +22,27 @@ const schema = createInsertSchema(pagesTable, {
     form_id: (schema) => schema.min(3),
 }).partial()
 
-async function create(
+async function createPageHandler(
     _data: Partial<IPage>,
-    ctx: IMiddlewaresAccessCtx<IPage>
+    ctx: IMiddlewaresAccessCtx<IPage>,
+    env: ServerEnv
 ): Promise<IReturnAction<Partial<IPage>>> {
     const validatedFields = ctx.validatedFields
+    const data = validatedFields.data!
+    const formId = data.form_id!
 
-    const pageId = uuidv7()
-
-    if (!validatedFields.data?.form_id)
-        return {
-            status: 'error',
-            error: { message: 'Form ID is required' },
-        }
-
-    await db.transaction(async (tx) => {
-        if (!validatedFields.data?.form_id) return
-
-        await tx.insert(pagesTable).values({
-            id: pageId,
-            title: validatedFields.data?.title || '',
-            order: validatedFields.data?.order || '0',
-            conditions: validatedFields.data?.conditions || '',
-            form_id: validatedFields.data?.form_id,
-        })
-        await tx
-            .update(formsTable)
-            .set({
-                updatedAt: new Date().getTime(),
-            })
-            .where(eq(formsTable.id, validatedFields.data?.form_id))
-    })
+    const result = await withFormContext(env)(formId, () => createPage(data))
 
     return {
         status: 'success',
-        data: { id: pageId },
+        data: result,
     }
 }
 
 export default defineServerRequest<
     Partial<IPage>,
     IMiddlewaresAccessCtx<IPage>
->(create, [
+>(createPageHandler, [
     requireAuth(),
     requireValidation(schema),
     requireResourceAccess(['read', 'write']),
