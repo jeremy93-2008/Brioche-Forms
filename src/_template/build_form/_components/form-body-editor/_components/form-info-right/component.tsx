@@ -1,11 +1,10 @@
 'use client'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
-import { IFullForm } from '@/_server/domains/form/getFullForms'
 import { formatDate } from '@/_utils/formatDate'
 import { use } from 'react'
 
 export function FormInfoRightComponent() {
-    const data: IFullForm = use(SingleFormSelectedContext)!
+    const { data } = use(SingleFormSelectedContext)!
 
     return (
         <section className="flex flex-col items-end font-sans">

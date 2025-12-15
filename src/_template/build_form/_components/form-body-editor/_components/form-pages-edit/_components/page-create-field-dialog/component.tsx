@@ -6,6 +6,7 @@ import {
 } from '@/_components/shared/form-field-edit-dialog/component.client'
 import { Button } from '@/_components/ui/button'
 import { Input } from '@/_components/ui/input'
+import type { useAfterSaveOptimisticData } from '@/_hooks/useAfterSaveOptimisticData/useAfterSaveOptimisticData'
 import CreatePageAction from '@/_server/_handlers/actions/page/create'
 import { Plus } from 'lucide-react'
 import { IPage } from '../../../../../../../../../db/types'
@@ -13,17 +14,19 @@ import { IPage } from '../../../../../../../../../db/types'
 interface IPageCreateFieldDialogComponentProps {
     formId: string
     order: string
+    afterSave: ReturnType<typeof useAfterSaveOptimisticData>['afterSave']
 }
 
 export function PageCreateFieldDialogComponent(
     props: IPageCreateFieldDialogComponentProps
 ) {
-    const { formId, order } = props
+    const { formId, order, afterSave } = props
 
     return (
         <FormFieldEditDialog
             title="Crear nueva Página"
             serverAction={CreatePageAction}
+            afterSave={afterSave}
             saveButtonText="Crear"
             saveButtonVariant="default"
         >

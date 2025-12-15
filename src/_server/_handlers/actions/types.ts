@@ -1,4 +1,18 @@
 export type IReturnAction<T> =
-    | { status: 'idle' }
-    | { status: 'success'; data: T }
-    | { status: 'error'; error: { message: string } }
+    | IReturnActionIdle
+    | IReturnActionOnSuccess<T>
+    | IReturnActionOnError
+
+export type IReturnActionIdle = {
+    status: 'idle'
+}
+
+export type IReturnActionOnSuccess<T> = {
+    status: 'success'
+    data: T
+}
+
+export type IReturnActionOnError = {
+    status: 'error'
+    error: { message: string }
+}

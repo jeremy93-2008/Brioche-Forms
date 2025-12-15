@@ -6,6 +6,7 @@ import {
 } from '@/_components/shared/form-field-edit-dialog/component.client'
 import { Button } from '@/_components/ui/button'
 import { Textarea } from '@/_components/ui/textarea'
+import { useAfterSaveOptimisticData } from '@/_hooks/useAfterSaveOptimisticData/useAfterSaveOptimisticData'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
 import EditFormAction from '@/_server/_handlers/actions/form/update'
 import { Pen } from 'lucide-react'
@@ -13,12 +14,14 @@ import { use } from 'react'
 import { type IForm } from '../../../../../../../db/types'
 
 export function FormDescriptionEditComponent() {
-    const data: IForm = use(SingleFormSelectedContext)!
+    const { data } = use(SingleFormSelectedContext)!
+    const { afterSave } = useAfterSaveOptimisticData({ type: 'update' })
 
     return (
         <FormFieldEditDialog
             title="Editar Descripción del Formulario"
             serverAction={EditFormAction}
+            afterSave={afterSave}
         >
             <FormFieldEditDialogTrigger>
                 <Button className="text-sm group" variant="link">

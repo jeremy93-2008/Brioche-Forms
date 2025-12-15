@@ -35,6 +35,5 @@ export type IAnswer = typeof answersTable.$inferSelect
 export type ITag = typeof tagsTable.$inferSelect
 export type INotification = typeof notificationsTable.$inferSelect
 export type ISharedNotification = typeof sharedNotificationsTable.$inferSelect
-export type IQuestions = typeof questionsTable.$inferSelect
 export type ISharedForms = typeof sharedFormsTable.$inferSelect
 export type ISharedFolders = typeof sharedFoldersTable.$inferSelect

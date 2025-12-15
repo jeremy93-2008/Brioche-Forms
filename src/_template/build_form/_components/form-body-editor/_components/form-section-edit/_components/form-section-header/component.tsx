@@ -5,6 +5,7 @@ import {
 } from '@/_components/shared/form-field-edit-dialog/component.client'
 import { Button } from '@/_components/ui/button'
 import { Input } from '@/_components/ui/input'
+import { useAfterSaveOptimisticData } from '@/_hooks/useAfterSaveOptimisticData/useAfterSaveOptimisticData'
 import DeleteSectionAction from '@/_server/_handlers/actions/section/delete'
 import EditSectionAction from '@/_server/_handlers/actions/section/update'
 import { IFullForm } from '@/_server/domains/form/getFullForms'
@@ -20,12 +21,14 @@ export function FormSectionHeaderComponent(
     props: IFormSectionEditNameComponentProps
 ) {
     const { data, formId } = props
+    const { afterSave } = useAfterSaveOptimisticData({ type: 'update' })
 
     return (
         <section className="flex items-center group">
             <FormFieldEditDialog
                 title="Renombrar Sección"
                 serverAction={EditSectionAction}
+                afterSave={afterSave}
             >
                 <FormFieldEditDialogTrigger>
                     <Button className="text-sm" variant="link">

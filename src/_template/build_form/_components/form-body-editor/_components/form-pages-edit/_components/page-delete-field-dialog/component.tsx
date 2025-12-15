@@ -5,6 +5,7 @@ import {
     FormFieldEditDialogTrigger,
 } from '@/_components/shared/form-field-edit-dialog/component.client'
 import { Button } from '@/_components/ui/button'
+import type { useAfterSaveOptimisticData } from '@/_hooks/useAfterSaveOptimisticData/useAfterSaveOptimisticData'
 import DeletePageAction from '@/_server/_handlers/actions/page/delete'
 import { Trash } from 'lucide-react'
 import { IPage } from '../../../../../../../../../db/types'
@@ -12,17 +13,19 @@ import { IPage } from '../../../../../../../../../db/types'
 interface IPageDeleteFieldDialogComponentProps {
     pageId: string
     formId: string
+    afterSave: ReturnType<typeof useAfterSaveOptimisticData>['afterSave']
 }
 
 export function PageDeleteFieldDialogComponent(
     props: IPageDeleteFieldDialogComponentProps
 ) {
-    const { pageId, formId } = props
+    const { pageId, formId, afterSave } = props
 
     return (
         <FormFieldEditDialog
             title="Eliminar Página"
             serverAction={DeletePageAction}
+            afterSave={afterSave}
             saveButtonText="Eliminar"
             saveButtonVariant="destructive"
         >

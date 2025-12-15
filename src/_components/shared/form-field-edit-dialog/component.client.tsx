@@ -31,6 +31,11 @@ const FormFieldEditDialogCtx = createContext({
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>
     title: string
     serverAction: (arg: any) => Promise<IReturnAction<any>>
+    afterSave?: (
+        isSuccess: boolean,
+        fields: any,
+        result: IReturnAction<any>
+    ) => void
     saveButtonText?: string
     cancelButtonText?: string
     saveButtonVariant?:
@@ -53,9 +58,15 @@ const FormFieldEditDialogCtx = createContext({
     errorMessage?: string
 })
 
-interface IFormFieldEditDialogProps extends React.PropsWithChildren {
+interface IFormFieldEditDialogProps<T extends Record<string, any>>
+    extends React.PropsWithChildren {
     title: string
     serverAction: (arg: any) => Promise<IReturnAction<any>>
+    afterSave?: (
+        isSuccess: boolean,
+        fields: T,
+        result: IReturnAction<any>
+    ) => void
     saveButtonText?: string
     cancelButtonText?: string
     saveButtonVariant?:
@@ -90,10 +101,13 @@ interface IFormFieldEditDialogContentProps<T> {
     ) => React.ReactNode
 }
 
-export function FormFieldEditDialog(props: IFormFieldEditDialogProps) {
+export function FormFieldEditDialog<T extends Record<string, any>>(
+    props: IFormFieldEditDialogProps<T>
+) {
     const {
         title,
         serverAction,
+        afterSave,
         saveButtonText,
         cancelButtonText,
         saveButtonVariant,
@@ -111,6 +125,7 @@ export function FormFieldEditDialog(props: IFormFieldEditDialogProps) {
                 setIsOpen: setIsDialogOpen,
                 title,
                 serverAction,
+                afterSave,
                 saveButtonText,
                 cancelButtonText,
                 saveButtonVariant,
@@ -138,6 +153,7 @@ export function FormFieldEditDialogContent<T>(
         setIsOpen: setIsDialogOpen,
         title,
         serverAction,
+        afterSave,
         saveButtonText,
         cancelButtonText,
         saveButtonVariant,
@@ -165,6 +181,10 @@ export function FormFieldEditDialogContent<T>(
                     ? result.error.message
                     : ToastMessages.genericError)
         )
+
+        if (afterSave) {
+            afterSave(result.status === 'success', data, result)
+        }
 
         setIsDialogOpen(false)
     }
