@@ -44,7 +44,7 @@ async function createVideoSectionHandler(
         const new_section = await createSection({
             title: 'Sección de Video',
             description: '',
-            order: '0',
+            order: 'latest',
             conditions: '',
             page_id: data.page_id,
             form_id: data.form_id,

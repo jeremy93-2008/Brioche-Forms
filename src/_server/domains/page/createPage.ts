@@ -12,7 +12,7 @@ export async function createPage(data: Partial<IPage>) {
         await tx.insert(pagesTable).values({
             id: pageId,
             title: data.title || '',
-            order: data.order || '0',
+            order: data.order || 'latest',
             conditions: data.conditions || '',
             form_id: data.form_id,
         })

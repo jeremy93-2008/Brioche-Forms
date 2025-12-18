@@ -10,7 +10,7 @@ export async function createTextSection(data: ITextWithPageId) {
 
     const result = await db.insert(textsTable).values({
         id: textId,
-        order: data?.order ?? '0',
+        order: data?.order ?? 'latest',
         content: data?.content ?? '',
         section_id: sectionId!,
         form_id: data?.form_id,

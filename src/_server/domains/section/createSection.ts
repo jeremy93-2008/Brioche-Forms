@@ -9,7 +9,7 @@ export async function createSection(data: Partial<ISection>) {
     await db.insert(sectionsTable).values({
         id: sectionId,
         title: data.title || '',
-        order: data.order || '0',
+        order: data.order || 'latest',
         conditions: data.conditions || '',
         page_id: data.page_id!,
         form_id: data.form_id!,

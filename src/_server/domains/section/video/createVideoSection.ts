@@ -10,7 +10,7 @@ export async function createVideoSection(data: IVideoWithPageId) {
 
     const result = await db.insert(videosTable).values({
         id: videoId,
-        order: data?.order ?? '0',
+        order: data?.order ?? 'latest',
         caption: data?.caption ?? '',
         url: data.url ?? '',
         section_id: sectionId!,

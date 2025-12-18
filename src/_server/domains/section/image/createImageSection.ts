@@ -10,7 +10,7 @@ export async function createImageSection(data: IImageWithPageId) {
 
     const result = await db.insert(imagesTable).values({
         id: imageId,
-        order: data?.order ?? '0',
+        order: data?.order ?? 'latest',
         caption: data?.caption ?? '',
         url: data.url ?? '',
         section_id: sectionId!,

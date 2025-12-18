@@ -11,17 +11,19 @@ import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAcc
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
 import { createSection } from '@/_server/domains/section/createSection'
-import { createImageSection } from '@/_server/domains/section/image/createImageSection'
+import { createQuestionSection } from '@/_server/domains/section/question/createQuestionSection'
 import { createInsertSchema } from 'drizzle-zod'
 import z from 'zod'
-import { imagesTable } from '../../../../../db/schema'
+import { questionsTable } from '../../../../../db/schema'
 
-const schema = createInsertSchema(imagesTable, {
-    id: (schema) => schema.min(3),
-    url: (schema) => schema.min(3),
-    caption: (schema) => schema.nullable(),
+const schema = createInsertSchema(questionsTable, {
+    id: (schema) => schema.nullable(),
+    name: (schema) => schema.min(3),
+    type: (schema) => schema.min(3),
+    is_required: (schema) => schema.nullable(),
+    content: (schema) => schema.nullable(),
     order: (schema) => schema.nullable(),
-    section_id: (schema) => schema.min(3),
+    section_id: (schema) => schema.nullable(),
     form_id: (schema) => schema.min(3),
 })
 
@@ -29,27 +31,30 @@ const extendSchema = schema.extend({
     page_id: z.string().min(3),
 })
 
-export type IImageWithPageId = z.infer<typeof extendSchema>
+export type IQuestionWithPageId = z.infer<typeof extendSchema>
 
-async function createImageSectionHandler(
-    _data: Partial<IImageWithPageId>,
-    ctx: IMiddlewaresAccessCtx<IImageWithPageId>,
+async function createQuestionSectionHandler(
+    _data: Partial<IQuestionWithPageId>,
+    ctx: IMiddlewaresAccessCtx<IQuestionWithPageId>,
     env: ServerEnv
-): Promise<IReturnAction<Partial<IImageWithPageId>>> {
+): Promise<IReturnAction<Partial<IQuestionWithPageId>>> {
     const validatedFields = ctx.validatedFields
-    const data = validatedFields.data! as Required<IImageWithPageId>
+    const data = validatedFields.data! as Required<IQuestionWithPageId>
     const formId = data.form_id!
 
     const result = await withFormContext(env)(formId, async () => {
         const new_section = await createSection({
-            title: 'Sección de Imagen',
+            title: 'Sección de Pregunta',
             description: '',
             order: 'latest',
             conditions: '',
             page_id: data.page_id,
             form_id: data.form_id,
         })
-        return await createImageSection({ ...data, section_id: new_section.id })
+        return await createQuestionSection({
+            ...data,
+            section_id: new_section.id,
+        })
     })
 
     return {
@@ -59,9 +64,9 @@ async function createImageSectionHandler(
 }
 
 export default defineServerRequest<
-    Partial<IImageWithPageId>,
-    IMiddlewaresAccessCtx<IImageWithPageId>
->(createImageSectionHandler, [
+    Partial<IQuestionWithPageId>,
+    IMiddlewaresAccessCtx<IQuestionWithPageId>
+>(createQuestionSectionHandler, [
     requireAuth(),
     requireValidation(extendSchema),
     requireResourceAccess(['read', 'write']),

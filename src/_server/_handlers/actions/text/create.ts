@@ -43,7 +43,7 @@ async function createTextSectionHandler(
         const new_section = await createSection({
             title: 'Sección de Texto',
             description: '',
-            order: '0',
+            order: 'latest',
             conditions: '',
             page_id: data.page_id,
             form_id: data.form_id,
