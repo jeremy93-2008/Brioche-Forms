@@ -9,7 +9,7 @@ import {
     ComposeServerFunctionMiddleware,
 } from '@/_server/__internals/composeServerFunction'
 import { createServer } from '@/_server/__internals/createServer'
-import { FormUpdated } from '@/_server/_events/FormUpdated'
+import { EventsList } from '@/_server/_events'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
 import { IAuthCtx } from '@/_server/_middlewares/requireAuth'
 import { IPermissionCtx } from '@/_server/_middlewares/requireResourceAccess'
@@ -90,7 +90,7 @@ export function defineServerRequest<
 ) {
     return createServer<TInput, TOutput, TCtx, Bs>()
         .use(LoggingPlugin({ level: 'debug' }))
-        .use(EventsDispatcherPlugin({ formUpdated: FormUpdated }))
+        .use(EventsDispatcherPlugin(EventsList))
         .middlewares(...middlewares)
         .handler(handler)
         .execute()

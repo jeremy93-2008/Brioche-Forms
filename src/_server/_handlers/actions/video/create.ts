@@ -11,16 +11,17 @@ import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAcc
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
 import { createSection } from '@/_server/domains/section/createSection'
-import { createTextSection } from '@/_server/domains/section/text/createTextSection'
+import { createVideoSection } from '@/_server/domains/section/video/createVideoSection'
 import { createInsertSchema } from 'drizzle-zod'
 import z from 'zod'
-import { textsTable } from '../../../../../db/schema'
+import { videosTable } from '../../../../../db/schema'
 
-const schema = createInsertSchema(textsTable, {
+const schema = createInsertSchema(videosTable, {
     id: (schema) => schema.min(3),
-    content: (schema) => schema.nullable(),
+    url: (schema) => schema.min(3),
+    caption: (schema) => schema.nullable(),
     order: (schema) => schema.nullable(),
-    section_id: (schema) => schema.nullable(),
+    section_id: (schema) => schema.min(3),
     form_id: (schema) => schema.min(3),
 })
 
@@ -28,27 +29,27 @@ const extendSchema = schema.extend({
     page_id: z.string().min(3),
 })
 
-export type ITextWithPageId = z.infer<typeof extendSchema>
+export type IVideoWithPageId = z.infer<typeof extendSchema>
 
-async function createTextSectionHandler(
-    _data: Partial<ITextWithPageId>,
-    ctx: IMiddlewaresAccessCtx<ITextWithPageId>,
+async function createVideoSectionHandler(
+    _data: Partial<IVideoWithPageId>,
+    ctx: IMiddlewaresAccessCtx<IVideoWithPageId>,
     env: ServerEnv
-): Promise<IReturnAction<Partial<ITextWithPageId>>> {
+): Promise<IReturnAction<Partial<IVideoWithPageId>>> {
     const validatedFields = ctx.validatedFields
-    const data = validatedFields.data! as Required<ITextWithPageId>
+    const data = validatedFields.data! as Required<IVideoWithPageId>
     const formId = data.form_id!
 
     const result = await withFormContext(env)(formId, async () => {
         const new_section = await createSection({
-            title: 'Sección de Texto',
+            title: 'Sección de Video',
             description: '',
             order: '0',
             conditions: '',
             page_id: data.page_id,
             form_id: data.form_id,
         })
-        return await createTextSection({ ...data, section_id: new_section.id })
+        return await createVideoSection({ ...data, section_id: new_section.id })
     })
 
     return {
@@ -58,9 +59,9 @@ async function createTextSectionHandler(
 }
 
 export default defineServerRequest<
-    Partial<ITextWithPageId>,
-    IMiddlewaresAccessCtx<ITextWithPageId>
->(createTextSectionHandler, [
+    Partial<IVideoWithPageId>,
+    IMiddlewaresAccessCtx<IVideoWithPageId>
+>(createVideoSectionHandler, [
     requireAuth(),
     requireValidation(extendSchema),
     requireResourceAccess(['read', 'write']),
