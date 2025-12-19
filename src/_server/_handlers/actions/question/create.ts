@@ -44,7 +44,7 @@ async function createQuestionSectionHandler(
 
     const result = await withFormContext(env)(formId, async () => {
         const new_section = await createSection({
-            title: 'Sección de Pregunta',
+            title: data.name ?? 'Sección de Pregunta',
             description: '',
             order: 'latest',
             conditions: '',

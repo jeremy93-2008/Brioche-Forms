@@ -5,7 +5,6 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -89,7 +88,7 @@ interface IFormFieldEditDialogProps<T extends Record<string, any>>
     errorMessage?: string
 }
 
-type IFormFieldEditDialogContentChildrenOpts = {
+export type IFormFieldEditDialogContentChildrenOpts = {
     handleKeyUp: (event: React.KeyboardEvent<HTMLInputElement>) => void
 }
 
@@ -199,24 +198,24 @@ export function FormFieldEditDialogContent<T>(
         <DialogContent>
             <DialogHeader>
                 <DialogTitle>{title}</DialogTitle>
-                <DialogDescription className="mt-2">
-                    {props.children(form, { handleKeyUp })}
-                </DialogDescription>
-                <DialogFooter className="mt-4">
-                    <DialogClose asChild>
-                        <Button variant={cancelButtonVariant ?? 'outline'}>
-                            {cancelButtonText ?? 'Cancelar'}
-                        </Button>
-                    </DialogClose>
-                    <Button
-                        onClick={form.handleSubmit(onEditTitle)}
-                        variant={saveButtonVariant ?? 'secondary'}
-                        isLoading={isPending}
-                    >
-                        {saveButtonText ?? 'Guardar'}
-                    </Button>
-                </DialogFooter>
             </DialogHeader>
+            <section className="mt-2">
+                {props.children(form, { handleKeyUp })}
+            </section>
+            <DialogFooter className="mt-4">
+                <DialogClose asChild>
+                    <Button variant={cancelButtonVariant ?? 'outline'}>
+                        {cancelButtonText ?? 'Cancelar'}
+                    </Button>
+                </DialogClose>
+                <Button
+                    onClick={form.handleSubmit(onEditTitle)}
+                    variant={saveButtonVariant ?? 'secondary'}
+                    isLoading={isPending}
+                >
+                    {saveButtonText ?? 'Guardar'}
+                </Button>
+            </DialogFooter>
         </DialogContent>
     )
 }
