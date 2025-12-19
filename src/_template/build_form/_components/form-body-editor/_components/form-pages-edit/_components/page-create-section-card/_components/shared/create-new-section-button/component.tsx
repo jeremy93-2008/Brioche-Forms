@@ -15,7 +15,7 @@ interface ICreateNewSectionButtonComponentProps {
     dialogTitle: string
     serverAction: (arg: any) => Promise<IReturnAction<any>>
     children: (
-        form: ReturnType<typeof useForm<Partial<T>>>,
+        form: ReturnType<typeof useForm<Partial<any>>>,
         opts: IFormFieldEditDialogContentChildrenOpts
     ) => React.ReactNode
 }
@@ -27,7 +27,12 @@ export function CreateNewSectionButtonComponent<T extends { id: string }>(
         props
 
     return (
-        <FormFieldEditDialog title={dialogTitle} serverAction={serverAction}>
+        <FormFieldEditDialog
+            title={dialogTitle}
+            serverAction={serverAction}
+            saveButtonText="Crear"
+            saveButtonVariant="default"
+        >
             <FormFieldEditDialogTrigger>
                 <Button className="flex flex-col h-32 w-38" variant="link">
                     {buttonIcon}

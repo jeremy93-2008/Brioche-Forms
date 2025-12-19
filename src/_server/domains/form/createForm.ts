@@ -56,7 +56,7 @@ export async function createForm(
         await tx.insert(textsTable).values({
             id: text_id,
             section_id,
-            content: SectionConstants.defaultContent,
+            content: SectionConstants.firstTimeContent,
             order: 'latest',
             form_id,
         })

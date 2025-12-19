@@ -17,16 +17,19 @@ import z from 'zod'
 import { textsTable } from '../../../../../db/schema'
 
 const schema = createInsertSchema(textsTable, {
-    id: (schema) => schema.min(3),
+    id: (schema) => schema.nullable(),
     content: (schema) => schema.nullable(),
     order: (schema) => schema.nullable(),
     section_id: (schema) => schema.nullable(),
     form_id: (schema) => schema.min(3),
 })
 
-const extendSchema = schema.extend({
-    page_id: z.string().min(3),
-})
+const extendSchema = schema
+    .extend({
+        title: z.string().nullable(),
+        page_id: z.string().min(3),
+    })
+    .partial()
 
 export type ITextWithPageId = z.infer<typeof extendSchema>
 
@@ -41,7 +44,7 @@ async function createTextSectionHandler(
 
     const result = await withFormContext(env)(formId, async () => {
         const new_section = await createSection({
-            title: 'Sección de Texto',
+            title: data.title ?? 'Sección de Texto',
             description: '',
             order: 'latest',
             conditions: '',

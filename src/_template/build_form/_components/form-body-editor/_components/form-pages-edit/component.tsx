@@ -93,7 +93,7 @@ export function FormPagesEditComponent() {
                                 formId={data.id}
                             />
                         ))}
-                        <PageCreateSectionCardComponent />
+                        <PageCreateSectionCardComponent page={page} />
                     </section>
                 </TabsContent>
             ))}

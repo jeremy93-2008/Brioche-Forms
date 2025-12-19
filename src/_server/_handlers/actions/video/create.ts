@@ -26,6 +26,7 @@ const schema = createInsertSchema(videosTable, {
 })
 
 const extendSchema = schema.extend({
+    title: z.string().nullable(),
     page_id: z.string().min(3),
 })
 
@@ -42,7 +43,7 @@ async function createVideoSectionHandler(
 
     const result = await withFormContext(env)(formId, async () => {
         const new_section = await createSection({
-            title: 'Sección de Video',
+            title: data.title ?? 'Sección de Video',
             description: '',
             order: 'latest',
             conditions: '',

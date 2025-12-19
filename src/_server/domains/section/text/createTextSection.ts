@@ -1,3 +1,4 @@
+import { SectionConstants } from '@/_server/_constants/section'
 import { ITextWithPageId } from '@/_server/_handlers/actions/text/create'
 import { v7 as uuidv7 } from 'uuid'
 import { db } from '../../../../../db'
@@ -11,9 +12,9 @@ export async function createTextSection(data: ITextWithPageId) {
     const result = await db.insert(textsTable).values({
         id: textId,
         order: data?.order ?? 'latest',
-        content: data?.content ?? '',
+        content: data?.content ?? SectionConstants.defaultContent,
         section_id: sectionId!,
-        form_id: data?.form_id,
+        form_id: data.form_id!,
     })
 
     if (result.rowsAffected === 0) {
