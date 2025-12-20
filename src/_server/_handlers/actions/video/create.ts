@@ -14,7 +14,7 @@ import { createSection } from '@/_server/domains/section/createSection'
 import { createVideoSection } from '@/_server/domains/section/video/createVideoSection'
 import { createInsertSchema } from 'drizzle-zod'
 import z from 'zod'
-import { videosTable } from '../../../../../db/schema'
+import { videosTable } from '@db/tables'
 
 const schema = createInsertSchema(videosTable, {
     id: (schema) => schema.min(3),

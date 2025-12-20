@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm'
-import { db } from '../../../../../db'
-import { questionsTable } from '../../../../../db/tables'
-import { IQuestion } from '../../../../../db/types'
+import { db } from '@db/index'
+import { questionsTable } from '@db/tables'
+import { IQuestion } from '@db/types'
 
 export async function editQuestionSection(data: Partial<IQuestion>) {
     const result = await db

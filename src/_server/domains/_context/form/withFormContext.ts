@@ -1,5 +1,5 @@
 import { ServerEnv } from '@/_server/__internals/defineServerRequest'
-import { db } from '../../../../../db'
+import { db } from '@db/index'
 
 export type IDbClient = {
     tx: Parameters<Parameters<typeof db.transaction>[0]>[0]

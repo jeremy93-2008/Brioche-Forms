@@ -1,8 +1,8 @@
 import { getDbClient } from '@/_server/domains/_context/form/withFormContext'
 import { CurrentServerUser } from '@stackframe/stack'
 import { and, eq } from 'drizzle-orm'
-import { notificationsTable } from '../../../../db/tables'
-import { INotification } from '../../../../db/types'
+import { notificationsTable } from '@db/tables'
+import { INotification } from '@db/types'
 
 export async function getNotifications(
     user: CurrentServerUser,

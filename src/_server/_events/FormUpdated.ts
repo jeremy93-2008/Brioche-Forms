@@ -1,6 +1,6 @@
 import { getDbClient } from '@/_server/domains/_context/form/withFormContext'
 import { eq } from 'drizzle-orm'
-import { formsTable } from '../../../db/tables'
+import { formsTable } from '@db/tables'
 
 export async function FormUpdated(form_id: string) {
     const result = await getDbClient()

@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm'
-import { db } from '../../../../../db'
-import { videosTable } from '../../../../../db/tables'
-import { IVideo } from '../../../../../db/types'
+import { db } from '@db/index'
+import { videosTable } from '@db/tables'
+import { IVideo } from '@db/types'
 
 export async function editVideoSection(data: Partial<IVideo>) {
     const result = await db

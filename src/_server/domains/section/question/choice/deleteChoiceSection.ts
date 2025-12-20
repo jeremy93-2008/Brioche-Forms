@@ -1,7 +1,7 @@
 import { IDeleteChoice } from '@/_server/_handlers/actions/question/choice/delete'
 import { and, eq } from 'drizzle-orm'
-import { db } from '../../../../../../db'
-import { choicesTable } from '../../../../../../db/tables'
+import { db } from '@db/index'
+import { choicesTable } from '@db/tables'
 
 export async function deleteChoiceSection(data: IDeleteChoice) {
     const result = await db

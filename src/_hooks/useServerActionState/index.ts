@@ -1,5 +1,2 @@
-export {
-    useServerActionState,
-    createInitialServerState,
-} from './useServerActionState'
+export { useServerActionState } from './useServerActionState'
 export { type IReturnState } from './types'

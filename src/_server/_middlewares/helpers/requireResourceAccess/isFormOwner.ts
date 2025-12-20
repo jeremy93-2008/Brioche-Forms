@@ -5,8 +5,8 @@ import {
 } from '@/_server/_middlewares/requireResourceAccess'
 import { CurrentServerUser } from '@stackframe/stack'
 import { and, eq } from 'drizzle-orm'
-import { db } from '../../../../../db'
-import { formsTable } from '../../../../../db/tables'
+import { db } from '@db/index'
+import { formsTable } from '@db/tables'
 
 interface IFormOwnerProps<TCtx extends IPermissionCtx> {
     form_id: string

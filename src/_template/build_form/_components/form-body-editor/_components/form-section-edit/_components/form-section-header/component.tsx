@@ -10,7 +10,7 @@ import DeleteSectionAction from '@/_server/_handlers/actions/section/delete'
 import EditSectionAction from '@/_server/_handlers/actions/section/update'
 import { IFullForm } from '@/_server/domains/form/getFullForms'
 import { Pen, Trash } from 'lucide-react'
-import { ISection } from '../../../../../../../../../db/types'
+import { ISection } from '@db/types'
 
 interface IFormSectionEditNameComponentProps {
     data: IFullForm['pages'][0]['sections'][0]

@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm'
-import { db } from '../../../../db'
-import { pagesTable } from '../../../../db/tables'
-import { IPage } from '../../../../db/types'
+import { db } from '@db/index'
+import { pagesTable } from '@db/tables'
+import { IPage } from '@db/types'
 
 export async function editPage(data: Partial<IPage>) {
     const result = await db

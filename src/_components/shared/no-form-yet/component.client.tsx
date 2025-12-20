@@ -16,7 +16,7 @@ import createFormAction from '@/_server/_handlers/actions/form/create'
 import { Table } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
-import { IForm } from '../../../../db/schema'
+import { IForm } from '@db/types'
 
 export function NoFormYetComponent() {
     const router = useRouter()

@@ -1,14 +1,9 @@
 import { SectionConstants } from '@/_server/_constants/section'
 import { CurrentServerUser } from '@stackframe/stack'
 import { v7 as uuidv7 } from 'uuid'
-import { db } from '../../../../db'
-import {
-    formsTable,
-    pagesTable,
-    sectionsTable,
-    textsTable,
-} from '../../../../db/tables'
-import { IForm } from '../../../../db/types'
+import { db } from '@db/index'
+import { formsTable, pagesTable, sectionsTable, textsTable } from '@db/tables'
+import { IForm } from '@db/types'
 
 export async function createForm(
     user: CurrentServerUser,

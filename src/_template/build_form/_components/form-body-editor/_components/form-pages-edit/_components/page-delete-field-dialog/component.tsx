@@ -8,7 +8,7 @@ import { Button } from '@/_components/ui/button'
 import type { useAfterSaveOptimisticData } from '@/_hooks/useAfterSaveOptimisticData/useAfterSaveOptimisticData'
 import DeletePageAction from '@/_server/_handlers/actions/page/delete'
 import { Trash } from 'lucide-react'
-import { IPage } from '../../../../../../../../../db/types'
+import { IPage } from '@db/types'
 
 interface IPageDeleteFieldDialogComponentProps {
     pageId: string

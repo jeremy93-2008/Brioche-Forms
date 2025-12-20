@@ -12,7 +12,7 @@ import {
     INotificationsWithUsers,
 } from '@/_server/domains/notification/createNotification'
 import { createInsertSchema } from 'drizzle-zod'
-import { notificationsTable } from '../../../../../db/schema'
+import { notificationsTable } from '@db/tables'
 
 const schema = createInsertSchema(notificationsTable, {
     id: (schema) => schema.nullable(),

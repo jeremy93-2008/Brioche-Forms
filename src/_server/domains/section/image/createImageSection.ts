@@ -1,7 +1,7 @@
 import { IImageWithPageId } from '@/_server/_handlers/actions/image/create'
 import { getDbClient } from '@/_server/domains/_context/form/withFormContext'
 import { v7 as uuidv7 } from 'uuid'
-import { imagesTable } from '../../../../../db/tables'
+import { imagesTable } from '@db/tables'
 
 export async function createImageSection(data: IImageWithPageId) {
     const imageId = uuidv7()
@@ -16,7 +16,7 @@ export async function createImageSection(data: IImageWithPageId) {
             caption: data?.caption ?? '',
             url: data.url ?? '',
             section_id: sectionId!,
-            form_id: data?.form_id,
+            form_id: data.form_id!,
         })
 
     if (result.rowsAffected === 0) {

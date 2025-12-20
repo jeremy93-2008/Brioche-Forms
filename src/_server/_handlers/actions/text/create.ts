@@ -14,7 +14,7 @@ import { createSection } from '@/_server/domains/section/createSection'
 import { createTextSection } from '@/_server/domains/section/text/createTextSection'
 import { createInsertSchema } from 'drizzle-zod'
 import z from 'zod'
-import { textsTable } from '../../../../../db/schema'
+import { textsTable } from '@db/tables'
 
 const schema = createInsertSchema(textsTable, {
     id: (schema) => schema.nullable(),

@@ -1,8 +1,8 @@
 import { getDbClient } from '@/_server/domains/_context/form/withFormContext'
 import { CurrentServerUser } from '@stackframe/stack'
 import { and, eq, like } from 'drizzle-orm'
-import { formsTable } from '../../../../db/tables'
-import { IForm } from '../../../../db/types'
+import { formsTable } from '@db/tables'
+import { IForm } from '@db/types'
 
 export type IFullForm = Awaited<ReturnType<typeof getFullForms>>[number]
 

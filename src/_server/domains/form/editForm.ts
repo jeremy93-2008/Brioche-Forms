@@ -1,8 +1,8 @@
 import { CurrentServerUser } from '@stackframe/stack'
 import { and, eq } from 'drizzle-orm'
-import { db } from '../../../../db'
-import { formsTable } from '../../../../db/tables'
-import { IForm } from '../../../../db/types'
+import { db } from '@db/index'
+import { formsTable } from '@db/tables'
+import { IForm } from '@db/types'
 
 export async function editForm(user: CurrentServerUser, data: Partial<IForm>) {
     const result = await db

@@ -11,7 +11,7 @@ import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selecte
 import EditFormAction from '@/_server/_handlers/actions/form/update'
 import { Pen } from 'lucide-react'
 import { use } from 'react'
-import { IForm } from '../../../../../../../db/types'
+import { IForm } from '@db/types'
 
 export function FormTitleEditComponent() {
     const { data } = use(SingleFormSelectedContext)!

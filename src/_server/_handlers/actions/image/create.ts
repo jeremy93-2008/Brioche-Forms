@@ -14,7 +14,7 @@ import { createSection } from '@/_server/domains/section/createSection'
 import { createImageSection } from '@/_server/domains/section/image/createImageSection'
 import { createInsertSchema } from 'drizzle-zod'
 import z from 'zod'
-import { imagesTable } from '../../../../../db/schema'
+import { imagesTable } from '@db/tables'
 
 const schema = createInsertSchema(imagesTable, {
     id: (schema) => schema.min(3),

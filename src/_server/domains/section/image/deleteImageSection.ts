@@ -1,7 +1,7 @@
 import { IDeleteText } from '@/_server/_handlers/actions/text/delete'
 import { and, eq } from 'drizzle-orm'
-import { db } from '../../../../../db'
-import { imagesTable } from '../../../../../db/tables'
+import { db } from '@db/index'
+import { imagesTable } from '@db/tables'
 
 export async function deleteImageSection(data: IDeleteText) {
     const result = await db

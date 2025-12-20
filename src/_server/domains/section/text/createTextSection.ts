@@ -2,7 +2,7 @@ import { SectionConstants } from '@/_server/_constants/section'
 import { ITextWithPageId } from '@/_server/_handlers/actions/text/create'
 import { getDbClient } from '@/_server/domains/_context/form/withFormContext'
 import { v7 as uuidv7 } from 'uuid'
-import { textsTable } from '../../../../../db/tables'
+import { textsTable } from '@db/tables'
 
 export async function createTextSection(data: ITextWithPageId) {
     const textId = uuidv7()

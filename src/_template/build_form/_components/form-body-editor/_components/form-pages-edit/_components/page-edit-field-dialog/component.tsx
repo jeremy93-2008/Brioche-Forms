@@ -9,7 +9,7 @@ import { Input } from '@/_components/ui/input'
 import { type useAfterSaveOptimisticData } from '@/_hooks/useAfterSaveOptimisticData/useAfterSaveOptimisticData'
 import EditPageAction from '@/_server/_handlers/actions/page/update'
 import { Pen } from 'lucide-react'
-import { IPage } from '../../../../../../../../../db/types'
+import { IPage } from '@db/types'
 
 interface IPageEditFieldDialogComponentProps {
     page: IPage

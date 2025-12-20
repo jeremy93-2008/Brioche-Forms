@@ -1,7 +1,7 @@
 import { IDeleteVideo } from '@/_server/_handlers/actions/video/delete'
 import { and, eq } from 'drizzle-orm'
-import { db } from '../../../../../db'
-import { videosTable } from '../../../../../db/tables'
+import { db } from '@db/index'
+import { videosTable } from '@db/tables'
 
 export async function deleteVideoSection(data: IDeleteVideo) {
     const result = await db

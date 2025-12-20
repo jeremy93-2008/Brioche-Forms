@@ -1,7 +1,7 @@
 import { getDbClient } from '@/_server/domains/_context/form/withFormContext'
 import { v7 as uuidv7 } from 'uuid'
-import { choicesTable } from '../../../../../../db/tables'
-import { IChoice } from '../../../../../../db/types'
+import { choicesTable } from '@db/tables'
+import { IChoice } from '@db/types'
 
 export async function createChoiceSection(data: IChoice) {
     const choiceId = uuidv7()

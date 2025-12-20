@@ -14,7 +14,7 @@ import { createSection } from '@/_server/domains/section/createSection'
 import { createQuestionSection } from '@/_server/domains/section/question/createQuestionSection'
 import { createInsertSchema } from 'drizzle-zod'
 import z from 'zod'
-import { questionsTable } from '../../../../../db/schema'
+import { questionsTable } from '@db/tables'
 
 const schema = createInsertSchema(questionsTable, {
     id: (schema) => schema.nullable(),

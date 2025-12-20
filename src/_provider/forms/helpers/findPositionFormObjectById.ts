@@ -1,12 +1,5 @@
 import { IFullForm } from '@/_server/domains/form/getFullForms'
-import {
-    IImage,
-    IPage,
-    IQuestion,
-    ISection,
-    IText,
-    IVideo,
-} from '../../../../db/types'
+import { IImage, IPage, IQuestion, ISection, IText, IVideo } from '@db/types'
 
 export function findPositionFormObjectById(
     obj: IFullForm,

@@ -1,7 +1,7 @@
 import { IDeletePage } from '@/_server/_handlers/actions/page/delete'
 import { and, eq } from 'drizzle-orm'
-import { db } from '../../../../db'
-import { pagesTable } from '../../../../db/tables'
+import { db } from '@db/index'
+import { pagesTable } from '@db/tables'
 
 export async function deletePage(data: IDeletePage) {
     const result = await db

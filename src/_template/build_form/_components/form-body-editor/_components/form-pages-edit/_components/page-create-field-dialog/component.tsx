@@ -9,7 +9,7 @@ import { Input } from '@/_components/ui/input'
 import type { useAfterSaveOptimisticData } from '@/_hooks/useAfterSaveOptimisticData/useAfterSaveOptimisticData'
 import CreatePageAction from '@/_server/_handlers/actions/page/create'
 import { Plus } from 'lucide-react'
-import { IPage } from '../../../../../../../../../db/types'
+import { IPage } from '@db/types'
 
 interface IPageCreateFieldDialogComponentProps {
     formId: string

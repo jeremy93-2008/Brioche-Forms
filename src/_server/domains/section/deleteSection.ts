@@ -1,7 +1,7 @@
 import { IDeleteSection } from '@/_server/_handlers/actions/section/delete'
 import { and, eq } from 'drizzle-orm'
-import { db } from '../../../../db'
-import { sectionsTable } from '../../../../db/tables'
+import { db } from '@db/index'
+import { sectionsTable } from '@db/tables'
 
 export async function deleteSection(data: IDeleteSection) {
     const result = await db

@@ -1,11 +1,8 @@
 import { CurrentServerUser } from '@stackframe/stack'
 import { v7 as uuidv7 } from 'uuid'
-import { db } from '../../../../db'
-import {
-    notificationsTable,
-    sharedNotificationsTable,
-} from '../../../../db/tables'
-import { INotification } from '../../../../db/types'
+import { db } from '@db/index'
+import { notificationsTable, sharedNotificationsTable } from '@db/tables'
+import { INotification } from '@db/types'
 
 export interface INotificationsWithUsers extends INotification {
     users?: string[]

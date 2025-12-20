@@ -11,8 +11,8 @@ import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
 import { editChoiceSection } from '@/_server/domains/section/question/choice/editChoiceSection'
 import { createUpdateSchema } from 'drizzle-zod'
-import { choicesTable } from '../../../../../../db/tables'
-import { IChoice } from '../../../../../../db/types'
+import { choicesTable } from '@db/tables'
+import { IChoice } from '@db/types'
 
 const schema = createUpdateSchema(choicesTable, {
     id: (schema) => schema.min(3),

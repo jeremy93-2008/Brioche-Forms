@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm'
-import { db } from '../../../../../db'
-import { textsTable } from '../../../../../db/tables'
-import { IText } from '../../../../../db/types'
+import { db } from '@db/index'
+import { textsTable } from '@db/tables'
+import { IText } from '@db/types'
 
 export async function editTextSection(data: Partial<IText>) {
     const result = await db

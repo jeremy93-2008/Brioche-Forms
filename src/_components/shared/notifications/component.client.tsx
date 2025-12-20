@@ -11,7 +11,7 @@ import {
 } from '@/_components/ui/tooltip'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
 import { Bell } from 'lucide-react'
-import { INotification } from '../../../../db/types'
+import { INotification } from '@db/types'
 
 interface NotificationClientProps {
     result: IReturnAction<INotification[]>
