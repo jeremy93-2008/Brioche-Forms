@@ -8,22 +8,12 @@ import {
     SelectValue,
 } from '@/_components/ui/select'
 import { Textarea } from '@/_components/ui/textarea'
+import { QuestionTypes } from '@/_constants/question'
 import CreateQuestionAction from '@/_server/_handlers/actions/question/create'
 import { CreateNewSectionButtonComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/_components/shared/create-new-section-button/component'
 import { ICreateNewSectionButtonProps } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/_components/shared/types'
 import { useAfterSaveNewSectionOptimistic } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/hooks/useAfterSaveNewSectionOptimistic'
-import {
-    BadgeQuestionMarkIcon,
-    BookOpenIcon,
-    Calendar1Icon,
-    CaseLowerIcon,
-    CircleDotIcon,
-    MailIcon,
-    PhoneIcon,
-    ShapesIcon,
-    StarIcon,
-    TrendingUpIcon,
-} from 'lucide-react'
+import { BadgeQuestionMarkIcon } from 'lucide-react'
 import { Controller } from 'react-hook-form'
 
 export function CreateNewQuestionButtonComponent(
@@ -118,51 +108,3 @@ export function CreateNewQuestionButtonComponent(
         </CreateNewSectionButtonComponent>
     )
 }
-
-const QuestionTypes = [
-    {
-        icon: <CircleDotIcon />,
-        value: 'single_choice',
-        label: 'Opción múltiple (única respuesta)',
-    },
-    {
-        icon: <ShapesIcon />,
-        value: 'multiple_choice',
-        label: 'Opción múltiple (varias respuestas)',
-    },
-    {
-        icon: <CaseLowerIcon />,
-        value: 'short_answer',
-        label: 'Respuesta corta',
-    },
-    {
-        icon: <BookOpenIcon />,
-        value: 'long_answer',
-        label: 'Respuesta larga',
-    },
-    {
-        icon: <Calendar1Icon />,
-        value: 'short_answer:date',
-        label: 'Fecha',
-    },
-    {
-        icon: <PhoneIcon />,
-        value: 'short_answer:phone',
-        label: 'Teléfono',
-    },
-    {
-        icon: <MailIcon />,
-        value: 'short_answer:email',
-        label: 'Correo electrónico',
-    },
-    {
-        icon: <StarIcon />,
-        value: 'short_answer:rating',
-        label: 'Valoración',
-    },
-    {
-        icon: <TrendingUpIcon />,
-        value: 'short_answer:opinion_scale',
-        label: 'Escala de opinión',
-    },
-]

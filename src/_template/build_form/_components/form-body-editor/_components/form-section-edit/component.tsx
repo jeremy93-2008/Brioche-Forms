@@ -7,7 +7,7 @@ import { FormSectionTextEditComponent } from '@/_template/build_form/_components
 import { FormSectionVideoEditComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-video-edit/component'
 import { useMemo } from 'react'
 
-export type ITypeOfSection = 'question' | 'text' | 'image' | 'video'
+export type ITypeOfSection = 'question' | 'text' | 'image' | 'video' | null
 
 interface IFormSectionEditComponentProps {
     data: IFullForm['pages'][0]['sections'][0]
@@ -19,7 +19,7 @@ export function FormSectionEditComponent(
 ) {
     const { data, formId } = props
 
-    const typeOfSection = useMemo(() => {
+    const typeOfSection: ITypeOfSection = useMemo(() => {
         if (data.questions.length > 0) return 'question'
         if (data.texts.length > 0) return 'text'
         if (data.images.length > 0) return 'image'
@@ -32,7 +32,9 @@ export function FormSectionEditComponent(
             <div className="mx-4 my-4 py-2 px-2">
                 <FormSectionHeaderComponent data={data} formId={formId} />
                 {typeOfSection === 'question' && (
-                    <FormSectionQuestionEditComponent />
+                    <FormSectionQuestionEditComponent
+                        data={data.questions[0]}
+                    />
                 )}
                 {typeOfSection === 'text' && (
                     <FormSectionTextEditComponent
@@ -41,7 +43,9 @@ export function FormSectionEditComponent(
                         formId={formId}
                     />
                 )}
-                {typeOfSection === 'image' && <FormSectionImageEditComponent />}
+                {typeOfSection === 'image' && (
+                    <FormSectionImageEditComponent data={data.images[0]} />
+                )}
                 {typeOfSection === 'video' && <FormSectionVideoEditComponent />}
             </div>
         </Card>

@@ -7,7 +7,7 @@ import { FormTitleEditComponent } from '@/_template/build_form/_components/form-
 export function FormBodyEditorComponent() {
     return (
         <section className="flex items-center w-full font-sans">
-            <section className="flex flex-col flex-1 mx-16 my-1 px-8 py-4 gap-2 bg-card border rounded-xl">
+            <section className="flex flex-col flex-1 mx-16 mt-1 mb-16 px-8 py-4 gap-2 bg-card border rounded-xl">
                 <section className="flex justify-between items-center font-sans">
                     <FormTitleEditComponent />
                     <FormInfoRightComponent />

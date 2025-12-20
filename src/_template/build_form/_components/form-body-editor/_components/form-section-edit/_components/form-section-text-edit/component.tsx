@@ -66,7 +66,7 @@ export function FormSectionTextEditComponent(
             id: data.id,
             content: JSON.stringify(editor.document),
             section_id: sectionId,
-            order: '1',
+            order: 'latest',
             form_id: formId,
         })
 
