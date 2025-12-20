@@ -44,7 +44,7 @@ async function createTextSectionHandler(
 
     const result = await withFormContext(env)(formId, async () => {
         const new_section = await createSection({
-            title: data.title ?? 'Sección de Texto',
+            title: data.title ?? 'Texto',
             description: '',
             order: 'latest',
             conditions: '',

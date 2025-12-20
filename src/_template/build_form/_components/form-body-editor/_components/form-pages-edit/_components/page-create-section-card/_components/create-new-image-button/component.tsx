@@ -2,18 +2,25 @@ import { Input } from '@/_components/ui/input'
 import CreateImageAction from '@/_server/_handlers/actions/image/create'
 import { CreateNewSectionButtonComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/_components/shared/create-new-section-button/component'
 import { ICreateNewSectionButtonProps } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/_components/shared/types'
+import { useAfterSaveNewSectionOptimistic } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/hooks/useAfterSaveNewSectionOptimistic'
 import { ImageIcon } from 'lucide-react'
 
 export function CreateNewImageButtonComponent(
     props: ICreateNewSectionButtonProps
 ) {
     const { formId, pageId } = props
+
+    const { afterSave } = useAfterSaveNewSectionOptimistic({
+        contentType: 'images',
+    })
+
     return (
         <CreateNewSectionButtonComponent
             buttonText="Nueva Imagen"
             buttonIcon={<ImageIcon className="w-10! h-10!" />}
             dialogTitle="Crear nueva imagen"
             serverAction={CreateImageAction}
+            afterSave={afterSave}
         >
             {(form, { handleKeyUp }) => (
                 <>

@@ -25,10 +25,12 @@ const schema = createInsertSchema(videosTable, {
     form_id: (schema) => schema.min(3),
 })
 
-const extendSchema = schema.extend({
-    title: z.string().nullable(),
-    page_id: z.string().min(3),
-})
+const extendSchema = schema
+    .extend({
+        title: z.string().nullable(),
+        page_id: z.string().min(3),
+    })
+    .partial()
 
 export type IVideoWithPageId = z.infer<typeof extendSchema>
 
@@ -43,14 +45,19 @@ async function createVideoSectionHandler(
 
     const result = await withFormContext(env)(formId, async () => {
         const new_section = await createSection({
-            title: data.title ?? 'Sección de Video',
+            title: data.title ?? 'Video',
             description: '',
             order: 'latest',
             conditions: '',
             page_id: data.page_id,
             form_id: data.form_id,
         })
-        return await createVideoSection({ ...data, section_id: new_section.id })
+        const video_section = await createVideoSection({
+            ...data,
+            section_id: new_section.id,
+        })
+
+        return { section_id: new_section.id, video_id: video_section.id }
     })
 
     return {

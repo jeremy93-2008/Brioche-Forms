@@ -1,10 +1,17 @@
+import * as Avatar from '@/_components/ui/avatar'
+import * as Badge from '@/_components/ui/badge'
 import * as Button from '@/_components/ui/button'
 import * as Card from '@/_components/ui/card'
+import * as DropdownMenu from '@/_components/ui/dropdown-menu'
+import * as Form from '@/_components/ui/form'
 import * as Input from '@/_components/ui/input'
+import * as Label from '@/_components/ui/label'
 import * as Popover from '@/_components/ui/popover'
 import * as Select from '@/_components/ui/select'
+import * as Skeleton from '@/_components/ui/skeleton'
 import * as Tabs from '@/_components/ui/tabs'
-import '@blocknote/shadcn/style.css'
+import * as Toggle from '@/_components/ui/toggle'
+import * as Tooltip from '@/_components/ui/tooltip'
 import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
 import EditTextAction from '@/_server/_handlers/actions/text/update'
@@ -19,8 +26,11 @@ import {
     useCreateBlockNote,
 } from '@blocknote/react'
 import { BlockNoteView } from '@blocknote/shadcn'
+import { IText } from '@db/types'
 import { useEffect, useState } from 'react'
-import { IText } from '../../../../../../../../../db/types'
+
+import '@blocknote/core/fonts/inter.css'
+import '@blocknote/shadcn/style.css'
 
 interface IFormSectionTextEditComponentProps {
     data: IText
@@ -94,6 +104,14 @@ export function FormSectionTextEditComponent(
                     Input,
                     Popover,
                     Select,
+                    DropdownMenu,
+                    Tooltip,
+                    Form,
+                    Label,
+                    Avatar,
+                    Badge,
+                    Toggle,
+                    Skeleton,
                 }}
             >
                 <SuggestionMenuController

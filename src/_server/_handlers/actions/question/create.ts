@@ -27,9 +27,11 @@ const schema = createInsertSchema(questionsTable, {
     form_id: (schema) => schema.min(3),
 })
 
-const extendSchema = schema.extend({
-    page_id: z.string().min(3),
-})
+const extendSchema = schema
+    .extend({
+        page_id: z.string().min(3),
+    })
+    .partial()
 
 export type IQuestionWithPageId = z.infer<typeof extendSchema>
 
@@ -44,17 +46,19 @@ async function createQuestionSectionHandler(
 
     const result = await withFormContext(env)(formId, async () => {
         const new_section = await createSection({
-            title: data.name ?? 'Sección de Pregunta',
+            title: 'Pregunta',
             description: '',
             order: 'latest',
             conditions: '',
             page_id: data.page_id,
             form_id: data.form_id,
         })
-        return await createQuestionSection({
+        const question_section = await createQuestionSection({
             ...data,
             section_id: new_section.id,
         })
+
+        return { section_id: new_section.id, question_id: question_section.id }
     })
 
     return {

@@ -14,7 +14,7 @@ import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
-import React, { createContext, use, useState } from 'react'
+import React, { createContext, use, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 const FormFieldEditDialogCtx = createContext({
@@ -149,6 +149,7 @@ export function FormFieldEditDialogContent<T>(
     props: IFormFieldEditDialogContentProps<T>
 ) {
     const {
+        isOpen,
         setIsOpen: setIsDialogOpen,
         title,
         serverAction,
@@ -193,6 +194,10 @@ export function FormFieldEditDialogContent<T>(
             form.handleSubmit(onEditTitle)()
         }
     }
+
+    useEffect(() => {
+        form.reset()
+    }, [form, isOpen])
 
     return (
         <DialogContent>

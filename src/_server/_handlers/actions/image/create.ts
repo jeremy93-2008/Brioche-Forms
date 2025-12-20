@@ -25,10 +25,12 @@ const schema = createInsertSchema(imagesTable, {
     form_id: (schema) => schema.min(3),
 })
 
-const extendSchema = schema.extend({
-    title: z.string().nullable(),
-    page_id: z.string().min(3),
-})
+const extendSchema = schema
+    .extend({
+        title: z.string().nullable(),
+        page_id: z.string().min(3),
+    })
+    .partial()
 
 export type IImageWithPageId = z.infer<typeof extendSchema>
 
@@ -43,7 +45,7 @@ async function createImageSectionHandler(
 
     const result = await withFormContext(env)(formId, async () => {
         const new_section = await createSection({
-            title: data.title ?? 'Sección de Imagen',
+            title: data.title ?? 'Imagen',
             description: '',
             order: 'latest',
             conditions: '',

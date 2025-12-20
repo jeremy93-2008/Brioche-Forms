@@ -198,6 +198,10 @@ body {
     body {
         @apply bg-background text-foreground;
     }
+
+    .bn-shadcn * {
+        @apply border-border outline-ring/50;
+    }
 }
 
 .bn-editor {
