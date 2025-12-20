@@ -1,6 +1,6 @@
+import { getDbClient } from '@/_server/domains/_context/form/withFormContext'
 import { CurrentServerUser } from '@stackframe/stack'
 import { and, eq } from 'drizzle-orm'
-import { db } from '../../../../db'
 import { notificationsTable } from '../../../../db/tables'
 import { INotification } from '../../../../db/types'
 
@@ -9,8 +9,8 @@ export async function getNotifications(
     data: Partial<INotification>
 ) {
     if (data?.id) {
-        return db
-            .select()
+        return getDbClient()
+            .tx.select()
             .from(notificationsTable)
             .where(
                 and(
@@ -20,13 +20,17 @@ export async function getNotifications(
             )
     }
 
-    const ownNotifications = await db.query.notificationsTable.findMany({
-        where: (notifications, { eq }) => eq(notifications.user_id, user.id),
-        orderBy: (notifications, { desc }) => [desc(notifications.created_at)],
-    })
+    const ownNotifications =
+        await getDbClient().tx.query.notificationsTable.findMany({
+            where: (notifications, { eq }) =>
+                eq(notifications.user_id, user.id),
+            orderBy: (notifications, { desc }) => [
+                desc(notifications.created_at),
+            ],
+        })
 
     const sharedNotifications =
-        await db.query.sharedNotificationsTable.findMany({
+        await getDbClient().tx.query.sharedNotificationsTable.findMany({
             where: (shared, { eq }) => eq(shared.shared_with_user_id, user.id),
             with: {
                 notification: true,

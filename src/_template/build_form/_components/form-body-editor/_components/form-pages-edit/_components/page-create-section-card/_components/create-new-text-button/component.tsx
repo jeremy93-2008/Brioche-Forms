@@ -8,6 +8,7 @@ export function CreateNewTextButtonComponent(
     props: ICreateNewSectionButtonProps
 ) {
     const { formId, pageId } = props
+
     return (
         <CreateNewSectionButtonComponent
             buttonText="Nuevo texto"

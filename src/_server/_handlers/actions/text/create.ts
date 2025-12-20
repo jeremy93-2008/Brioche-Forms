@@ -51,7 +51,11 @@ async function createTextSectionHandler(
             page_id: data.page_id,
             form_id: data.form_id,
         })
-        return await createTextSection({ ...data, section_id: new_section.id })
+        const new_text_section = await createTextSection({
+            ...data,
+            section_id: new_section.id,
+        })
+        return { section_id: new_section.id, text_id: new_text_section.id }
     })
 
     return {

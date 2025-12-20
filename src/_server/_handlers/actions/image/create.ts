@@ -50,7 +50,12 @@ async function createImageSectionHandler(
             page_id: data.page_id,
             form_id: data.form_id,
         })
-        return await createImageSection({ ...data, section_id: new_section.id })
+        const new_image_section = await createImageSection({
+            ...data,
+            section_id: new_section.id,
+        })
+
+        return { section_id: new_section.id, image_id: new_image_section.id }
     })
 
     return {

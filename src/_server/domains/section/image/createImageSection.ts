@@ -1,6 +1,6 @@
 import { IImageWithPageId } from '@/_server/_handlers/actions/image/create'
+import { getDbClient } from '@/_server/domains/_context/form/withFormContext'
 import { v7 as uuidv7 } from 'uuid'
-import { db } from '../../../../../db'
 import { imagesTable } from '../../../../../db/tables'
 
 export async function createImageSection(data: IImageWithPageId) {
@@ -8,14 +8,16 @@ export async function createImageSection(data: IImageWithPageId) {
 
     const sectionId = data.section_id
 
-    const result = await db.insert(imagesTable).values({
-        id: imageId,
-        order: data?.order ?? 'latest',
-        caption: data?.caption ?? '',
-        url: data.url ?? '',
-        section_id: sectionId!,
-        form_id: data?.form_id,
-    })
+    const result = await getDbClient()
+        .tx.insert(imagesTable)
+        .values({
+            id: imageId,
+            order: data?.order ?? 'latest',
+            caption: data?.caption ?? '',
+            url: data.url ?? '',
+            section_id: sectionId!,
+            form_id: data?.form_id,
+        })
 
     if (result.rowsAffected === 0) {
         throw new Error(

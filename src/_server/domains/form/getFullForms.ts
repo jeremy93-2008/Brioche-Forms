@@ -1,6 +1,6 @@
+import { getDbClient } from '@/_server/domains/_context/form/withFormContext'
 import { CurrentServerUser } from '@stackframe/stack'
 import { and, eq, like } from 'drizzle-orm'
-import { db } from '../../../../db'
 import { formsTable } from '../../../../db/tables'
 import { IForm } from '../../../../db/types'
 
@@ -10,7 +10,7 @@ export async function getFullForms(
     user: CurrentServerUser,
     data: Partial<IForm>
 ) {
-    return await db.query.formsTable.findMany({
+    return await getDbClient().tx.query.formsTable.findMany({
         where: and(
             ...Object.entries(data)
                 .filter(([key, value]) => key && value)
