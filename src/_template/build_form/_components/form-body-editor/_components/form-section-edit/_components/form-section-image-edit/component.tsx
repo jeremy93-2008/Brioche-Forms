@@ -2,6 +2,7 @@ import { Button } from '@/_components/ui/button'
 import { Field, FieldSet } from '@/_components/ui/field'
 import { Input } from '@/_components/ui/input'
 import { Label } from '@/_components/ui/label'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/_components/ui/tabs'
 import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
 import EditImageAction from '@/_server/_handlers/actions/image/update'
@@ -77,13 +78,21 @@ export function FormSectionImageEditComponent(
             />
             <section className="flex justify-center mb-4">
                 {displayedImageUrl ? (
-                    <img
-                        className="rounded-lg"
-                        src={displayedImageUrl}
-                        alt="Image Preview"
-                        width={400}
-                        height={300}
-                    />
+                    <section className="flex flex-col">
+                        <Label
+                            className="block text-sm font-medium mt-2 mb-1"
+                            htmlFor="url-image"
+                        >
+                            Imagen de vista previa
+                        </Label>
+                        <img
+                            className="rounded-lg"
+                            src={displayedImageUrl}
+                            alt="Image Preview"
+                            width={400}
+                            height={300}
+                        />
+                    </section>
                 ) : (
                     <section className="w-[400px] h-[300px] flex flex-col items-center justify-center bg-gray-200 text-gray-500 rounded-lg">
                         <CameraIcon className="w-16 h-16" />
@@ -91,33 +100,75 @@ export function FormSectionImageEditComponent(
                     </section>
                 )}
             </section>
-            <Field className="mt-4 mb-2">
-                <Label
-                    className="block text-sm font-medium mb-1"
-                    htmlFor="url-image"
-                >
-                    Enlace de la imagen
-                </Label>
-                <Input
-                    id="url-image"
-                    className="text-primary"
-                    defaultValue={data.url}
-                    {...register('url')}
-                />
-            </Field>
-            <Field className="mb-4">
-                <Label
-                    className="block text-sm font-medium mb-1"
-                    htmlFor="caption-image"
-                >
-                    Leyenda de la imagen
-                </Label>
-                <Input
-                    id="caption-image"
-                    defaultValue={data.caption ?? ''}
-                    {...register('caption')}
-                />
-            </Field>
+            <section className="flex justify-center mb-4 items-end gap-6">
+                <Tabs className="flex-1" defaultValue="url">
+                    <TabsList>
+                        <TabsTrigger value="upload">Subir imagen</TabsTrigger>
+                        <TabsTrigger value="url">Usar enlace</TabsTrigger>
+                    </TabsList>
+                    <TabsContent
+                        value="upload"
+                        className="flex flex-1 w-[40vw] flex-col gap-4"
+                    >
+                        <form onSubmit={(evt) => evt.preventDefault()}>
+                            <input type="hidden" id="id" value={data.id} />
+                            <input
+                                type="hidden"
+                                id="form_id"
+                                value={data.form_id}
+                            />
+                            <section className="flex items-end gap-2">
+                                <Field>
+                                    <Label
+                                        className="block text-sm font-medium mb-1"
+                                        htmlFor="url-image"
+                                    >
+                                        Subir imagen
+                                    </Label>
+                                    <Input
+                                        id="upload-image"
+                                        className="text-primary"
+                                        type="file"
+                                    />
+                                </Field>
+                                <Button type="submit">Subir</Button>
+                            </section>
+                        </form>
+                    </TabsContent>
+                    <TabsContent
+                        value="url"
+                        className="flex flex-1 w-[40vw] flex-col gap-4"
+                    >
+                        <Field>
+                            <Label
+                                className="block text-sm font-medium mb-1"
+                                htmlFor="url-image"
+                            >
+                                Enlace de la imagen
+                            </Label>
+                            <Input
+                                id="url-image"
+                                className="text-primary"
+                                defaultValue={data.url}
+                                {...register('url')}
+                            />
+                        </Field>
+                    </TabsContent>
+                </Tabs>
+                <Field>
+                    <Label
+                        className="block text-sm font-medium mb-1"
+                        htmlFor="caption-image"
+                    >
+                        Leyenda de la imagen
+                    </Label>
+                    <Input
+                        id="caption-image"
+                        defaultValue={data.caption ?? ''}
+                        {...register('caption')}
+                    />
+                </Field>
+            </section>
         </FieldSet>
     )
 }
