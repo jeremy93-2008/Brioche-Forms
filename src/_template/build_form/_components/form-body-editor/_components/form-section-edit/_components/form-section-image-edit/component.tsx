@@ -6,11 +6,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/_components/ui/tabs'
 import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
 import EditImageAction from '@/_server/_handlers/actions/image/update'
+import UploadImageAction from '@/_server/_handlers/actions/image/upload'
+
 import { IFullForm } from '@/_server/domains/form/getFullForms'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { IImage } from '@db/types'
 import { CameraIcon } from 'lucide-react'
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 interface IFormSectionImageEditComponentProps {
@@ -42,6 +44,13 @@ export function FormSectionImageEditComponent(
         setDisplayedImageUrl(fields.url || '')
 
         showToastFromResult(result, ToastMessages.genericSuccess)
+    }
+
+    const onSaveUpload = async (evt: FormEvent<HTMLFormElement>) => {
+        evt.preventDefault()
+        const fd = new FormData(evt.currentTarget)
+        console.log(evt, Array.from(fd.entries()))
+        await UploadImageAction(fd)
     }
 
     return (
@@ -110,23 +119,30 @@ export function FormSectionImageEditComponent(
                         value="upload"
                         className="flex flex-1 w-[40vw] flex-col gap-4"
                     >
-                        <form onSubmit={(evt) => evt.preventDefault()}>
-                            <input type="hidden" id="id" value={data.id} />
+                        <form onSubmit={onSaveUpload}>
+                            <input
+                                type="hidden"
+                                id="id"
+                                name="id"
+                                value={data.id}
+                            />
                             <input
                                 type="hidden"
                                 id="form_id"
+                                name="form_id"
                                 value={data.form_id}
                             />
                             <section className="flex items-end gap-2">
                                 <Field>
                                     <Label
                                         className="block text-sm font-medium mb-1"
-                                        htmlFor="url-image"
+                                        htmlFor="upload-image"
                                     >
                                         Subir imagen
                                     </Label>
                                     <Input
                                         id="upload-image"
+                                        name="upload-image"
                                         className="text-primary"
                                         type="file"
                                     />

@@ -4,6 +4,7 @@ export interface IServerPluginReturn<Name extends string, Env extends object> {
     name: Name
     cb: () => Env
     hooks?: Partial<IBasicEnv['hooks']>
+    parser?: (rawData: any) => any
 }
 
 export type IServerPluginBuilderOptions = {

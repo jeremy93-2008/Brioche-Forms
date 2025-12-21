@@ -7,26 +7,20 @@ import {
 import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
-import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
 import { editImageSection } from '@/_server/domains/section/image/editImageSection'
-import { createUpdateSchema } from 'drizzle-zod'
-import { IImage, imagesTable } from '../../../../../db/schema'
+import { IImage } from '@db/types'
 
-const schema = createUpdateSchema(imagesTable, {
-    id: (schema) => schema.min(3),
-    url: (schema) => schema.nullable(),
-    caption: (schema) => schema.nullable(),
-    order: (schema) => schema.nullable(),
-    section_id: (schema) => schema.nullable(),
-    form_id: (schema) => schema.min(3),
-}).partial()
+interface IImageUpload {
+    id: string
+    form_id: string
+}
 
 async function uploadImageSectionHandler(
-    _data: Partial<IImage>,
-    ctx: IMiddlewaresAccessCtx<IImage>,
+    _data: FormData,
+    ctx: IMiddlewaresAccessCtx<IImageUpload>,
     env: ServerEnv
-): Promise<IReturnAction<Partial<IImage>>> {
+): Promise<IReturnAction<Partial<IImageUpload>>> {
     const validatedFields = ctx.validatedFields
     const data = validatedFields.data! as Partial<IImage>
     const formId = data.form_id!
@@ -39,10 +33,10 @@ async function uploadImageSectionHandler(
 }
 
 export default defineServerRequest<
-    Partial<IImage>,
-    IMiddlewaresAccessCtx<IImage>
->(editImageSectionHandler, [
+    FormData,
+    Partial<IImageUpload>,
+    IMiddlewaresAccessCtx<IImageUpload>
+>(uploadImageSectionHandler, [
     requireAuth(),
-    requireValidation(schema),
     requireResourceAccess(['read', 'write']),
 ])

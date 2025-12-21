@@ -32,7 +32,7 @@ export function composeServerFunction<
             handlerName: handler.name,
             middlewareNames: middlewares.map((m) => m.name),
         })
-
+        console.log('rawData', args)
         try {
             await runHooks(env.hooks.beforeRequest)
             const ctx = new Map() as IMapCtx<TCtx>

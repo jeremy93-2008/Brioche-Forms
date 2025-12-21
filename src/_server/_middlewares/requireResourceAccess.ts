@@ -8,7 +8,7 @@ export function requireResourceAccess<TCtx extends IPermissionCtx>(
     roles: IRoles | IRoles[],
     opts?: IOpts
 ) {
-    return async function executeRessourceAccess<
+    return async function executeResourceAccess<
         TData extends Record<string, any>,
     >(data: TData, ctx: IMapCtx<TCtx>) {
         const user = await stackServerApp.getUser()
