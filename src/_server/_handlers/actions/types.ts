@@ -14,5 +14,5 @@ export type IReturnActionOnSuccess<T> = {
 
 export type IReturnActionOnError = {
     status: 'error'
-    error: { message: string }
+    error: { message: string; trace?: string }
 }

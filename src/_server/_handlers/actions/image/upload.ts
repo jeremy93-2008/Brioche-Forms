@@ -9,32 +9,56 @@ import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
 import { editImageSection } from '@/_server/domains/section/image/editImageSection'
-import { IImage } from '@db/types'
+import { put } from '@vercel/blob'
 
-interface IImageUpload {
+export interface IImageUpload {
     id: string
     form_id: string
+    upload_image?: File
+}
+
+export interface IImageUploadResult {
+    id: string
+    form_id: string
+    image_url: string
 }
 
 async function uploadImageSectionHandler(
-    _data: FormData,
-    ctx: IMiddlewaresAccessCtx<IImageUpload>,
+    data: IImageUpload,
+    _ctx: IMiddlewaresAccessCtx<IImageUpload>,
     env: ServerEnv
-): Promise<IReturnAction<Partial<IImageUpload>>> {
-    const validatedFields = ctx.validatedFields
-    const data = validatedFields.data! as Partial<IImage>
-    const formId = data.form_id!
+): Promise<IReturnAction<Partial<IImageUploadResult>>> {
+    if (!data.upload_image) throw new Error('No image file provided')
 
-    const result = await withFormContext(env)(formId, () =>
-        editImageSection(data)
+    // Here you would handle the file upload logic
+    const blob = await put(data.upload_image.name, data.upload_image, {
+        access: 'public',
+        addRandomSuffix: true,
+    })
+    const imageUrl = blob.url
+
+    const result = await withFormContext(env)(data.form_id, () =>
+        editImageSection({
+            id: data.id,
+            form_id: data.form_id,
+            url: imageUrl,
+        })
     )
 
-    return { status: 'success', data: result }
+    return {
+        status: 'success',
+        data: {
+            id: result.id,
+            form_id: data.form_id,
+            image_url: imageUrl,
+        },
+    }
 }
 
 export default defineServerRequest<
     FormData,
-    Partial<IImageUpload>,
+    IImageUpload,
+    IImageUploadResult,
     IMiddlewaresAccessCtx<IImageUpload>
 >(uploadImageSectionHandler, [
     requireAuth(),

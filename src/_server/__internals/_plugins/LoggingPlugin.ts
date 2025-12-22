@@ -5,6 +5,7 @@ interface ILoggingPluginReturnCb {
     error: (message: string) => void
     debug: (message: string) => void
     warn: (message: string) => void
+    loglevel: LogLevel
 }
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error'
@@ -42,6 +43,7 @@ export function LoggingPlugin(opts?: {
                 error,
                 debug,
                 warn,
+                loglevel: level,
             }),
             hooks: {
                 beforeRequest: [

@@ -13,6 +13,9 @@ export function showToastFromResult<T>(
         toast.error(
             errorMessage ?? result.error.message ?? ToastMessages.genericError
         )
+        if (process.env.NODE_ENV !== 'production') {
+            console.error(result.error.trace)
+        }
     } else {
         toast.warning(ToastMessages.jokeWarning)
     }

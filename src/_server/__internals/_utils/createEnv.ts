@@ -38,6 +38,7 @@ export function createEnv<const Bs extends readonly IServerPluginBuilder[]>(
             beforeHandler: [],
             afterHandler: [],
         },
+        parsers: [],
     }
 
     for (const buildEnv of envBuilders) {
@@ -48,6 +49,11 @@ export function createEnv<const Bs extends readonly IServerPluginBuilder[]>(
         // We register hooks if any
         if (plg.hooks) {
             mergeHooks(env.hooks, plg.hooks)
+        }
+
+        // We register parser if any
+        if (plg.parser) {
+            env.parsers!.push(plg.parser)
         }
     }
 

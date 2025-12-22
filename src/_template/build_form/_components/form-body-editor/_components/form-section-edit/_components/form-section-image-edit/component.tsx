@@ -6,13 +6,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/_components/ui/tabs'
 import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
 import EditImageAction from '@/_server/_handlers/actions/image/update'
-import UploadImageAction from '@/_server/_handlers/actions/image/upload'
+import UploadImageAction, {
+    IImageUploadResult,
+} from '@/_server/_handlers/actions/image/upload'
 
 import { IFullForm } from '@/_server/domains/form/getFullForms'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { IImage } from '@db/types'
 import { CameraIcon } from 'lucide-react'
-import { FormEvent, useState } from 'react'
+import { Dispatch, FormEvent, SetStateAction, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 interface IFormSectionImageEditComponentProps {
@@ -24,12 +26,23 @@ export function FormSectionImageEditComponent(
 ) {
     const { data } = props
 
+    const { register, formState, handleSubmit, resetField } = useForm<IImage>()
+
+    const { isPending, runAction } = useServerActionState(EditImageAction)
+    const { isPending: isUploadPending, runAction: runUploadAction } =
+        useServerActionState<FormData, IImageUploadResult>(UploadImageAction)
+
     const [displayedImageUrl, setDisplayedImageUrl] = useState<string>(
         data.url || ''
     )
 
-    const { register, formState, handleSubmit } = useForm<IImage>()
-    const { isPending, runAction } = useServerActionState(EditImageAction)
+    const [activeTab, setActiveTab] = useState<'upload' | 'url'>('url')
+    const [isUploadEnabled, setIsUploadEnabled] = useState<boolean>(false)
+
+    const onChangeFile = (evt: React.ChangeEvent<HTMLInputElement>) => {
+        const files = evt.currentTarget.files
+        setIsUploadEnabled(!!files && files.length > 0)
+    }
 
     const onSaveContent = async (fields: IImage) => {
         const result = await runAction({
@@ -49,8 +62,15 @@ export function FormSectionImageEditComponent(
     const onSaveUpload = async (evt: FormEvent<HTMLFormElement>) => {
         evt.preventDefault()
         const fd = new FormData(evt.currentTarget)
-        console.log(evt, Array.from(fd.entries()))
-        await UploadImageAction(fd)
+        const result = await runUploadAction(fd)
+
+        if (result.status === 'success') {
+            setDisplayedImageUrl(result.data.image_url)
+            setActiveTab('url')
+            resetField('url', { defaultValue: result.data.image_url })
+        }
+
+        showToastFromResult(result, ToastMessages.genericSuccess)
     }
 
     return (
@@ -110,7 +130,14 @@ export function FormSectionImageEditComponent(
                 )}
             </section>
             <section className="flex justify-center mb-4 items-end gap-6">
-                <Tabs className="flex-1" defaultValue="url">
+                <Tabs
+                    value={activeTab}
+                    onValueChange={
+                        setActiveTab as Dispatch<SetStateAction<string>>
+                    }
+                    className="flex-1"
+                    defaultValue="url"
+                >
                     <TabsList>
                         <TabsTrigger value="upload">Subir imagen</TabsTrigger>
                         <TabsTrigger value="url">Usar enlace</TabsTrigger>
@@ -136,18 +163,26 @@ export function FormSectionImageEditComponent(
                                 <Field>
                                     <Label
                                         className="block text-sm font-medium mb-1"
-                                        htmlFor="upload-image"
+                                        htmlFor="upload_image"
                                     >
                                         Subir imagen
                                     </Label>
                                     <Input
-                                        id="upload-image"
-                                        name="upload-image"
+                                        id="upload_image"
+                                        name="upload_image"
                                         className="text-primary"
                                         type="file"
+                                        accept=".jpg, .jpeg, .png, .svg, .webp, .gif"
+                                        onChange={onChangeFile}
                                     />
                                 </Field>
-                                <Button type="submit">Subir</Button>
+                                <Button
+                                    isLoading={isUploadPending}
+                                    type="submit"
+                                    disabled={!isUploadEnabled}
+                                >
+                                    Subir
+                                </Button>
                             </section>
                         </form>
                     </TabsContent>

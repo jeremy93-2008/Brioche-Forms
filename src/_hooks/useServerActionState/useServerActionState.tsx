@@ -51,6 +51,12 @@ export function useServerActionState<K, T>(
     serverFn: (arg: K) => Promise<IReturnAction<T>>,
     afterCallback?: (data: IReturnState<T>) => void,
     initialState?: IReturnState<T>
+): IUseServerActionStateReturn<K, T>
+
+export function useServerActionState<K, T>(
+    serverFn: (arg: K) => Promise<IReturnAction<T>>,
+    afterCallback?: (data: IReturnState<T>) => void,
+    initialState?: IReturnState<T>
 ): IUseServerActionStateReturn<K, T> {
     const [actionState, setActionState] = useState<IReturnState<T>>(
         initialState ?? { status: 'idle' }

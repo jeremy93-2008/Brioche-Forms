@@ -1,9 +1,9 @@
-import { and, eq } from 'drizzle-orm'
 import { db } from '@db/index'
 import { imagesTable } from '@db/tables'
-import { IText } from '@db/types'
+import { IImage } from '@db/types'
+import { and, eq } from 'drizzle-orm'
 
-export async function editImageSection(data: Partial<IText>) {
+export async function editImageSection(data: Partial<IImage>) {
     const result = await db
         .update(imagesTable)
         .set(data)

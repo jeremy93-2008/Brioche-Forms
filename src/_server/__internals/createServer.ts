@@ -19,10 +19,12 @@ export interface IBasicEnv {
         beforeHandler: Array<() => void | Promise<void>>
         afterHandler: Array<() => void | Promise<void>>
     }
+    parsers?: Array<(rawData: any) => any>
 }
 
 export function createServer<
     TInput,
+    TInputParsed,
     TOutput,
     TCtx,
     const Bs extends readonly IServerPluginBuilder[] = [],
@@ -30,7 +32,7 @@ export function createServer<
     const envBuilders = [] as IServerPluginBuilder[]
 
     let _handler: ComposeServerFunctionHandler<
-        TInput,
+        TInputParsed,
         TOutput,
         TCtx,
         ServerEnv
@@ -38,7 +40,7 @@ export function createServer<
         return { status: 'success', data: {} }
     }
     const _middlewares: ComposeServerFunctionMiddleware<
-        TInput,
+        TInputParsed,
         TCtx,
         ServerEnv
     >[] = []
@@ -52,6 +54,7 @@ export function createServer<
                 return getServer() as unknown as ReturnType<
                     typeof createServer<
                         TInput,
+                        TInputParsed,
                         TOutput,
                         TCtx,
                         [...Bs, IServerPluginBuilder<Name, EnvPiece>]
@@ -60,7 +63,7 @@ export function createServer<
             },
             middlewares: (
                 ...middlewares: ComposeServerFunctionMiddleware<
-                    TInput,
+                    TInputParsed,
                     TCtx,
                     ServerEnv
                 >[]
@@ -70,7 +73,7 @@ export function createServer<
             },
             handler: (
                 handler: ComposeServerFunctionHandler<
-                    TInput,
+                    TInputParsed,
                     TOutput,
                     TCtx,
                     ServerEnv
@@ -81,7 +84,7 @@ export function createServer<
             },
             execute: () => {
                 return composeServerFunction<
-                    TInput,
+                    TInputParsed,
                     TOutput,
                     TCtx,
                     ServerEnv,
