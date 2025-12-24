@@ -5,6 +5,7 @@ import {
     foldersTable,
     formsTable,
     imagesTable,
+    mediaTable,
     multipleChoicesTable,
     notificationsTable,
     pagesTable,
@@ -210,3 +211,12 @@ export const sharedNotificationsRelations = relations(
         }),
     })
 )
+
+// MEDIA TABLES ↔ FORMS
+
+export const mediaRelations = relations(mediaTable, ({ one }) => ({
+    form: one(formsTable, {
+        fields: [mediaTable.used_in_form_id],
+        references: [formsTable.id],
+    }),
+}))

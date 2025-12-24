@@ -271,3 +271,12 @@ export const sharedNotificationsTable = sqliteTable('shared_notifications', {
         .references(() => notificationsTable.id),
     shared_with_user_id: text('shared_with_user_id').notNull(),
 })
+
+export const mediaTable = sqliteTable('media', {
+    id: text('id').primaryKey(),
+    url: text('url').notNull(),
+    type: text('type').notNull(), // e.g., 'image', 'video'
+    used_in_form_id: text('used_in_form_id').references(() => formsTable.id),
+    uploaded_at: int('uploaded_at').notNull(),
+    uploaded_by_user_id: text('uploaded_by_user_id').notNull(),
+})

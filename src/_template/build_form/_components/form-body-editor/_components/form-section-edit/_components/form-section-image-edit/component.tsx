@@ -6,15 +6,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/_components/ui/tabs'
 import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
 import EditImageAction from '@/_server/_handlers/actions/image/update'
-import UploadImageAction, {
-    IImageUploadResult,
-} from '@/_server/_handlers/actions/image/upload'
+import { IImageUploadResult } from '@/_server/_handlers/actions/image/upload'
+import { IReturnAction } from '@/_server/_handlers/actions/types'
 
 import { IFullForm } from '@/_server/domains/form/getFullForms'
+import { FormGalleryUploadImageComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-image-edit/_components/form-gallery-upload-image/component'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { IImage } from '@db/types'
 import { CameraIcon } from 'lucide-react'
-import { Dispatch, FormEvent, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 interface IFormSectionImageEditComponentProps {
@@ -29,20 +29,12 @@ export function FormSectionImageEditComponent(
     const { register, formState, handleSubmit, resetField } = useForm<IImage>()
 
     const { isPending, runAction } = useServerActionState(EditImageAction)
-    const { isPending: isUploadPending, runAction: runUploadAction } =
-        useServerActionState<FormData, IImageUploadResult>(UploadImageAction)
 
     const [displayedImageUrl, setDisplayedImageUrl] = useState<string>(
         data.url || ''
     )
 
     const [activeTab, setActiveTab] = useState<'upload' | 'url'>('url')
-    const [isUploadEnabled, setIsUploadEnabled] = useState<boolean>(false)
-
-    const onChangeFile = (evt: React.ChangeEvent<HTMLInputElement>) => {
-        const files = evt.currentTarget.files
-        setIsUploadEnabled(!!files && files.length > 0)
-    }
 
     const onSaveContent = async (fields: IImage) => {
         const result = await runAction({
@@ -59,18 +51,12 @@ export function FormSectionImageEditComponent(
         showToastFromResult(result, ToastMessages.genericSuccess)
     }
 
-    const onSaveUpload = async (evt: FormEvent<HTMLFormElement>) => {
-        evt.preventDefault()
-        const fd = new FormData(evt.currentTarget)
-        const result = await runUploadAction(fd)
-
+    const afterUpload = (result: IReturnAction<IImageUploadResult>) => {
         if (result.status === 'success') {
             setDisplayedImageUrl(result.data.image_url)
             setActiveTab('url')
             resetField('url', { defaultValue: result.data.image_url })
         }
-
-        showToastFromResult(result, ToastMessages.genericSuccess)
     }
 
     return (
@@ -112,7 +98,7 @@ export function FormSectionImageEditComponent(
                             className="block text-sm font-medium mt-2 mb-1"
                             htmlFor="url-image"
                         >
-                            Imagen de vista previa
+                            Imagen actual
                         </Label>
                         <img
                             className="rounded-lg"
@@ -139,52 +125,19 @@ export function FormSectionImageEditComponent(
                     defaultValue="url"
                 >
                     <TabsList>
-                        <TabsTrigger value="upload">Subir imagen</TabsTrigger>
+                        <TabsTrigger value="upload">
+                            Galería / Subir imagen
+                        </TabsTrigger>
                         <TabsTrigger value="url">Usar enlace</TabsTrigger>
                     </TabsList>
                     <TabsContent
                         value="upload"
                         className="flex flex-1 w-[40vw] flex-col gap-4"
                     >
-                        <form onSubmit={onSaveUpload}>
-                            <input
-                                type="hidden"
-                                id="id"
-                                name="id"
-                                value={data.id}
-                            />
-                            <input
-                                type="hidden"
-                                id="form_id"
-                                name="form_id"
-                                value={data.form_id}
-                            />
-                            <section className="flex items-end gap-2">
-                                <Field>
-                                    <Label
-                                        className="block text-sm font-medium mb-1"
-                                        htmlFor="upload_image"
-                                    >
-                                        Subir imagen
-                                    </Label>
-                                    <Input
-                                        id="upload_image"
-                                        name="upload_image"
-                                        className="text-primary"
-                                        type="file"
-                                        accept=".jpg, .jpeg, .png, .svg, .webp, .gif"
-                                        onChange={onChangeFile}
-                                    />
-                                </Field>
-                                <Button
-                                    isLoading={isUploadPending}
-                                    type="submit"
-                                    disabled={!isUploadEnabled}
-                                >
-                                    Subir
-                                </Button>
-                            </section>
-                        </form>
+                        <FormGalleryUploadImageComponent
+                            data={data}
+                            afterUpload={afterUpload}
+                        />
                     </TabsContent>
                     <TabsContent
                         value="url"
