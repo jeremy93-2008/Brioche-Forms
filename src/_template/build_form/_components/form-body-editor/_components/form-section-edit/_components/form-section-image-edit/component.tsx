@@ -6,7 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/_components/ui/tabs'
 import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
 import EditImageAction from '@/_server/_handlers/actions/image/update'
-import { IImageUploadResult } from '@/_server/_handlers/actions/image/upload'
+import { IMediaUploadResult } from '@/_server/_handlers/actions/media/upload'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
 
 import { IFullForm } from '@/_server/domains/form/getFullForms'
@@ -27,14 +27,13 @@ export function FormSectionImageEditComponent(
     const { data } = props
 
     const { register, formState, handleSubmit, resetField } = useForm<IImage>()
-
     const { isPending, runAction } = useServerActionState(EditImageAction)
 
     const [displayedImageUrl, setDisplayedImageUrl] = useState<string>(
         data.url || ''
     )
 
-    const [activeTab, setActiveTab] = useState<'upload' | 'url'>('url')
+    const [activeTab, setActiveTab] = useState<'upload' | 'url'>('upload')
 
     const onSaveContent = async (fields: IImage) => {
         const result = await runAction({
@@ -46,16 +45,19 @@ export function FormSectionImageEditComponent(
             order: fields.order,
         } as IImage)
 
-        setDisplayedImageUrl(fields.url || '')
+        setDisplayedImageUrl(fields.url)
 
         showToastFromResult(result, ToastMessages.genericSuccess)
     }
 
-    const afterUpload = (result: IReturnAction<IImageUploadResult>) => {
+    const onLinkInputBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
+        setDisplayedImageUrl(evt.currentTarget.value)
+    }
+
+    const afterUpload = (result: IReturnAction<IMediaUploadResult>) => {
         if (result.status === 'success') {
-            setDisplayedImageUrl(result.data.image_url)
-            setActiveTab('url')
-            resetField('url', { defaultValue: result.data.image_url })
+            setDisplayedImageUrl(result.data.url)
+            resetField('url', { defaultValue: result.data.url })
         }
     }
 
@@ -92,28 +94,30 @@ export function FormSectionImageEditComponent(
                 {...register('order')}
             />
             <section className="flex justify-center mb-4">
-                {displayedImageUrl ? (
-                    <section className="flex flex-col">
-                        <Label
-                            className="block text-sm font-medium mt-2 mb-1"
-                            htmlFor="url-image"
-                        >
-                            Imagen actual
-                        </Label>
-                        <img
-                            className="rounded-lg"
-                            src={displayedImageUrl}
-                            alt="Image Preview"
-                            width={400}
-                            height={300}
-                        />
-                    </section>
-                ) : (
-                    <section className="w-[400px] h-[300px] flex flex-col items-center justify-center bg-gray-200 text-gray-500 rounded-lg">
-                        <CameraIcon className="w-16 h-16" />
-                        No Image Preview
-                    </section>
-                )}
+                <section className="w-[450px] h-[400px]">
+                    {displayedImageUrl ? (
+                        <section className="flex flex-col">
+                            <Label
+                                className="block text-sm font-medium mt-2 mb-1"
+                                htmlFor="url-image"
+                            >
+                                Imagen actual
+                            </Label>
+                            <img
+                                className="rounded-lg"
+                                src={displayedImageUrl}
+                                alt="Image Preview"
+                                width={400}
+                                height={300}
+                            />
+                        </section>
+                    ) : (
+                        <section className="w-[480px] h-[420px] flex flex-col items-center justify-center bg-gray-200 text-gray-500 rounded-lg">
+                            <CameraIcon className="w-16 h-16" />
+                            Sin vista previa
+                        </section>
+                    )}
+                </section>
             </section>
             <section className="flex justify-center mb-4 items-end gap-6">
                 <Tabs
@@ -122,12 +126,9 @@ export function FormSectionImageEditComponent(
                         setActiveTab as Dispatch<SetStateAction<string>>
                     }
                     className="flex-1"
-                    defaultValue="url"
                 >
                     <TabsList>
-                        <TabsTrigger value="upload">
-                            Galería / Subir imagen
-                        </TabsTrigger>
+                        <TabsTrigger value="upload">Usar galería</TabsTrigger>
                         <TabsTrigger value="url">Usar enlace</TabsTrigger>
                     </TabsList>
                     <TabsContent
@@ -135,7 +136,7 @@ export function FormSectionImageEditComponent(
                         className="flex flex-1 w-[40vw] flex-col gap-4"
                     >
                         <FormGalleryUploadImageComponent
-                            data={data}
+                            displayedImageUrl={displayedImageUrl}
                             afterUpload={afterUpload}
                         />
                     </TabsContent>
@@ -154,7 +155,9 @@ export function FormSectionImageEditComponent(
                                 id="url-image"
                                 className="text-primary"
                                 defaultValue={data.url}
-                                {...register('url')}
+                                {...register('url', {
+                                    onBlur: onLinkInputBlur,
+                                })}
                             />
                         </Field>
                     </TabsContent>

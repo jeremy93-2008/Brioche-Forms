@@ -4,6 +4,7 @@ import {
     foldersTable,
     formsTable,
     imagesTable,
+    mediaTable,
     multipleChoicesTable,
     notificationsTable,
     pagesTable,
@@ -37,3 +38,4 @@ export type INotification = typeof notificationsTable.$inferSelect
 export type ISharedNotification = typeof sharedNotificationsTable.$inferSelect
 export type ISharedForms = typeof sharedFormsTable.$inferSelect
 export type ISharedFolders = typeof sharedFoldersTable.$inferSelect
+export type IMedia = typeof mediaTable.$inferSelect

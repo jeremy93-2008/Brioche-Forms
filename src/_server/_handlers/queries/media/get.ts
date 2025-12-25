@@ -7,35 +7,48 @@ import {
 import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { getNotifications } from '@/_server/domains/notification/getNotifications'
-import { createSelectSchema } from 'drizzle-zod'
-import { INotification, notificationsTable } from '../../../../../db/schema'
+import { getMedias } from '@/_server/domains/media/getMedias'
+import { eq, like } from 'drizzle-orm'
+import z from 'zod'
+import { IMedia } from '../../../../../db/schema'
 
-const schema = createSelectSchema(notificationsTable, {
-    id: (schema) => schema.nullable(),
-    folder_id: (schema) => schema.nullable(),
-    content: (schema) => schema.nullable(),
-    form_id: (schema) => schema.nullable(),
-    is_read: (schema) => schema.nullable(),
-    created_at: (schema) => schema.nullable(),
-    action_type: (schema) => schema.nullable(),
-    user_id: (schema) => schema.nullable(),
-}).partial()
+const schema = z
+    .object({
+        id: z.string().min(3),
+        url: z.string().min(1).max(255).optional(),
+        form_id: z.string().min(3).optional(),
+    })
+    .partial()
 
-async function getNotificationsHandler(
-    _data: Partial<INotification>,
-    ctx: IMiddlewaresCtx<INotification>
-): Promise<IReturnAction<Partial<INotification[]>>> {
+export type IMediaWhere = z.infer<typeof schema>
+
+async function getMediasHandler(
+    _data: Partial<IMediaWhere>,
+    ctx: IMiddlewaresCtx<Partial<IMediaWhere>>
+): Promise<IReturnAction<IMedia[]>> {
     const user = ctx.user
-    const data = ctx.validatedFields.data as Partial<INotification>
+    const validateFields = ctx.validatedFields.data
 
-    const result = await getNotifications(user, data)
+    const result = await getMedias(user, {
+        id: {
+            comparison: eq,
+            value: validateFields?.id ? validateFields.id : undefined,
+        },
+        url: {
+            comparison: like,
+            value: validateFields?.url ? validateFields.url : undefined,
+        },
+        form_id: {
+            comparison: eq,
+            value: validateFields?.form_id ? validateFields.form_id : undefined,
+        },
+    })
 
     return { status: 'success', data: result }
 }
 
 export default defineServerRequest<
-    Partial<INotification>,
-    INotification[],
-    IMiddlewaresCtx<INotification>
->(getNotificationsHandler, [requireAuth(), requireValidation(schema)])
+    Partial<IMediaWhere>,
+    IMedia[],
+    IMiddlewaresCtx<IMedia>
+>(getMediasHandler, [requireAuth(), requireValidation(schema)])
