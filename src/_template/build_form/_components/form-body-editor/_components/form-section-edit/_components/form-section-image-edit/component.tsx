@@ -94,9 +94,9 @@ export function FormSectionImageEditComponent(
                 {...register('order')}
             />
             <section className="flex justify-center mb-4">
-                <section className="w-[450px] h-[400px]">
+                <section className="">
                     {displayedImageUrl ? (
-                        <section className="flex flex-col">
+                        <section className="flex flex-col h-[450px]">
                             <Label
                                 className="block text-sm font-medium mt-2 mb-1"
                                 htmlFor="url-image"
@@ -104,11 +104,9 @@ export function FormSectionImageEditComponent(
                                 Imagen actual
                             </Label>
                             <img
-                                className="rounded-lg"
+                                className="rounded-lg h-full w-full object-contain"
                                 src={displayedImageUrl}
                                 alt="Image Preview"
-                                width={400}
-                                height={300}
                             />
                         </section>
                     ) : (

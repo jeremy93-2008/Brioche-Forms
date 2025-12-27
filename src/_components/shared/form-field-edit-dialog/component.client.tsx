@@ -134,7 +134,12 @@ export function FormFieldEditDialog<T extends Record<string, any>>(
             }}
         >
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                {props.children}
+                <section
+                    className="dialog-stop-propagation"
+                    onClick={(evt) => evt.stopPropagation()}
+                >
+                    {props.children}
+                </section>
             </Dialog>
         </FormFieldEditDialogCtx>
     )
@@ -142,7 +147,11 @@ export function FormFieldEditDialog<T extends Record<string, any>>(
 
 export function FormFieldEditDialogTrigger(props: React.PropsWithChildren) {
     const { children } = props
-    return <DialogTrigger asChild>{children}</DialogTrigger>
+    return (
+        <DialogTrigger onClick={(evt) => evt.stopPropagation()} asChild>
+            {children}
+        </DialogTrigger>
+    )
 }
 
 export function FormFieldEditDialogContent<T>(

@@ -1,13 +1,16 @@
 import { ISingleApiRequest } from '@/_lib/http_api'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
-import useSWR from 'swr'
+import useSWR, { type SWRConfiguration } from 'swr'
 
 export function useAsyncApi<TData, TInput>(
     request: ISingleApiRequest<TData, TInput>,
-    data?: TInput
+    data?: TInput,
+    opts?: SWRConfiguration
 ) {
-    const swrResponse = useSWR([request._key, data], async (args) =>
-        request.fn(args[1])
+    const swrResponse = useSWR(
+        [request._key, data],
+        async (args) => request.fn(args[1]),
+        opts
     )
 
     return {

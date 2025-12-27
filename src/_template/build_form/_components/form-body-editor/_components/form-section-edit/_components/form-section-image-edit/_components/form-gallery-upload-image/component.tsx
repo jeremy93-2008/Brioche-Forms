@@ -15,13 +15,15 @@ import { ToastMessages } from '@/_constants/toast'
 import { useAsyncApi } from '@/_hooks/useAsyncApi/useAsyncApi'
 import { useServerActionState } from '@/_hooks/useServerActionState'
 import { http_api } from '@/_lib/http_api'
+
 import UploadImageAction, {
     IMediaUploadResult,
 } from '@/_server/_handlers/actions/media/upload'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
+import { FormGalleryMediaDeleteItem } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-image-edit/_components/form-gallery-upload-image/form-gallery-media-delete-item/component'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { IMedia } from '@db/types'
-import { ChevronsUpDown, Circle, CircleCheckBig, Trash } from 'lucide-react'
+import { ChevronsUpDown, Circle, CircleCheckBig } from 'lucide-react'
 import Image from 'next/image'
 import { FormEvent, useState } from 'react'
 
@@ -39,7 +41,7 @@ export function FormGalleryUploadImageComponent(
         IMediaUploadResult
     >(UploadImageAction)
 
-    const { result: mediasResult } = useAsyncApi(http_api.media.get, {})
+    const { result: mediasResult, mutate } = useAsyncApi(http_api.media.get, {})
 
     const [isUploadEnabled, setIsUploadEnabled] = useState<boolean>(false)
 
@@ -69,12 +71,14 @@ export function FormGalleryUploadImageComponent(
         afterUpload(result)
 
         showToastFromResult(result, ToastMessages.genericSuccess)
+
+        await mutate()
     }
 
     return (
         <section className="flex flex-col">
             <form onSubmit={onSaveUpload}>
-                <Collapsible defaultOpen>
+                <Collapsible defaultOpen={false}>
                     <CollapsibleTrigger className="flex items-center justify-between mb-2 w-full cursor-pointer">
                         <section className="flex items-baseline">
                             <h3 className="mt-2 mb-2">Galería</h3>
@@ -106,7 +110,12 @@ export function FormGalleryUploadImageComponent(
                                         <Tooltip>
                                             <TooltipTrigger asChild>
                                                 <section className="absolute hidden group-hover:block left-2 top-2">
-                                                    <Trash className="w-5! h-5! text-red-400 hover:text-red-500" />
+                                                    <FormGalleryMediaDeleteItem
+                                                        afterDelete={() =>
+                                                            mutate()
+                                                        }
+                                                        item={item}
+                                                    />
                                                 </section>
                                             </TooltipTrigger>
                                             <TooltipContent>
