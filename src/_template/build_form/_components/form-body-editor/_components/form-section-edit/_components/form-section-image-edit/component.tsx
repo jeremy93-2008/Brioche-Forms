@@ -13,6 +13,7 @@ import { IFullForm } from '@/_server/domains/form/getFullForms'
 import { FormGalleryUploadImageComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-image-edit/_components/form-gallery-upload-image/component'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { IImage } from '@db/types'
+import { clsx } from 'clsx'
 import { CameraIcon } from 'lucide-react'
 import { Dispatch, SetStateAction, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -140,7 +141,11 @@ export function FormSectionImageEditComponent(
                     </TabsContent>
                     <TabsContent
                         value="url"
-                        className="flex flex-1 w-[40vw] flex-col gap-4"
+                        className={clsx(
+                            'flex flex-1 w-[40vw] flex-col gap-4',
+                            activeTab !== 'url' ? 'hidden' : ''
+                        )}
+                        forceMount
                     >
                         <Field>
                             <Label
