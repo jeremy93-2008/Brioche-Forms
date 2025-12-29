@@ -29,7 +29,19 @@ export function FormSectionQuestionEditComponent(
 ) {
     const { data } = props
 
-    const { register, control, formState, handleSubmit } = useForm<IQuestion>()
+    const { register, control, getValues, formState, handleSubmit } =
+        useForm<IQuestion>({
+            defaultValues: {
+                id: data.id,
+                form_id: data.form_id,
+                section_id: data.section_id,
+                name: data.name,
+                order: data.order,
+                content: data.content,
+                type: data.type,
+                is_required: data.is_required,
+            },
+        })
     const { isPending, runAction } = useServerActionState(EditQuestionAction)
 
     const onSaveContent = async (fields: IQuestion) => {
@@ -136,10 +148,18 @@ export function FormSectionQuestionEditComponent(
             </Field>
             <Field className="mb-4">
                 <Label className="inline-flex items-center">
-                    <Checkbox
-                        className="form-checkbox"
-                        defaultChecked={data.is_required === 1}
-                        {...register('is_required')}
+                    <Controller
+                        control={control}
+                        name="is_required"
+                        render={({ field: { onChange, value } }) => (
+                            <Checkbox
+                                className="form-checkbox"
+                                checked={value === 1}
+                                onCheckedChange={(checked) => {
+                                    onChange(checked ? 1 : 0)
+                                }}
+                            />
+                        )}
                     />
                     <span className="ml-2">Requerido</span>
                 </Label>
