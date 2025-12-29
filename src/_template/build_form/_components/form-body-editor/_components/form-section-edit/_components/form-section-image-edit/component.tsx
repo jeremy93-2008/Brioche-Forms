@@ -27,7 +27,16 @@ export function FormSectionImageEditComponent(
 ) {
     const { data } = props
 
-    const { register, formState, handleSubmit, resetField } = useForm<IImage>()
+    const { register, formState, handleSubmit, setValue } = useForm<IImage>({
+        defaultValues: {
+            id: data.id,
+            section_id: data.section_id,
+            form_id: data.form_id,
+            order: data.order,
+            url: data.url,
+            caption: data.caption,
+        },
+    })
     const { isPending, runAction } = useServerActionState(EditImageAction)
 
     const [displayedImageUrl, setDisplayedImageUrl] = useState<string>(
@@ -58,7 +67,7 @@ export function FormSectionImageEditComponent(
     const afterUpload = (result: IReturnAction<IMediaUploadResult>) => {
         if (result.status === 'success') {
             setDisplayedImageUrl(result.data.url)
-            resetField('url', { defaultValue: result.data.url })
+            setValue('url', result.data.url, { shouldDirty: true })
         }
     }
 

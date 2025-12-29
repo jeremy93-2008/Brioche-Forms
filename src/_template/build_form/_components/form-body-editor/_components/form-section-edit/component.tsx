@@ -46,7 +46,9 @@ export function FormSectionEditComponent(
                 {typeOfSection === 'image' && (
                     <FormSectionImageEditComponent data={data.images[0]} />
                 )}
-                {typeOfSection === 'video' && <FormSectionVideoEditComponent />}
+                {typeOfSection === 'video' && (
+                    <FormSectionVideoEditComponent data={data.videos[0]} />
+                )}
             </div>
         </Card>
     )
