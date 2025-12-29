@@ -16,7 +16,7 @@ import { useAsyncApi } from '@/_hooks/useAsyncApi/useAsyncApi'
 import { useServerActionState } from '@/_hooks/useServerActionState'
 import { http_api } from '@/_lib/http_api'
 
-import UploadImageAction, {
+import UploadMediaAction, {
     IMediaUploadResult,
 } from '@/_server/_handlers/actions/media/upload'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
@@ -39,7 +39,7 @@ export function FormGalleryUploadImageComponent(
     const { isPending, runAction } = useServerActionState<
         FormData,
         IMediaUploadResult
-    >(UploadImageAction)
+    >(UploadMediaAction)
 
     const { result: mediasResult, mutate } = useAsyncApi(http_api.media.get, {})
 
