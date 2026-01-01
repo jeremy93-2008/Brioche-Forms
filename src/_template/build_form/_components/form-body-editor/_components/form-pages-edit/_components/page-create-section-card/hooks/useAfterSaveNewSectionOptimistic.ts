@@ -75,6 +75,7 @@ export function useAfterSaveNewSectionOptimistic(params: ISectionContentType) {
                     type: updatedData.type,
                     is_required: 0,
                     content: updatedData.content ?? '',
+                    choices: [],
                 } as IQuestion,
             }
 

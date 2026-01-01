@@ -56,4 +56,6 @@ export const QuestionTypes = [
         value: 'short_answer:opinion_scale',
         label: 'Escala de opinión',
     },
-]
+] as const
+
+export type IQuestionTypeValues = (typeof QuestionTypes)[number]['value']

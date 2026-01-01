@@ -70,9 +70,9 @@ export function CreateNewQuestionButtonComponent(
                             <Controller
                                 control={form.control}
                                 name="type"
+                                defaultValue={QuestionTypes[0].value}
                                 render={({ field: { onChange, value } }) => (
                                     <Select
-                                        defaultValue={QuestionTypes[0].value}
                                         value={value}
                                         onValueChange={onChange}
                                     >

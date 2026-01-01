@@ -1,5 +1,10 @@
 import { Button } from '@/_components/ui/button'
 import { Checkbox } from '@/_components/ui/checkbox'
+import {
+    Collapsible,
+    CollapsibleContent,
+    CollapsibleTrigger,
+} from '@/_components/ui/collapsible'
 import { Field, FieldSet } from '@/_components/ui/field'
 import { Label } from '@/_components/ui/label'
 import {
@@ -13,12 +18,20 @@ import {
 import { Textarea } from '@/_components/ui/textarea'
 import { QuestionTypes } from '@/_constants/question'
 import { ToastMessages } from '@/_constants/toast'
+import { useReturnActionUtils } from '@/_hooks/useReturnActionUtils'
 import { useServerActionState } from '@/_hooks/useServerActionState'
+import UpsertChoicesAction from '@/_server/_handlers/actions/question/choice/upsert'
 import EditQuestionAction from '@/_server/_handlers/actions/question/update'
 import { IFullForm } from '@/_server/domains/form/getFullForms'
+import { FormQuestionChoicesEditComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-question-edit/_components/form-question-choices-edit/component'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { IQuestion } from '@db/types'
-import { Controller, useForm } from 'react-hook-form'
+import { ChevronsUpDown } from 'lucide-react'
+import { Controller, useForm, useWatch } from 'react-hook-form'
+
+export type IQuestionWithChoices = IQuestion & {
+    choices: IFullForm['pages'][0]['sections'][0]['questions'][0]['choices']
+}
 
 interface IFormSectionQuestionEditComponentProps {
     data: IFullForm['pages'][0]['sections'][0]['questions'][0]
@@ -29,8 +42,8 @@ export function FormSectionQuestionEditComponent(
 ) {
     const { data } = props
 
-    const { register, control, getValues, formState, handleSubmit } =
-        useForm<IQuestion>({
+    const { register, control, formState, handleSubmit } =
+        useForm<IQuestionWithChoices>({
             defaultValues: {
                 id: data.id,
                 form_id: data.form_id,
@@ -40,12 +53,18 @@ export function FormSectionQuestionEditComponent(
                 content: data.content,
                 type: data.type,
                 is_required: data.is_required,
+                choices: data.choices,
             },
         })
-    const { isPending, runAction } = useServerActionState(EditQuestionAction)
 
-    const onSaveContent = async (fields: IQuestion) => {
-        const result = await runAction({
+    const { merge } = useReturnActionUtils()
+
+    const { isPending, runAction } = useServerActionState(EditQuestionAction)
+    const { isPending: isChoicesPending, runAction: runChoicesAction } =
+        useServerActionState(UpsertChoicesAction)
+
+    const onSaveContent = async (fields: IQuestionWithChoices) => {
+        const result_question = await runAction({
             id: data.id,
             form_id: data.form_id,
             section_id: data.section_id,
@@ -53,11 +72,29 @@ export function FormSectionQuestionEditComponent(
             order: fields.order,
             content: fields.content,
             type: fields.type,
-            is_required: fields.is_required.toString() === 'on' ? 1 : 0,
+            is_required: fields.is_required,
         } as IQuestion)
+
+        if (
+            fields.type !== 'single_choice' &&
+            fields.type !== 'multiple_choice'
+        ) {
+            // If the question type is not choice-based, skip choices update
+            showToastFromResult(result_question, ToastMessages.genericSuccess)
+            return
+        }
+
+        const result_choices = await runChoicesAction({
+            form_id: data.form_id,
+            data: fields.choices,
+        })
+
+        const result = merge(result_question, result_choices)!
 
         showToastFromResult(result, ToastMessages.genericSuccess)
     }
+
+    const currentQuestionType = useWatch({ name: 'type', control })
 
     return (
         <FieldSet className="relative flex-col">
@@ -66,7 +103,7 @@ export function FormSectionQuestionEditComponent(
                     onClick={handleSubmit(onSaveContent)}
                     className="mb-4"
                     size="sm"
-                    isLoading={isPending}
+                    isLoading={isPending || isChoicesPending}
                     disabled={!formState.isDirty}
                 >
                     Guardar
@@ -97,23 +134,41 @@ export function FormSectionQuestionEditComponent(
                 value={data.order}
                 {...register('order')}
             />
+            <section className="absolute flex justify-end top-[-25px] right-32">
+                <Label className="inline-flex items-center">
+                    <Controller
+                        control={control}
+                        name="is_required"
+                        render={({ field: { onChange, value } }) => (
+                            <Checkbox
+                                className="form-checkbox"
+                                checked={value === 1}
+                                onCheckedChange={(checked) => {
+                                    onChange(checked ? 1 : 0)
+                                }}
+                            />
+                        )}
+                    />
+                    <span className="ml-2">Requerido</span>
+                </Label>
+            </section>
             <Field className="mt-4 mb-2">
                 <Label
                     className="block text-sm font-medium mb-1"
-                    htmlFor="question-content"
+                    htmlFor={`question-content-${data.id}`}
                 >
                     Contenido de la pregunta
                 </Label>
                 <Textarea
-                    id="question-content"
+                    id={`question-content-${data.id}`}
                     defaultValue={data.content}
                     {...register('content')}
                 />
             </Field>
-            <Field className="mb-4">
+            <Field className="mb-2">
                 <Label
                     className="block text-sm font-medium mb-1"
-                    htmlFor="question-type"
+                    htmlFor={`question-type-${data.id}`}
                 >
                     Tipo de pregunta
                 </Label>
@@ -126,8 +181,11 @@ export function FormSectionQuestionEditComponent(
                             value={value}
                             onValueChange={onChange}
                         >
-                            <SelectTrigger id="question-type" className="w-72">
-                                <SelectValue placeholder="Selecciona un espacio de trabajo" />
+                            <SelectTrigger
+                                id={`question-type-${data.id}`}
+                                className="w-72"
+                            >
+                                <SelectValue placeholder="Selecciona un tipo de pregunta" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectGroup>
@@ -146,24 +204,39 @@ export function FormSectionQuestionEditComponent(
                     )}
                 />
             </Field>
-            <Field className="mb-4">
-                <Label className="inline-flex items-center">
-                    <Controller
-                        control={control}
-                        name="is_required"
-                        render={({ field: { onChange, value } }) => (
-                            <Checkbox
-                                className="form-checkbox"
-                                checked={value === 1}
-                                onCheckedChange={(checked) => {
-                                    onChange(checked ? 1 : 0)
-                                }}
+            {(currentQuestionType === 'single_choice' ||
+                currentQuestionType === 'multiple_choice') && (
+                <Field className="mb-4">
+                    <Collapsible defaultOpen>
+                        <CollapsibleTrigger>
+                            <Label className="flex text-sm font-medium cursor-pointer">
+                                Lista de Respuestas disponibles
+                                <h6 className="text-xs">
+                                    ({data.choices.length} respuestas)
+                                </h6>
+                                <ChevronsUpDown className="w-4! h-4!" />
+                            </Label>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent>
+                            <Controller
+                                control={control}
+                                name="choices"
+                                render={({ field: { value, onChange } }) => (
+                                    <section className="mt-4">
+                                        <FormQuestionChoicesEditComponent
+                                            data={value}
+                                            onDataChange={onChange}
+                                            questionId={data.id}
+                                            formId={data.form_id}
+                                            type={currentQuestionType}
+                                        />
+                                    </section>
+                                )}
                             />
-                        )}
-                    />
-                    <span className="ml-2">Requerido</span>
-                </Label>
-            </Field>
+                        </CollapsibleContent>
+                    </Collapsible>
+                </Field>
+            )}
         </FieldSet>
     )
 }

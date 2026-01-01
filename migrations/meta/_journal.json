@@ -29,6 +29,13 @@
       "when": 1766447505993,
       "tag": "0003_tough_shockwave",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1767179480113,
+      "tag": "0004_daily_magus",
+      "breakpoints": true
     }
   ]
 }

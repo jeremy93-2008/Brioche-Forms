@@ -170,6 +170,7 @@ export const choicesTable = sqliteTable('choices', {
             onDelete: 'cascade',
         }),
     content: text('content').notNull(),
+    is_free_text: int('is_free_text').notNull().default(0),
     order: text('order').notNull(),
 })
 
@@ -217,6 +218,7 @@ export const answersTable = sqliteTable('answers', {
             onDelete: 'cascade',
         }),
     choice_id: text('choice_id').references(() => choicesTable.id),
+    choice_free_text: text('choice_free_text'),
     short_answer: text('short_answer'),
     long_answer: text('long_answer'),
     date_answer: int('date_answer'),

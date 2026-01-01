@@ -10,12 +10,13 @@ import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
-import { createChoiceSection } from '@/_server/domains/section/question/choice/createChoiceSection'
-import { createInsertSchema } from 'drizzle-zod'
+import { upsertChoicesSection } from '@/_server/domains/section/question/choices/upsertChoicesSection'
 import { choicesTable } from '@db/tables'
 import { IChoice } from '@db/types'
+import { createInsertSchema } from 'drizzle-zod'
+import z from 'zod'
 
-const schema = createInsertSchema(choicesTable, {
+const singleSchema = createInsertSchema(choicesTable, {
     id: (schema) => schema.nullable(),
     content: (schema) => schema.min(3),
     order: (schema) => schema.nullable(),
@@ -23,17 +24,29 @@ const schema = createInsertSchema(choicesTable, {
     form_id: (schema) => schema.min(3),
 })
 
-async function createChoiceSectionHandler(
-    _data: Partial<IChoice>,
-    ctx: IMiddlewaresAccessCtx<IChoice>,
+const schema = z.object({
+    form_id: z.string().min(3),
+    data: z.array(singleSchema).min(0).max(30),
+})
+
+export type IChoiceInput = z.infer<typeof schema>
+export type IChoiceReturn = { ids: string[] }
+
+async function upsertChoicesSectionHandler(
+    _data: IChoiceInput,
+    ctx: IMiddlewaresAccessCtx<IChoiceInput>,
     env: ServerEnv
-): Promise<IReturnAction<Partial<IChoice>>> {
+): Promise<IReturnAction<IChoiceReturn>> {
     const validatedFields = ctx.validatedFields
-    const data = validatedFields.data! as Required<IChoice>
-    const formId = data.form_id!
+    const validatedData = validatedFields.data!
+    const formId = validatedData.form_id!
+
+    if (validatedData.data?.every((d) => d.form_id !== formId)) {
+        throw new Error('All choices must belong to the same form.')
+    }
 
     const result = await withFormContext(env)(formId, async () =>
-        createChoiceSection(data)
+        upsertChoicesSection(validatedData.data as IChoice[])
     )
 
     return {
@@ -43,9 +56,10 @@ async function createChoiceSectionHandler(
 }
 
 export default defineServerRequest<
-    Partial<IChoice>,
-    IMiddlewaresAccessCtx<IChoice>
->(createChoiceSectionHandler, [
+    IChoiceInput,
+    IChoiceReturn,
+    IMiddlewaresAccessCtx<IChoiceInput>
+>(upsertChoicesSectionHandler, [
     requireAuth(),
     requireValidation(schema),
     requireResourceAccess(['read', 'write']),
