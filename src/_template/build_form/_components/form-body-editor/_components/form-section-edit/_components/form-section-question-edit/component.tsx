@@ -18,9 +18,7 @@ import {
 import { Textarea } from '@/_components/ui/textarea'
 import { QuestionTypes } from '@/_constants/question'
 import { ToastMessages } from '@/_constants/toast'
-import { useReturnActionUtils } from '@/_hooks/useReturnActionUtils'
 import { useServerActionState } from '@/_hooks/useServerActionState'
-import UpsertChoicesAction from '@/_server/_handlers/actions/question/choice/upsert'
 import EditQuestionAction from '@/_server/_handlers/actions/question/update'
 import { IFullForm } from '@/_server/domains/form/getFullForms'
 import { FormQuestionChoicesEditComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-question-edit/_components/form-question-choices-edit/component'
@@ -57,14 +55,10 @@ export function FormSectionQuestionEditComponent(
             },
         })
 
-    const { merge } = useReturnActionUtils()
-
     const { isPending, runAction } = useServerActionState(EditQuestionAction)
-    const { isPending: isChoicesPending, runAction: runChoicesAction } =
-        useServerActionState(UpsertChoicesAction)
 
     const onSaveContent = async (fields: IQuestionWithChoices) => {
-        const result_question = await runAction({
+        const result = await runAction({
             id: data.id,
             form_id: data.form_id,
             section_id: data.section_id,
@@ -73,23 +67,8 @@ export function FormSectionQuestionEditComponent(
             content: fields.content,
             type: fields.type,
             is_required: fields.is_required,
-        } as IQuestion)
-
-        if (
-            fields.type !== 'single_choice' &&
-            fields.type !== 'multiple_choice'
-        ) {
-            // If the question type is not choice-based, skip choices update
-            showToastFromResult(result_question, ToastMessages.genericSuccess)
-            return
-        }
-
-        const result_choices = await runChoicesAction({
-            form_id: data.form_id,
-            data: fields.choices,
-        })
-
-        const result = merge(result_question, result_choices)!
+            choices: fields.choices,
+        } as IQuestionWithChoices)
 
         showToastFromResult(result, ToastMessages.genericSuccess)
     }
@@ -103,7 +82,7 @@ export function FormSectionQuestionEditComponent(
                     onClick={handleSubmit(onSaveContent)}
                     className="mb-4"
                     size="sm"
-                    isLoading={isPending || isChoicesPending}
+                    isLoading={isPending}
                     disabled={!formState.isDirty}
                 >
                     Guardar

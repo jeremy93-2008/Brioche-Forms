@@ -3,6 +3,7 @@ import { hasSharedPermission } from '@/_server/_middlewares/helpers/requireResou
 import { isFormOwner } from '@/_server/_middlewares/helpers/requireResourceAccess/isFormOwner'
 import { isRoleListEmpty } from '@/_server/_middlewares/helpers/requireResourceAccess/isRoleListEmpty'
 import { stackServerApp } from '@/_stack/server'
+import { CurrentServerUser } from '@stackframe/stack'
 
 export function requireResourceAccess<TCtx extends IPermissionCtx>(
     roles: IRoles | IRoles[],
@@ -10,8 +11,8 @@ export function requireResourceAccess<TCtx extends IPermissionCtx>(
 ) {
     return async function executeResourceAccess<
         TData extends Record<string, any>,
-    >(data: TData, ctx: IMapCtx<TCtx>) {
-        const user = await stackServerApp.getUser()
+    >(data: TData, ctx: IMapCtx<TCtx & { user?: CurrentServerUser }>) {
+        const user = ctx.get('user') ?? (await stackServerApp.getUser())
 
         const folder_id = (data[opts?.folder_id_field || 'folder_id'] ??
             '') as string
