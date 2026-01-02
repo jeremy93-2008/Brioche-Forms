@@ -17,18 +17,18 @@ export function LoggingPlugin(opts?: {
 
     const info = (message: string) => {
         if (level === 'error' || level === 'warn') return
-        console.log(`[INFO]: ${message}`)
+        console.log(`[INFO] ${message}`)
     }
     const error = (message: string) => {
-        console.error(`[ERROR]: ${message}`)
+        console.error(`[ERROR] ${message}`)
     }
     const debug = (message: string) => {
         if (level !== 'debug') return
-        console.debug(`[DEBUG]: ${message}`)
+        console.debug(`[DEBUG] ${message}`)
     }
     const warn = (message: string) => {
         if (level === 'error') return
-        console.warn(`[WARN]: ${message}`)
+        console.warn(`[WARN] ${message}`)
     }
 
     return (env, opts) => {
@@ -49,13 +49,15 @@ export function LoggingPlugin(opts?: {
                 beforeRequest: [
                     () =>
                         info(
-                            `[req#${rid}] → serverFn:${opts.handlerName} @${t}`
+                            `🚀 [req#${rid}] → serverFn:${opts.handlerName} @${t}`
                         ),
                 ],
                 beforeMiddlewares: [
                     () => {
                         const ms = Date.now() - env.request.timestamp
-                        debug(`[req#${rid}] → middlewares started t+${ms}ms`)
+                        debug(
+                            `   🔐 🔄 [req#${rid}] → middlewares started t+${ms}ms`
+                        )
                     },
                 ],
                 afterMiddlewares: [
@@ -64,7 +66,7 @@ export function LoggingPlugin(opts?: {
                             opts.middlewareNames.join(', ') || 'none'
                         const ms = Date.now() - env.request.timestamp
                         debug(
-                            `[req#${rid}] → middlewares done t+${ms}ms - [${middlewaresNames}]`
+                            `   🔐 [req#${rid}] → middlewares done t+${ms}ms - [${middlewaresNames}]`
                         )
                     },
                 ],
@@ -72,7 +74,7 @@ export function LoggingPlugin(opts?: {
                     () => {
                         const ms = Date.now() - env.request.timestamp
                         debug(
-                            `[req#${rid}] → handler started:${opts.handlerName} t+${ms}ms`
+                            `   💡 🔄 [req#${rid}] → handler started:${opts.handlerName} t+${ms}ms`
                         )
                     },
                 ],
@@ -80,7 +82,7 @@ export function LoggingPlugin(opts?: {
                     () => {
                         const ms = Date.now() - env.request.timestamp
                         debug(
-                            `[req#${rid}] → handler done:${opts.handlerName} t+${ms}ms`
+                            `   💡 [req#${rid}] → handler done:${opts.handlerName} t+${ms}ms`
                         )
                     },
                 ],
@@ -88,7 +90,7 @@ export function LoggingPlugin(opts?: {
                     () => {
                         const ms = Date.now() - env.request.timestamp
                         info(
-                            `[req#${rid}] ← serverFn:${opts.handlerName} ${ms}ms`
+                            `🏁 [req#${rid}] ← serverFn:${opts.handlerName} ${ms}ms`
                         )
                     },
                 ],
