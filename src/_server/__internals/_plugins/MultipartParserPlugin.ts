@@ -1,4 +1,5 @@
 import { IServerPluginBuilder } from '@/_server/__internals/_plugins/types/type'
+import { ServerEnv } from '@/_server/__internals/defineServerRequest'
 
 export interface IMultipartPluginReturnCb {
     parse: (data: FormData) => Record<string, any>
@@ -25,14 +26,23 @@ export function MultipartParserPlugin(): IServerPluginBuilder<
         return parsed
     }
 
-    return (env, opts) => {
+    return (env: ServerEnv, opts) => {
         return {
             name: 'multipart',
             cb: () => ({
                 parse: multipartParse,
             }),
             hooks: {
-                beforeRequest: [],
+                beforeRequest: [
+                    () => {
+                        env.logging.debug(
+                            `   📦 🔄 [req#${env.request.id.slice(-5)}] → parsing multipart data`
+                        )
+                        env.logging.debug(
+                            `   📦 [req#${env.request.id.slice(-5)}] → multipart data parsed`
+                        )
+                    },
+                ],
                 beforeMiddlewares: [],
                 afterMiddlewares: [],
                 beforeHandler: [],

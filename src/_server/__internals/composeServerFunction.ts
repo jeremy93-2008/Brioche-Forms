@@ -34,12 +34,13 @@ export function composeServerFunction<
             middlewareNames: middlewares.map((m) => m.name),
         })
         try {
+            await runHooks(env.hooks.beforeRequest)
+
             const parsedArgs =
                 env.parsers?.reduce((prev, parse) => {
                     return parse(prev)
                 }, args) ?? args
 
-            await runHooks(env.hooks.beforeRequest)
             const ctx = new Map() as IMapCtx<TCtx>
             await runHooks(env.hooks.beforeMiddlewares)
             for (const middleware of middlewares) {
