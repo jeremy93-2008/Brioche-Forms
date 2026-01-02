@@ -33,7 +33,7 @@ const schema = createUpdateSchema(questionsTable, {
 
 const singleChoiceSchema = createInsertSchema(choicesTable, {
     id: (schema) => schema.min(3),
-    content: (schema) => schema.min(3),
+    content: (schema) => schema.min(0),
     order: (schema) => schema.nullable(),
     question_id: (schema) => schema.min(1),
     form_id: (schema) => schema.min(3),
