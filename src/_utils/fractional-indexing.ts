@@ -1,4 +1,5 @@
 /**
+ * TODO - Need to rewrote it in base-16 to take in account the "latest" string as a first-class citizen
  * Fractional Indexing for Lexicographic Ordering
  *
  * Generates strings that sort lexicographically between two positions.
