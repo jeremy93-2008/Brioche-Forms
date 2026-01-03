@@ -1,3 +1,4 @@
+import { FormGalleryUploadImageComponent } from '@/_components/shared/form-gallery-upload-image/component.client'
 import { Button } from '@/_components/ui/button'
 import { Field, FieldSet } from '@/_components/ui/field'
 import { Input } from '@/_components/ui/input'
@@ -10,7 +11,6 @@ import { IMediaUploadResult } from '@/_server/_handlers/actions/media/upload'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
 
 import { IFullForm } from '@/_server/domains/form/getFullForms'
-import { FormGalleryUploadImageComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-image-edit/_components/form-gallery-upload-image/component'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { IImage } from '@db/types'
 import { clsx } from 'clsx'
@@ -144,7 +144,7 @@ export function FormSectionImageEditComponent(
                         className="flex flex-1 w-[40vw] flex-col gap-4"
                     >
                         <FormGalleryUploadImageComponent
-                            displayedImageUrl={displayedImageUrl}
+                            selectedImageUrl={displayedImageUrl}
                             afterUpload={afterUpload}
                         />
                     </TabsContent>

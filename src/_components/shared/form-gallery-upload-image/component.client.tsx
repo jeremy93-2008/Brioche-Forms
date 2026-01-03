@@ -1,3 +1,4 @@
+import { FormGalleryMediaDeleteItem } from '@/_components/shared/form-gallery-upload-image/form-gallery-media-delete-item/component.client'
 import { Button } from '@/_components/ui/button'
 import {
     Collapsible,
@@ -20,7 +21,6 @@ import UploadMediaAction, {
     IMediaUploadResult,
 } from '@/_server/_handlers/actions/media/upload'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
-import { FormGalleryMediaDeleteItem } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-image-edit/_components/form-gallery-upload-image/form-gallery-media-delete-item/component'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { IMedia } from '@db/types'
 import { ChevronsUpDown, Circle, CircleCheckBig } from 'lucide-react'
@@ -28,14 +28,14 @@ import Image from 'next/image'
 import { FormEvent, useState } from 'react'
 
 interface IFormGalleryUploadImageComponentProps {
-    displayedImageUrl: string
+    selectedImageUrl: string
     afterUpload: (result: IReturnAction<IMediaUploadResult>) => void
 }
 
 export function FormGalleryUploadImageComponent(
     props: IFormGalleryUploadImageComponentProps
 ) {
-    const { displayedImageUrl, afterUpload } = props
+    const { selectedImageUrl, afterUpload } = props
     const { isPending, runAction } = useServerActionState<
         FormData,
         IMediaUploadResult
@@ -122,7 +122,7 @@ export function FormGalleryUploadImageComponent(
                                                 Borrar la imagen
                                             </TooltipContent>
                                         </Tooltip>
-                                        {displayedImageUrl === item.url ? (
+                                        {selectedImageUrl === item.url ? (
                                             <Tooltip>
                                                 <TooltipTrigger asChild>
                                                     <CircleCheckBig
