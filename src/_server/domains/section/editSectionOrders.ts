@@ -16,12 +16,10 @@ interface ISectionOrderUpdate {
  * @param updates - Array of {id, order, page_id?} for sections to update
  * @returns Number of sections updated
  */
-export async function batchUpdateSectionOrders(
+export async function editSectionOrders(
     formId: string,
     updates: ISectionOrderUpdate[]
 ): Promise<{ updated: number }> {
-    const db = getDbClient()
-
     let updatedCount = 0
 
     for (const update of updates) {
@@ -34,8 +32,8 @@ export async function batchUpdateSectionOrders(
             setData.page_id = update.page_id
         }
 
-        const result = await db.tx
-            .update(sectionsTable)
+        const result = await getDbClient()
+            .tx.update(sectionsTable)
             .set(setData)
             .where(
                 and(

@@ -1,10 +1,10 @@
 import { Card } from '@/_components/ui/card'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
 import { IFullForm } from '@/_server/domains/form/getFullForms'
-import { CreateNewImageButtonComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/_components/create-new-image-button/component'
-import { CreateNewQuestionButtonComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/_components/create-new-question-button/component'
-import { CreateNewTextButtonComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/_components/create-new-text-button/component'
-import { CreateNewVideoButtonComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/_components/create-new-video-button/component'
+import { CreateNewImageButtonComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/contents/page-create-section-card/_components/create-new-image-button/component'
+import { CreateNewQuestionButtonComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/contents/page-create-section-card/_components/create-new-question-button/component'
+import { CreateNewTextButtonComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/contents/page-create-section-card/_components/create-new-text-button/component'
+import { CreateNewVideoButtonComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/contents/page-create-section-card/_components/create-new-video-button/component'
 import { use } from 'react'
 
 interface IPageCreateSectionCardComponentProps {

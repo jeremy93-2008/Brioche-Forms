@@ -10,7 +10,7 @@ import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
-import { batchUpdateSectionOrders } from '@/_server/domains/section/batchUpdateSectionOrders'
+import { editSectionOrders } from '@/_server/domains/section/editSectionOrders'
 import { z } from 'zod'
 
 const schema = z.object({
@@ -40,7 +40,7 @@ async function reorderSectionsHandler(
     const { form_id, updates } = data
 
     const result = await withFormContext(env)(form_id, () =>
-        batchUpdateSectionOrders(form_id, updates)
+        editSectionOrders(form_id, updates)
     )
 
     return { status: 'success', data: result }

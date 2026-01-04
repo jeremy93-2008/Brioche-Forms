@@ -10,7 +10,7 @@ import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
-import { batchUpdatePageOrders } from '@/_server/domains/page/batchUpdatePageOrders'
+import { editPageOrders } from '@/_server/domains/page/editPageOrders'
 import { z } from 'zod'
 
 const schema = z.object({
@@ -39,7 +39,7 @@ async function reorderPagesHandler(
     const { form_id, updates } = data
 
     const result = await withFormContext(env)(form_id, () =>
-        batchUpdatePageOrders(form_id, updates)
+        editPageOrders(form_id, updates)
     )
 
     return { status: 'success', data: result }

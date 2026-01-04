@@ -1,6 +1,5 @@
 import { Button } from '@/_components/ui/button'
 import { Checkbox } from '@/_components/ui/checkbox'
-import { Field } from '@/_components/ui/field'
 import { Input } from '@/_components/ui/input'
 import { Label } from '@/_components/ui/label'
 import { RadioGroupItem } from '@/_components/ui/radio-group'
@@ -10,6 +9,7 @@ import {
     TooltipTrigger,
 } from '@/_components/ui/tooltip'
 import { IQuestionTypeValues } from '@/_constants/question'
+import { ChoiceWrapper } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-question-edit/_components/form-question-choices-edit/form-question-choice-single-edit/ChoicesWrapper'
 import { IFullChoices } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-question-edit/_components/form-question-choices-edit/types'
 import { IChoice } from '@db/types'
 import { TrashIcon } from 'lucide-react'
@@ -43,7 +43,7 @@ export function FormQuestionChoiceSingleEditComponent(
     }
 
     return (
-        <Field className="flex flex-row items-center mb-2">
+        <ChoiceWrapper id={item.id} isDraggable={item.id !== 'new'}>
             {type === 'single_choice' && (
                 <RadioGroupItem
                     className="min-w-6 h-6 flex-0"
@@ -118,6 +118,6 @@ export function FormQuestionChoiceSingleEditComponent(
                     </TooltipContent>
                 </Tooltip>
             )}
-        </Field>
+        </ChoiceWrapper>
     )
 }

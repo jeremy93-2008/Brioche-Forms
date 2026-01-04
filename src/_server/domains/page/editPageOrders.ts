@@ -15,17 +15,15 @@ interface IPageOrderUpdate {
  * @param updates - Array of {id, order} for pages to update
  * @returns Number of pages updated
  */
-export async function batchUpdatePageOrders(
+export async function editPageOrders(
     formId: string,
     updates: IPageOrderUpdate[]
 ): Promise<{ updated: number }> {
-    const db = getDbClient()
-
     let updatedCount = 0
 
     for (const update of updates) {
-        const result = await db.tx
-            .update(pagesTable)
+        const result = await getDbClient()
+            .tx.update(pagesTable)
             .set({ order: update.order })
             .where(
                 and(

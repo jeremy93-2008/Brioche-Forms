@@ -29,8 +29,7 @@ export async function upsertChoicesSection(data: IChoice[]) {
                 is_free_text: sql.raw(
                     `excluded.${choicesTable.is_free_text.name}`
                 ),
-                [sql.identifier('order') as unknown as string]:
-                    sql`excluded.${choicesTable.order.name}`,
+                order: sql.raw(`excluded."${choicesTable.order.name}"`),
             },
         })
         .returning({ id: choicesTable.id })

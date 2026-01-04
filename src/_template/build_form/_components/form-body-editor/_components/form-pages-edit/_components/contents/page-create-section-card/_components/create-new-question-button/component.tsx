@@ -10,9 +10,9 @@ import {
 import { Textarea } from '@/_components/ui/textarea'
 import { QuestionTypes } from '@/_constants/question'
 import CreateQuestionAction from '@/_server/_handlers/actions/question/create'
-import { CreateNewSectionButtonComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/_components/shared/create-new-section-button/component'
-import { ICreateNewSectionButtonProps } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/_components/shared/types'
-import { useAfterSaveNewSectionOptimistic } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/page-create-section-card/hooks/useAfterSaveNewSectionOptimistic'
+import { CreateNewSectionButtonComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/contents/page-create-section-card/_components/shared/create-new-section-button/component'
+import { ICreateNewSectionButtonProps } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/contents/page-create-section-card/_components/shared/types'
+import { useAfterSaveNewSectionOptimistic } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/contents/page-create-section-card/hooks/useAfterSaveNewSectionOptimistic'
 import { BadgeQuestionMarkIcon } from 'lucide-react'
 import { Controller } from 'react-hook-form'
 
