@@ -1,3 +1,4 @@
+import { DragHandler } from '@/_components/dnd/dragHandle'
 import { Button } from '@/_components/ui/button'
 import { Checkbox } from '@/_components/ui/checkbox'
 import { Input } from '@/_components/ui/input'
@@ -44,6 +45,12 @@ export function FormQuestionChoiceSingleEditComponent(
 
     return (
         <ChoiceWrapper id={item.id} isDraggable={item.id !== 'new'}>
+            {item.id !== 'new' && (
+                <DragHandler
+                    className="flex-0 p-2 pr-0"
+                    iconClassName="!w-4 !h-4 stroke-secondary"
+                />
+            )}
             {type === 'single_choice' && (
                 <RadioGroupItem
                     className="min-w-6 h-6 flex-0"

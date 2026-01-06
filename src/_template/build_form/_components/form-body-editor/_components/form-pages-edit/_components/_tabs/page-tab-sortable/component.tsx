@@ -1,10 +1,13 @@
 'use client'
 
+import { DragHandler } from '@/_components/dnd/dragHandle'
+import { SortableItemContext } from '@/_components/dnd/sortableItem'
 import { TabsTrigger } from '@/_components/ui/tabs'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
 import { IFullForm } from '@/_server/domains/form/getFullForms'
 import { PageDeleteFieldDialogComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/_tabs/page-delete-field-dialog/component'
 import { PageEditFieldDialogComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/_tabs/page-edit-field-dialog/component'
+import { use } from 'react'
 
 interface ISortablePageTabProps {
     page: IFullForm['pages'][number]
@@ -31,6 +34,8 @@ export function PageTabSortableComponent({
     afterSaveUpdate,
     afterSaveDelete,
 }: ISortablePageTabProps) {
+    const sortable = use(SortableItemContext)
+
     return (
         <TabsTrigger
             asChild
@@ -38,8 +43,14 @@ export function PageTabSortableComponent({
             value={page.id}
         >
             <section className="w-fit flex-none flex items-center group">
-                {page.title || 'Página sin título'}
                 {isActive && (
+                    <DragHandler
+                        className="w-0 opacity-0 group-hover:opacity-100 group-hover:w-4 transition-width"
+                        iconClassName="!w-4 !h-4"
+                    />
+                )}
+                {page.title || 'Página sin título'}
+                {isActive && !sortable?.isDragging && (
                     <>
                         <PageEditFieldDialogComponent
                             page={page}

@@ -1,9 +1,15 @@
+import { SortableItem } from '@/_components/dnd/sortableItem'
 import { RadioGroup } from '@/_components/ui/radio-group'
 import { IQuestionTypeValues } from '@/_constants/question'
+import { useSortableItems } from '@/_hooks/useSortableItems'
+import { withDndDragEnd } from '@/_lib/dnd'
 import { FormQuestionChoiceSingleEditComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-question-edit/_components/form-question-choices-edit/form-question-choice-single-edit/componente'
 import { IFullChoices } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-question-edit/_components/form-question-choices-edit/types'
 import { createTempId } from '@/_utils/temp-id'
 import { IChoice } from '@db/types'
+import { DndContext } from '@dnd-kit/core'
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { Fragment } from 'react'
 
 interface IFormQuestionChoicesEditComponentProps {
@@ -49,22 +55,49 @@ export function FormQuestionChoicesEditComponent(
         }
     }
 
+    const handleMove = async <T extends IFullChoices[number]>(
+        _movedChoice: T,
+        _modifiedChoices: T[],
+        allChoices: T[]
+    ) => {
+        onDataChange([...allChoices])
+    }
+
+    const { sortedItems: sortedChoices, moveItem } = useSortableItems(data, {
+        onMove: handleMove,
+    })
+
     const QuestionWrapper = type === 'single_choice' ? RadioGroup : Fragment
 
-    const isFreeTextAvailable = data.every((item) => item.is_free_text === 0)
+    const isFreeTextAvailable = sortedChoices.every(
+        (item) => item.is_free_text === 0
+    )
 
     return (
         <section>
             <QuestionWrapper>
-                {data.map((item) => (
-                    <FormQuestionChoiceSingleEditComponent
-                        key={item.id}
-                        item={item}
-                        type={type}
-                        isFreeTextAvailable={isFreeTextAvailable}
-                        onChange={onChoiceChange}
-                    />
-                ))}
+                <DndContext
+                    onDragEnd={withDndDragEnd(moveItem)}
+                    modifiers={[restrictToVerticalAxis]}
+                >
+                    <SortableContext
+                        id="choices"
+                        items={data}
+                        strategy={verticalListSortingStrategy}
+                    >
+                        {sortedChoices.map((item) => (
+                            <SortableItem key={item.id} id={item.id}>
+                                <FormQuestionChoiceSingleEditComponent
+                                    key={item.id}
+                                    item={item}
+                                    type={type}
+                                    isFreeTextAvailable={isFreeTextAvailable}
+                                    onChange={onChoiceChange}
+                                />
+                            </SortableItem>
+                        ))}
+                    </SortableContext>
+                </DndContext>
                 {/* New Question Choice - outside sortable context */}
                 <FormQuestionChoiceSingleEditComponent
                     item={{
