@@ -1,9 +1,9 @@
 import { SectionConstants } from '@/_server/_constants/section'
-import { CurrentServerUser } from '@stackframe/stack'
-import { v7 as uuidv7 } from 'uuid'
 import { db } from '@db/index'
 import { formsTable, pagesTable, sectionsTable, textsTable } from '@db/tables'
 import { IForm } from '@db/types'
+import { CurrentServerUser } from '@stackframe/stack'
+import { v7 as uuidv7 } from 'uuid'
 
 export async function createForm(
     user: CurrentServerUser,
@@ -17,7 +17,7 @@ export async function createForm(
     const result = await db.transaction(async (tx) => {
         const form_result = await tx.insert(formsTable).values({
             id: form_id,
-            title: data.title || 'Untitled Form',
+            title: data.title || 'Formulario sin título',
             description: data.description || '',
             createdAt: data.createdAt ?? Date.now(),
             updatedAt: data.updatedAt ?? Date.now(),

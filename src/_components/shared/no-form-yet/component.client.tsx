@@ -8,31 +8,11 @@ import {
     EmptyMedia,
     EmptyTitle,
 } from '@/_components/ui/empty'
-import {
-    type IReturnState,
-    useServerActionState,
-} from '@/_hooks/useServerActionState'
-import createFormAction from '@/_server/_handlers/actions/form/create'
+import { useServerActionCreateForm } from '@/_hooks/useServerActionCreateForm/useServerActionCreateForm'
 import { Table } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { toast } from 'sonner'
-import { IForm } from '@db/types'
 
 export function NoFormYetComponent() {
-    const router = useRouter()
-
-    const afterCallback = (state: IReturnState<Partial<IForm>>) => {
-        if (state.status === 'success') {
-            router.push('/form/' + state.data.id)
-        } else if (state.status === 'error') {
-            toast.error('Error al crear el formulario: ' + state.error?.message)
-        }
-    }
-
-    const { isPending, handleAction } = useServerActionState<Partial<IForm>>(
-        createFormAction,
-        afterCallback
-    )
+    const { isPending, handleAction } = useServerActionCreateForm()
 
     return (
         <Empty>
