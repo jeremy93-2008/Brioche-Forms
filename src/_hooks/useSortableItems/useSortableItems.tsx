@@ -4,13 +4,14 @@ import {
 } from '@/_hooks/useSortableItems/fractional-indexing'
 import { type ISortableItem } from '@/_hooks/useSortableItems/types'
 import { log } from '@/_utils/log'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import isEqual from 'react-fast-compare'
 
 /**
  * Hook to manage sortable items with lexicographical fractional indexing with move and discard functionality.
  * @param items - Array of items to be sorted, each having an 'id' and 'order' property.
  * @param opts - Optional callbacks for move and discard actions.
- * @returns An object containing sorted items, move function, change status, pending moves, and discard function.
+ * @returns An object containing sorted items, move function, change status, modified items, and discard function.
  */
 export function useSortableItems<T extends ISortableItem>(
     items: T[],
@@ -46,6 +47,11 @@ export function useSortableItems<T extends ISortableItem>(
         let tempSortedItems = [...sortedItems]
 
         if (tempSortedItems.some((e) => e.order === 'latest')) {
+            tempSortedItems = materializeOrders(tempSortedItems)
+        }
+
+        if (tempSortedItems.some((e) => e.order.length >= 10)) {
+            log.warn('Rebalancing orders due to excessive length.')
             tempSortedItems = materializeOrders(tempSortedItems)
         }
 
@@ -92,6 +98,24 @@ export function useSortableItems<T extends ISortableItem>(
         opts?.onDiscard?.()
         log.debug('Discarded changes, reverted to initial items.')
     }
+
+    useEffect(() => {
+        if (isEqual(getSortedItems(items), sortedItems)) return
+        // Update sorted items to reflect any changes in the original items
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setSortedItems(
+            getSortedItems(
+                items.map((i) => {
+                    return {
+                        ...i,
+                        order:
+                            sortedItems.find((s) => s.id === i.id)?.order ||
+                            i.order,
+                    }
+                })
+            )
+        )
+    }, [getSortedItems, items, sortedItems])
 
     return {
         sortedItems,
