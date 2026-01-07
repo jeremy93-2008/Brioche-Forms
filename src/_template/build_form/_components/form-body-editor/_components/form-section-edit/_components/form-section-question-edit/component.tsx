@@ -1,3 +1,4 @@
+import { SortableItemContext } from '@/_components/dnd/sortableItem'
 import { Button } from '@/_components/ui/button'
 import { Checkbox } from '@/_components/ui/checkbox'
 import {
@@ -24,7 +25,8 @@ import { IFullForm } from '@/_server/domains/form/getFullForms'
 import { FormQuestionChoicesEditComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-question-edit/_components/form-question-choices-edit/component'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { IQuestion } from '@db/types'
-import { ChevronsUpDown } from 'lucide-react'
+import { ChevronsUpDown, EllipsisIcon } from 'lucide-react'
+import { use } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 
 export type IQuestionWithChoices = IQuestion & {
@@ -74,6 +76,8 @@ export function FormSectionQuestionEditComponent(
     }
 
     const currentQuestionType = useWatch({ name: 'type', control })
+
+    const sortableItem = use(SortableItemContext)
 
     return (
         <FieldSet className="relative flex-col">
@@ -186,34 +190,49 @@ export function FormSectionQuestionEditComponent(
             {(currentQuestionType === 'single_choice' ||
                 currentQuestionType === 'multiple_choice') && (
                 <Field className="mb-4">
-                    <Collapsible defaultOpen>
-                        <CollapsibleTrigger>
+                    {!sortableItem?.isSorting && (
+                        <Collapsible defaultOpen>
+                            <CollapsibleTrigger>
+                                <Label className="flex text-sm font-medium cursor-pointer">
+                                    Lista de Respuestas disponibles
+                                    <h6 className="text-xs">
+                                        ({data.choices.length} respuestas)
+                                    </h6>
+                                    <ChevronsUpDown className="w-4! h-4!" />
+                                </Label>
+                            </CollapsibleTrigger>
+                            <CollapsibleContent>
+                                <Controller
+                                    control={control}
+                                    name="choices"
+                                    render={({
+                                        field: { value, onChange },
+                                    }) => (
+                                        <section className="mt-4">
+                                            <FormQuestionChoicesEditComponent
+                                                data={value}
+                                                onDataChange={onChange}
+                                                questionId={data.id}
+                                                formId={data.form_id}
+                                                type={currentQuestionType}
+                                            />
+                                        </section>
+                                    )}
+                                />
+                            </CollapsibleContent>
+                        </Collapsible>
+                    )}
+                    {sortableItem?.isSorting && (
+                        <div>
                             <Label className="flex text-sm font-medium cursor-pointer">
                                 Lista de Respuestas disponibles
                                 <h6 className="text-xs">
                                     ({data.choices.length} respuestas)
                                 </h6>
-                                <ChevronsUpDown className="w-4! h-4!" />
                             </Label>
-                        </CollapsibleTrigger>
-                        <CollapsibleContent>
-                            <Controller
-                                control={control}
-                                name="choices"
-                                render={({ field: { value, onChange } }) => (
-                                    <section className="mt-4">
-                                        <FormQuestionChoicesEditComponent
-                                            data={value}
-                                            onDataChange={onChange}
-                                            questionId={data.id}
-                                            formId={data.form_id}
-                                            type={currentQuestionType}
-                                        />
-                                    </section>
-                                )}
-                            />
-                        </CollapsibleContent>
-                    </Collapsible>
+                            <EllipsisIcon className="w-8 h-8 mx-auto mt-4 mb-6 stroke-secondary" />
+                        </div>
+                    )}
                 </Field>
             )}
         </FieldSet>

@@ -69,12 +69,11 @@ export function FormSectionEditComponent(
                             )}
                         </>
                     )}
-                {sortableItem?.data.sortable.containerId === 'sections' &&
-                    sortableItem?.isDragging && (
-                        <div>
-                            <EllipsisIcon className="w-8 h-8 mx-auto mt-4 mb-6 stroke-secondary" />
-                        </div>
-                    )}
+                {sortableItem?.isDragging && (
+                    <div>
+                        <EllipsisIcon className="w-8 h-8 mx-auto mt-4 mb-6 stroke-secondary" />
+                    </div>
+                )}
             </div>
         </Card>
     )
