@@ -25,6 +25,7 @@ export function useAfterSaveNewSectionOptimistic(params: ISectionContentType) {
             id: string
             form_id: string
             page_id: string
+            order: string
             title: string
             type?: string
             name?: string
@@ -38,7 +39,7 @@ export function useAfterSaveNewSectionOptimistic(params: ISectionContentType) {
                 id: result.data.section_id,
                 title: updatedData.title ?? updatedData.name,
                 description: '',
-                order: 'latest',
+                order: updatedData.order,
                 conditions: '',
                 page_id: updatedData.page_id,
                 form_id: updatedData.form_id,

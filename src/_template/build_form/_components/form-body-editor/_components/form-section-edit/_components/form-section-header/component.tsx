@@ -9,8 +9,8 @@ import { useAfterSaveOptimisticData } from '@/_hooks/useAfterSaveOptimisticData/
 import DeleteSectionAction from '@/_server/_handlers/actions/section/delete'
 import EditSectionAction from '@/_server/_handlers/actions/section/update'
 import { IFullForm } from '@/_server/domains/form/getFullForms'
-import { Pen, Trash } from 'lucide-react'
 import { ISection } from '@db/types'
+import { Pen, Trash } from 'lucide-react'
 
 interface IFormSectionEditNameComponentProps {
     data: IFullForm['pages'][0]['sections'][0]
@@ -24,7 +24,7 @@ export function FormSectionHeaderComponent(
     const { afterSave } = useAfterSaveOptimisticData({ type: 'update' })
 
     return (
-        <section className="flex items-center group">
+        <section className="flex items-center">
             <FormFieldEditDialog
                 title="Renombrar Sección"
                 serverAction={EditSectionAction}
@@ -33,7 +33,7 @@ export function FormSectionHeaderComponent(
                 <FormFieldEditDialogTrigger>
                     <Button className="text-sm" variant="link">
                         <h3>{data.title || 'Sección sin título'}</h3>
-                        <Pen className="opacity-0 transition-opacity group-hover:opacity-100 " />
+                        <Pen className="opacity-0 transition-opacity group-hover/section:opacity-100 " />
                     </Button>
                 </FormFieldEditDialogTrigger>
                 <FormFieldEditDialogContent<ISection>>
@@ -68,7 +68,7 @@ export function FormSectionHeaderComponent(
             >
                 <FormFieldEditDialogTrigger>
                     <Button
-                        className="text-sm opacity-0 transition-opacity group-hover:opacity-100 delay-75"
+                        className="text-sm opacity-0 transition-opacity group-hover/section:opacity-100 delay-75"
                         variant="ghost"
                         size="xs"
                     >

@@ -12,9 +12,9 @@ import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
 import { createSection } from '@/_server/domains/section/createSection'
 import { createVideoSection } from '@/_server/domains/section/video/createVideoSection'
+import { videosTable } from '@db/tables'
 import { createInsertSchema } from 'drizzle-zod'
 import z from 'zod'
-import { videosTable } from '@db/tables'
 
 const schema = createInsertSchema(videosTable, {
     id: (schema) => schema.min(3),
@@ -47,13 +47,14 @@ async function createVideoSectionHandler(
         const new_section = await createSection({
             title: data.title ?? 'Video',
             description: '',
-            order: 'latest',
+            order: data.order ?? 'latest',
             conditions: '',
             page_id: data.page_id,
             form_id: data.form_id,
         })
         const video_section = await createVideoSection({
             ...data,
+            order: 'latest',
             section_id: new_section.id,
         })
 

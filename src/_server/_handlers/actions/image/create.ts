@@ -12,9 +12,9 @@ import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
 import { createSection } from '@/_server/domains/section/createSection'
 import { createImageSection } from '@/_server/domains/section/image/createImageSection'
+import { imagesTable } from '@db/tables'
 import { createInsertSchema } from 'drizzle-zod'
 import z from 'zod'
-import { imagesTable } from '@db/tables'
 
 const schema = createInsertSchema(imagesTable, {
     id: (schema) => schema.min(3),
@@ -47,13 +47,14 @@ async function createImageSectionHandler(
         const new_section = await createSection({
             title: data.title ?? 'Imagen',
             description: '',
-            order: 'latest',
+            order: data.order ?? 'latest',
             conditions: '',
             page_id: data.page_id,
             form_id: data.form_id,
         })
         const new_image_section = await createImageSection({
             ...data,
+            order: 'latest',
             section_id: new_section.id,
         })
 

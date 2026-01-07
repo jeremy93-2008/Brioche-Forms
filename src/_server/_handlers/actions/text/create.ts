@@ -12,9 +12,9 @@ import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
 import { createSection } from '@/_server/domains/section/createSection'
 import { createTextSection } from '@/_server/domains/section/text/createTextSection'
+import { textsTable } from '@db/tables'
 import { createInsertSchema } from 'drizzle-zod'
 import z from 'zod'
-import { textsTable } from '@db/tables'
 
 const schema = createInsertSchema(textsTable, {
     id: (schema) => schema.nullable(),
@@ -46,13 +46,14 @@ async function createTextSectionHandler(
         const new_section = await createSection({
             title: data.title ?? 'Texto',
             description: '',
-            order: 'latest',
+            order: data.order ?? 'latest',
             conditions: '',
             page_id: data.page_id,
             form_id: data.form_id,
         })
         const new_text_section = await createTextSection({
             ...data,
+            order: 'latest',
             section_id: new_section.id,
         })
         return { section_id: new_section.id, text_id: new_text_section.id }

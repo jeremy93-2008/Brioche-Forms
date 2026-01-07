@@ -2,6 +2,7 @@
 
 import { SortableItem } from '@/_components/dnd/sortableItem'
 import { useSortableItems } from '@/_hooks/useSortableItems'
+import { nextOrder } from '@/_hooks/useSortableItems/fractional-indexing'
 import { ISortableItem } from '@/_hooks/useSortableItems/types'
 import { withDndDragEnd } from '@/_lib/dnd'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
@@ -70,7 +71,12 @@ export function PageSectionsSortableComponent({
                             />
                         </SortableItem>
                     ))}
-                    <PageCreateSectionCardComponent page={page} />
+                    <PageCreateSectionCardComponent
+                        page={page}
+                        nextOrder={nextOrder(
+                            sortedSections.map((s) => s.order)
+                        )}
+                    />
                 </section>
             </SortableContext>
         </DndContext>

@@ -8,7 +8,7 @@ import { ClapperboardIcon } from 'lucide-react'
 export function CreateNewVideoButtonComponent(
     props: ICreateNewSectionButtonProps
 ) {
-    const { formId, pageId } = props
+    const { formId, pageId, nextOrder } = props
 
     const { afterSave } = useAfterSaveNewSectionOptimistic({
         contentType: 'videos',
@@ -35,6 +35,12 @@ export function CreateNewVideoButtonComponent(
                         id="page_id"
                         value={pageId}
                         {...form.register('page_id')}
+                    />
+                    <input
+                        type="hidden"
+                        id="order"
+                        value={nextOrder}
+                        {...form.register('order')}
                     />
                     <Input
                         id="title"

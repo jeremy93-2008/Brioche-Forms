@@ -2,6 +2,7 @@ import { SortableItem } from '@/_components/dnd/sortableItem'
 import { RadioGroup } from '@/_components/ui/radio-group'
 import { IQuestionTypeValues } from '@/_constants/question'
 import { useSortableItems } from '@/_hooks/useSortableItems'
+import { nextOrder } from '@/_hooks/useSortableItems/fractional-indexing'
 import { withDndDragEnd } from '@/_lib/dnd'
 import { FormQuestionChoiceSingleEditComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-question-edit/_components/form-question-choices-edit/form-question-choice-single-edit/componente'
 import { IFullChoices } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-question-edit/_components/form-question-choices-edit/types'
@@ -40,7 +41,7 @@ export function FormQuestionChoicesEditComponent(
                 content: params.content || '',
                 question_id: questionId,
                 form_id: formId,
-                order: 'latest',
+                order: params.order ?? 'latest',
                 is_free_text: params.is_free_text || 0,
                 multipleChoices: [],
             }
@@ -86,7 +87,30 @@ export function FormQuestionChoicesEditComponent(
                         strategy={verticalListSortingStrategy}
                     >
                         {sortedChoices.map((item) => (
-                            <SortableItem key={item.id} id={item.id}>
+                            <Fragment key={item.id}>
+                                {!item.is_free_text ? (
+                                    <SortableItem key={item.id} id={item.id}>
+                                        <FormQuestionChoiceSingleEditComponent
+                                            key={item.id}
+                                            item={item}
+                                            type={type}
+                                            isFreeTextAvailable={
+                                                isFreeTextAvailable
+                                            }
+                                            onChange={onChoiceChange}
+                                        />
+                                    </SortableItem>
+                                ) : (
+                                    <></>
+                                )}
+                            </Fragment>
+                        ))}
+                    </SortableContext>
+                </DndContext>
+                <>
+                    {sortedChoices.map((item) => (
+                        <Fragment key={item.id}>
+                            {item.is_free_text ? (
                                 <FormQuestionChoiceSingleEditComponent
                                     key={item.id}
                                     item={item}
@@ -94,10 +118,12 @@ export function FormQuestionChoicesEditComponent(
                                     isFreeTextAvailable={isFreeTextAvailable}
                                     onChange={onChoiceChange}
                                 />
-                            </SortableItem>
-                        ))}
-                    </SortableContext>
-                </DndContext>
+                            ) : (
+                                <></>
+                            )}
+                        </Fragment>
+                    ))}
+                </>
                 {/* New Question Choice - outside sortable context */}
                 <FormQuestionChoiceSingleEditComponent
                     item={{
@@ -105,7 +131,11 @@ export function FormQuestionChoicesEditComponent(
                         content: '',
                         question_id: questionId,
                         form_id: formId,
-                        order: 'latest',
+                        order: nextOrder(
+                            sortedChoices
+                                .filter((c) => !c.is_free_text)
+                                .map((c) => c.order)
+                        ),
                         is_free_text: 0,
                         multipleChoices: [],
                     }}

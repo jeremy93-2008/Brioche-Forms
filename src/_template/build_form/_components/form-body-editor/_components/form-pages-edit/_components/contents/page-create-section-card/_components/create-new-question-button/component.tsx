@@ -19,7 +19,7 @@ import { Controller } from 'react-hook-form'
 export function CreateNewQuestionButtonComponent(
     props: ICreateNewSectionButtonProps
 ) {
-    const { formId, pageId } = props
+    const { formId, pageId, nextOrder } = props
 
     const { afterSave } = useAfterSaveNewSectionOptimistic({
         contentType: 'questions',
@@ -52,6 +52,12 @@ export function CreateNewQuestionButtonComponent(
                         id="name"
                         value="Pregunta"
                         {...form.register('name')}
+                    />
+                    <input
+                        type="hidden"
+                        id="order"
+                        value={nextOrder}
+                        {...form.register('order')}
                     />
                     <FieldGroup>
                         <Field>

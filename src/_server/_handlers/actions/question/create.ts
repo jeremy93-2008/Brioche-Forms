@@ -12,9 +12,9 @@ import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
 import { createSection } from '@/_server/domains/section/createSection'
 import { createQuestionSection } from '@/_server/domains/section/question/createQuestionSection'
+import { questionsTable } from '@db/tables'
 import { createInsertSchema } from 'drizzle-zod'
 import z from 'zod'
-import { questionsTable } from '@db/tables'
 
 const schema = createInsertSchema(questionsTable, {
     id: (schema) => schema.nullable(),
@@ -48,13 +48,14 @@ async function createQuestionSectionHandler(
         const new_section = await createSection({
             title: 'Pregunta',
             description: '',
-            order: 'latest',
+            order: data.order ?? 'latest',
             conditions: '',
             page_id: data.page_id,
             form_id: data.form_id,
         })
         const question_section = await createQuestionSection({
             ...data,
+            order: 'latest',
             section_id: new_section.id,
         })
 

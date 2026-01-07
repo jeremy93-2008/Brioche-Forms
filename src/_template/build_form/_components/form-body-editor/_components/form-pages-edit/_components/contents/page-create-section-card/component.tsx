@@ -9,12 +9,13 @@ import { use } from 'react'
 
 interface IPageCreateSectionCardComponentProps {
     page: IFullForm['pages'][0]
+    nextOrder: string
 }
 
 export function PageCreateSectionCardComponent(
     props: IPageCreateSectionCardComponentProps
 ) {
-    const { page } = props
+    const { page, nextOrder } = props
     const { data } = use(SingleFormSelectedContext)!
 
     return (
@@ -24,18 +25,22 @@ export function PageCreateSectionCardComponent(
                 <CreateNewQuestionButtonComponent
                     formId={data.id}
                     pageId={page.id}
+                    nextOrder={nextOrder}
                 />
                 <CreateNewTextButtonComponent
                     formId={data.id}
                     pageId={page.id}
+                    nextOrder={nextOrder}
                 />
                 <CreateNewImageButtonComponent
                     formId={data.id}
                     pageId={page.id}
+                    nextOrder={nextOrder}
                 />
                 <CreateNewVideoButtonComponent
                     formId={data.id}
                     pageId={page.id}
+                    nextOrder={nextOrder}
                 />
             </section>
         </Card>

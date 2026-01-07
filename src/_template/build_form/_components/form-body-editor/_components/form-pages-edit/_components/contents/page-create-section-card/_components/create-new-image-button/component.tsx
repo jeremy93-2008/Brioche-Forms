@@ -8,7 +8,7 @@ import { ImageIcon } from 'lucide-react'
 export function CreateNewImageButtonComponent(
     props: ICreateNewSectionButtonProps
 ) {
-    const { formId, pageId } = props
+    const { formId, pageId, nextOrder } = props
 
     const { afterSave } = useAfterSaveNewSectionOptimistic({
         contentType: 'images',
@@ -35,6 +35,12 @@ export function CreateNewImageButtonComponent(
                         id="page_id"
                         value={pageId}
                         {...form.register('page_id')}
+                    />
+                    <input
+                        type="hidden"
+                        id="order"
+                        value={nextOrder}
+                        {...form.register('order')}
                     />
                     <Input
                         id="title"

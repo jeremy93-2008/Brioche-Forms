@@ -45,7 +45,7 @@ export function FormQuestionChoiceSingleEditComponent(
 
     return (
         <ChoiceWrapper id={item.id} isDraggable={item.id !== 'new'}>
-            {item.id !== 'new' && (
+            {item.id !== 'new' && !item.is_free_text && (
                 <DragHandler
                     className="flex-0 p-2 pr-0"
                     iconClassName="!w-4 !h-4 stroke-secondary"
@@ -83,6 +83,7 @@ export function FormQuestionChoiceSingleEditComponent(
                                 onClick={() =>
                                     onChoiceChange('upsert', {
                                         ...item,
+                                        order: 'zzzzzz', // Ensure it goes to the end
                                         is_free_text: 1,
                                     })
                                 }
