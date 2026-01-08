@@ -81,7 +81,7 @@ export function FormGalleryUploadImageComponent(
                 <Collapsible defaultOpen={false}>
                     <CollapsibleTrigger className="flex items-center justify-between mb-2 w-full cursor-pointer">
                         <section className="flex items-baseline">
-                            <h3 className="mt-2 mb-2">Galería</h3>
+                            <h3 className="text-xs mt-2 mb-2">Galería</h3>
                             <sub className="ml-1 text-[10px]">
                                 (
                                 {mediasResult?.status === 'success'

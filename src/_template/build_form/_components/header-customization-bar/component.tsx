@@ -1,5 +1,8 @@
+'use client'
 import { Button } from '@/_components/ui/button'
-import { CogIcon, Paintbrush2, Play, UploadCloud } from 'lucide-react'
+import { FormPreferencesPopupComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-preferences-popup/component'
+import { FormStylesPopupComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-styles-popup/component'
+import { Play, UploadCloud } from 'lucide-react'
 
 export function HeaderCustomizationBarComponent() {
     // style, settings, preview, publish buttons
@@ -11,14 +14,8 @@ export function HeaderCustomizationBarComponent() {
                 </h1>
             </div>
             <div className="flex items-center justify-end font-sans gap-2 mx-16 my-2">
-                <Button variant="link">
-                    <Paintbrush2 />
-                    Estilos
-                </Button>
-                <Button variant="link">
-                    <CogIcon />
-                    Ajustes
-                </Button>
+                <FormStylesPopupComponent />
+                <FormPreferencesPopupComponent />
                 <Button variant="link">
                     <Play />
                     Previsualizar

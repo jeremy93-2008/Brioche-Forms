@@ -23,7 +23,7 @@ interface IListOfFormsTemplateProps {
 export function ListOfFormsTemplate(props: IListOfFormsTemplateProps) {
     const { data } = props
 
-    const { isPending, runAction } = useServerActionCreateForm()
+    const { runAction } = useServerActionCreateForm()
 
     return (
         <section className="flex justify-center gap-6 flex-1 w-full">

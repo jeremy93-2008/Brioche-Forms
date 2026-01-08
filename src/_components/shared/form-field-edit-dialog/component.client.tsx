@@ -93,6 +93,7 @@ export type IFormFieldEditDialogContentChildrenOpts = {
 }
 
 interface IFormFieldEditDialogContentProps<T> {
+    className?: string
     // children is a function that receives the form methods
     children: (
         form: ReturnType<typeof useForm<Partial<T>>>,
@@ -209,7 +210,7 @@ export function FormFieldEditDialogContent<T>(
     }, [form, isOpen])
 
     return (
-        <DialogContent>
+        <DialogContent className={props.className}>
             <DialogHeader>
                 <DialogTitle>{title}</DialogTitle>
             </DialogHeader>

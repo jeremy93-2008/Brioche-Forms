@@ -14,13 +14,20 @@ export const formsTable = sqliteTable('forms', {
     description: text('description'),
     backgroundImage: text('background_image'),
     headerImage: text('header_image'),
+    formStyle: text('form_style').notNull().default('brioche'), // e.g., 'standard', 'brioche'
+    theme: text('theme').notNull().default('dark'), // e.g., 'light', 'dark', 'system'
     isPublished: int('is_published').notNull(),
     isDraft: int('is_draft').notNull(),
     canModifyResponses: int('can_modify_responses').notNull(),
+    mustLoginToRespond: int('must_login_to_respond').notNull().default(0),
     responseLimit: int('response_limit'),
     responseLimitDate: int('response_limit_date'),
     acceptResponses: int('accept_responses').notNull().default(1),
     messageIfNotAcceptResponses: text('message_if_not_accept_responses'),
+    messageAfterSubmit: text('message_after_submit'),
+    messageIfLimitReached: text('message_if_limit_reached'),
+    shuffleQuestions: int('shuffle_questions').notNull().default(0),
+    savePartialResponses: int('save_partial_responses').notNull().default(0),
 })
 
 export const tagsFormsTable = sqliteTable('tags_forms', {

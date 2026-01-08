@@ -1,8 +1,8 @@
 import { IRoles } from '@/_server/_middlewares/requireResourceAccess'
-import { CurrentServerUser } from '@stackframe/stack'
-import { and, eq } from 'drizzle-orm'
 import { db } from '@db/index'
 import { sharedFoldersTable, sharedFormsTable } from '@db/tables'
+import { CurrentServerUser } from '@stackframe/stack'
+import { and, eq } from 'drizzle-orm'
 
 interface IHasSharedPermissionParams {
     folder_id: string
