@@ -1,0 +1,1 @@
+ALTER TABLE `forms` ADD `questionnaire_display_mode` text DEFAULT 'all_pages' NOT NULL;

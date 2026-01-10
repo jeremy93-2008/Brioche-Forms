@@ -20,7 +20,7 @@ export function useServerActionCreateForm(
     const afterCallback = (state: IReturnState<Partial<IForm>>) => {
         if (!redirectToNewForm) return
         if (state.status === 'success') {
-            router.push('/form/' + state.data.id)
+            router.push('/form/' + state.data.id + '/edit')
         } else if (state.status === 'error') {
             toast.error('Error al crear el formulario: ' + state.error?.message)
         }

@@ -1,4 +1,5 @@
 import { Field, FieldGroup, FieldLabel, FieldSet } from '@/_components/ui/field'
+import { Input } from '@/_components/ui/input'
 import {
     Select,
     SelectContent,
@@ -49,17 +50,21 @@ export function CreateNewQuestionButtonComponent(
                     />
                     <input
                         type="hidden"
-                        id="name"
-                        value="Pregunta"
-                        {...form.register('name')}
-                    />
-                    <input
-                        type="hidden"
                         id="order"
                         value={nextOrder}
                         {...form.register('order')}
                     />
                     <FieldGroup>
+                        <Field>
+                            <FieldLabel htmlFor="title">
+                                Título de la pregunta
+                            </FieldLabel>
+                            <Input
+                                id="title"
+                                placeholder="Pregunta sin título..."
+                                {...form.register('title')}
+                            />
+                        </Field>
                         <Field>
                             <FieldLabel htmlFor="content">
                                 Contenido de la pregunta

@@ -5,9 +5,9 @@ import {
     IMiddlewaresCtx,
 } from '@/_server/__internals/defineServerRequest'
 import type { IReturnAction } from '@/_server/_handlers/actions/types'
-import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { getFullForms, IFullForm } from '@/_server/domains/form/getFullForms'
+import { stackServerApp } from '@/_stack/server'
 import { createSelectSchema } from 'drizzle-zod'
 import { formsTable, IForm } from '../../../../../db/schema'
 
@@ -33,10 +33,14 @@ async function getFullFormsHandler(
     _data: Partial<IForm>,
     ctx: IMiddlewaresCtx<IForm>
 ): Promise<IReturnAction<IFullForm[]>> {
-    const user = ctx.user
+    const user = await stackServerApp.getUser()
     const validatedFields = ctx.validatedFields
 
-    const result = await getFullForms(user, validatedFields.data!)
+    const rawResult = await getFullForms(validatedFields.data!)
+
+    const result = rawResult.filter(
+        (form) => form.isPublished || form.author_id === user?.id
+    )
 
     return { status: 'success', data: result }
 }
@@ -45,4 +49,4 @@ export default defineServerRequest<
     Partial<IForm>,
     IFullForm[],
     IMiddlewaresCtx<IForm>
->(getFullFormsHandler, [requireAuth(), requireValidation(schema)])
+>(getFullFormsHandler, [requireValidation(schema)])

@@ -12,9 +12,10 @@ import { DraftModeFieldComponent } from '@/_template/build_form/_components/head
 import { PublishStatusFieldComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-preferences-popup/_components/2.publish-status-field/component'
 import { ResponseSettingsFieldsComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-preferences-popup/_components/3.response-settings-fields/component'
 import { ResponseLimitsFieldsComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-preferences-popup/_components/4.response-limits-fields/component'
-import { CustomMessagesFieldsComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-preferences-popup/_components/5.custom-messages-fields/component'
-import { PartialResponseFieldComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-preferences-popup/_components/6.partial-response-field/component'
-import { ShuffleQuestionsFieldComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-preferences-popup/_components/7.shuffle-questions-field/component'
+import { PartialResponseFieldComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-preferences-popup/_components/5.partial-response-field/component'
+import { ShuffleQuestionsFieldComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-preferences-popup/_components/6.shuffle-questions-field/component'
+import { QuestionnaireDisplayModeFieldComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-preferences-popup/_components/7.questionnaire-display-mode-field/component'
+import { CustomMessagesFieldsComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-preferences-popup/_components/8.custom-messages-fields/component'
 import { IForm } from '@db/types'
 import { CogIcon } from 'lucide-react'
 import { use } from 'react'
@@ -71,6 +72,11 @@ export function FormPreferencesPopupComponent() {
                             <ShuffleQuestionsFieldComponent
                                 control={control}
                                 defaultValue={data.shuffleQuestions || 0}
+                            />
+                            <Separator className="mb-2" />
+                            <QuestionnaireDisplayModeFieldComponent
+                                control={control}
+                                defaultValue={data.questionnaireDisplayMode}
                             />
                             <Separator className="mb-2" />
                             <CustomMessagesFieldsComponent

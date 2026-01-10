@@ -28,7 +28,7 @@ export function ListOfFormsTemplate(props: IListOfFormsTemplateProps) {
     return (
         <section className="flex justify-center gap-6 flex-1 w-full">
             {data.map((form) => (
-                <Link key={form.id} href={`/form/${form.id}`}>
+                <Link key={form.id} href={`/form/${form.id}/edit`}>
                     <Card
                         className="relative group overflow-hidden py-0 gap-3 cursor-pointer opacity-90 hover:opacity-100"
                         key={form.id}

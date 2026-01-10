@@ -3,7 +3,7 @@ import GetForms from '@/_server/_handlers/queries/form/get'
 import { FormTemplate } from '@/_template/form/template'
 import { redirect } from 'next/navigation'
 
-export default async function FormPage(props: {
+export default async function FormPreviewPage(props: {
     params: Promise<{ id: string }>
 }) {
     const params = await props.params
@@ -18,10 +18,6 @@ export default async function FormPage(props: {
         redirect('/')
     }
 
-    if (result.status === 'success' && !result.data[0].isPublished) {
-        redirect(`/form/${params.id}/edit`)
-    }
-
     return (
         <div>
             <title>{previewTitlePage}</title>
@@ -29,7 +25,7 @@ export default async function FormPage(props: {
                 <SingleFormSelectedProvider value={result.data[0]}>
                     <main className="flex flex-col justify-center font-sans">
                         <FormTemplate
-                            isPreviewMode={false}
+                            isPreviewMode={true}
                             formData={result.data[0]}
                         />
                     </main>

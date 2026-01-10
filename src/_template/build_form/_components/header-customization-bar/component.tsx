@@ -1,11 +1,15 @@
 'use client'
 import { Button } from '@/_components/ui/button'
+import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
 import { FormPreferencesPopupComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-preferences-popup/component'
 import { FormStylesPopupComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-styles-popup/component'
 import { Play, UploadCloud } from 'lucide-react'
+import Link from 'next/link'
+import { use } from 'react'
 
 export function HeaderCustomizationBarComponent() {
-    // style, settings, preview, publish buttons
+    const { data } = use(SingleFormSelectedContext)!
+
     return (
         <section className="flex items-center justify-between w-full">
             <div className="flex items-center w-full gap-2 mx-20">
@@ -16,10 +20,12 @@ export function HeaderCustomizationBarComponent() {
             <div className="flex items-center justify-end font-sans gap-2 mx-16 my-2">
                 <FormStylesPopupComponent />
                 <FormPreferencesPopupComponent />
-                <Button variant="link">
-                    <Play />
-                    Previsualizar
-                </Button>
+                <Link href={`/form/${data.id}/preview`} target="_blank">
+                    <Button variant="link">
+                        <Play />
+                        Previsualizar
+                    </Button>
+                </Link>
                 <Button variant="link">
                     <UploadCloud />
                     Publicar

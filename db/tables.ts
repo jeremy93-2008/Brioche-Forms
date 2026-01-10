@@ -28,6 +28,9 @@ export const formsTable = sqliteTable('forms', {
     messageIfLimitReached: text('message_if_limit_reached'),
     shuffleQuestions: int('shuffle_questions').notNull().default(0),
     savePartialResponses: int('save_partial_responses').notNull().default(0),
+    questionnaireDisplayMode: text('questionnaire_display_mode')
+        .notNull()
+        .default('all_pages'), // e.g., 'all_pages', 'page_by_page', 'single_section'
 })
 
 export const tagsFormsTable = sqliteTable('tags_forms', {

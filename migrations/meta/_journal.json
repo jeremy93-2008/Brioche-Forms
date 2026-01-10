@@ -57,6 +57,13 @@
       "when": 1767884286615,
       "tag": "0007_lame_tomorrow_man",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1768049548279,
+      "tag": "0008_steep_killer_shrike",
+      "breakpoints": true
     }
   ]
 }

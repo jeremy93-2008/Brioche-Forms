@@ -34,15 +34,14 @@ export default function RootLayout({
         <html lang="en" suppressHydrationWarning>
             <link rel="icon" href="/brioche.svg" />
             <body
-                className={`${poppins.variable} ${montserratAlternates.variable} antialiased bg-background text-foreground`}
+                className={`${poppins.variable} ${montserratAlternates.variable} antialiased`}
             >
-                <StackProvider app={stackClientApp}>
+                <StackProvider app={stackClientApp} lang="es-ES">
                     <StackTheme>
                         <ThemeProvider
                             attribute="class"
                             defaultTheme="dark"
                             enableSystem
-                            disableTransitionOnChange
                         >
                             <Toaster position="top-center" />
                             {children}
