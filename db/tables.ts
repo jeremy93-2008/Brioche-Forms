@@ -30,7 +30,7 @@ export const formsTable = sqliteTable('forms', {
     savePartialResponses: int('save_partial_responses').notNull().default(0),
     questionnaireDisplayMode: text('questionnaire_display_mode')
         .notNull()
-        .default('all_pages'), // e.g., 'all_pages', 'page_by_page', 'single_section'
+        .default('all_pages'), // e.g., 'all_pages', 'page_by_page', 'section_by_page'
 })
 
 export const tagsFormsTable = sqliteTable('tags_forms', {

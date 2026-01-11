@@ -25,7 +25,7 @@ export function PreviewHeaderComponent() {
         <header className="flex justify-between items-center w-full p-4 border-b bg-card">
             <section className="flex items-center gap-3">
                 <h1 className="text-xl font-semibold text-center">
-                    {data.title} - Vista Previa
+                    {data.title} <span className="text-xs">- Vista Previa</span>
                 </h1>
                 <Link href={`/form/${data.id}/edit`}>
                     <Button className="ml-6" size="xs">

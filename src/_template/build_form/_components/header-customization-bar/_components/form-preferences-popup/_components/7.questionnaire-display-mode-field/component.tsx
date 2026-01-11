@@ -70,7 +70,7 @@ export function QuestionnaireDisplayModeFieldComponent(
                                     <StickyNoteIcon />
                                     Página por página
                                 </SelectItem>
-                                <SelectItem value="section_by_section">
+                                <SelectItem value="section_by_page">
                                     <CaseSensitiveIcon />
                                     Sección por página
                                 </SelectItem>
