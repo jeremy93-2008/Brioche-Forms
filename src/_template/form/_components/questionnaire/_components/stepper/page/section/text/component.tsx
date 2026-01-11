@@ -33,6 +33,7 @@ export function TextSectionComponent(props: ITextSectionComponentProps) {
     return (
         <div className="w-full flex flex-col items-center justify-center p-4">
             <BlockNoteView
+                className="w-full"
                 editor={editor}
                 slashMenu={false}
                 editable={false}

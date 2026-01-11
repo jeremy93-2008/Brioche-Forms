@@ -25,8 +25,10 @@ export function SectionComponent(props: ISectionComponentProps) {
     }, [])
 
     return (
-        <Card className="w-full flex flex-col items-center justify-center p-4">
-            <h2 className="text-xl font-semibold mb-4">{data.title}</h2>
+        <Card className="w-full flex flex-col gap-2 items-start justify-center p-4 mb-6">
+            <h2 className="text-xl text-primary font-semibold mb-0">
+                {data.title}
+            </h2>
             {getTypeOfSection(data) === 'question' && (
                 <QuestionSectionComponent data={data.questions[0]} />
             )}

@@ -4,6 +4,7 @@ import { IFullPage, IFullSection } from '@/_server/domains/form/getFullForms'
 import { PageComponent } from '@/_template/form/_components/questionnaire/_components/stepper/page/component'
 import { SectionComponent } from '@/_template/form/_components/questionnaire/_components/stepper/page/section/component'
 import { cn } from '@/_utils/clsx-tw'
+import { ArrowLeftIcon, ArrowRightIcon, SendIcon } from 'lucide-react'
 import { use, useState } from 'react'
 
 export type ITypeStepper = 'all' | 'by_component'
@@ -60,7 +61,7 @@ export function StepperComponent() {
             >
                 {componentsSteps.type === 'all' &&
                     componentsSteps.steps.map((page) => (
-                        <div key={page.id} className="p-8">
+                        <div key={page.id} className="p-8 pb-3">
                             <PageComponent data={page as IFullPage} />
                         </div>
                     ))}
@@ -83,33 +84,47 @@ export function StepperComponent() {
                         </div>
                     ))}
             </section>
-            {componentsSteps.type === 'by_component' && (
-                <section className="flex justify-between w-full px-64 mb-8">
-                    <Button
-                        onClick={handleStepChange(stepperIndex - 1)}
-                        disabled={stepperIndex === 0}
-                    >
-                        Anterior
-                    </Button>
-                    <Button
-                        onClick={handleStepChange(stepperIndex + 1)}
-                        className={cn(
-                            stepperIndex === componentsSteps.steps.length - 1 &&
-                                'hidden'
-                        )}
-                    >
-                        Siguiente
-                    </Button>
-                    <Button
-                        className={cn(
-                            stepperIndex !== componentsSteps.steps.length - 1 &&
-                                'hidden'
-                        )}
-                    >
-                        Enviar
-                    </Button>
-                </section>
-            )}
+
+            <section
+                className={cn(
+                    'flex gap-4 justify-start w-full px-40 mb-8',
+                    componentsSteps.type === 'all' && 'justify-center'
+                )}
+            >
+                {componentsSteps.type === 'by_component' && (
+                    <>
+                        <Button
+                            variant="secondary"
+                            onClick={handleStepChange(stepperIndex - 1)}
+                            disabled={stepperIndex === 0}
+                        >
+                            <ArrowLeftIcon />
+                            Anterior
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            onClick={handleStepChange(stepperIndex + 1)}
+                            className={cn(
+                                stepperIndex ===
+                                    componentsSteps.steps.length - 1 && 'hidden'
+                            )}
+                        >
+                            <ArrowRightIcon />
+                            Siguiente
+                        </Button>
+                    </>
+                )}
+                <Button
+                    className={cn(
+                        stepperIndex !== componentsSteps.steps.length - 1 &&
+                            componentsSteps.type === 'by_component' &&
+                            'hidden'
+                    )}
+                >
+                    <SendIcon />
+                    Enviar formulario
+                </Button>
+            </section>
         </section>
     )
 }

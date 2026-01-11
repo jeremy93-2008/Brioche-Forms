@@ -9,7 +9,7 @@ export function QuestionnaireComponent() {
     return (
         <div
             id="stepper-wrapper"
-            className={` overflow-y-auto ${data.formStyle === 'standard' ? 'published-form-standard bg-background' : ''} 
+            className={`min-h-[calc(100vh-61px)] overflow-y-auto ${data.formStyle === 'standard' ? 'published-form-standard bg-background' : ''} 
             ${data.theme === 'dark' ? 'dark' : ''}`}
         >
             <LazyStepperSectionComponent />
