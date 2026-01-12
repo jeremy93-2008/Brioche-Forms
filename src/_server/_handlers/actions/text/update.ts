@@ -8,7 +8,7 @@ import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { withFormBuildContext } from '@/_server/domains/_context/form/withFormBuildContext'
 import { editTextSection } from '@/_server/domains/section/text/editTextSection'
 import { createUpdateSchema } from 'drizzle-zod'
 import { IText, textsTable } from '../../../../../db/schema'
@@ -30,7 +30,7 @@ async function editTextSectionHandler(
     const data = validatedFields.data! as Partial<IText>
     const formId = data.form_id!
 
-    const result = await withFormContext(env)(formId, () =>
+    const result = await withFormBuildContext(env)(formId, () =>
         editTextSection(data)
     )
 

@@ -8,7 +8,7 @@ import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { withFormBuildContext } from '@/_server/domains/_context/form/withFormBuildContext'
 import { upsertChoicesSection } from '@/_server/domains/section/question/choices/upsertChoicesSection'
 import { editQuestionSection } from '@/_server/domains/section/question/editQuestionSection'
 import { createInsertSchema, createUpdateSchema } from 'drizzle-zod'
@@ -54,7 +54,7 @@ async function editQuestionSectionHandler(
     const data = validatedFields.data! as Partial<IQuestionInput>
     const formId = data.form_id!
 
-    const result = await withFormContext(env)(formId, async () => {
+    const result = await withFormBuildContext(env)(formId, async () => {
         const { choices, ...questionData } = data
         const question = await editQuestionSection(
             questionData as Partial<IQuestion>

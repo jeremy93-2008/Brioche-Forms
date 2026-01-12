@@ -193,6 +193,7 @@ export const responsesTable = sqliteTable('responses', {
         }),
     respondent_id: text('respondent_id').notNull(),
     respondent_name: text('respondent_name').notNull().default(''),
+    is_partial_response: int('is_partial_response').notNull().default(0),
     submitted_at: int('submitted_at').notNull(),
 })
 

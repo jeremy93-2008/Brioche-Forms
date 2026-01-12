@@ -8,7 +8,7 @@ import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { withFormBuildContext } from '@/_server/domains/_context/form/withFormBuildContext'
 import { editPage } from '@/_server/domains/page/editPage'
 import { createUpdateSchema } from 'drizzle-zod'
 import { IPage, pagesTable } from '../../../../../db/schema'
@@ -30,7 +30,7 @@ async function editPageHandler(
     const data = validatedFields.data! as Required<IPage>
     const formId = data.form_id!
 
-    const result = await withFormContext(env)(formId, () => editPage(data))
+    const result = await withFormBuildContext(env)(formId, () => editPage(data))
 
     return { status: 'success', data: result }
 }

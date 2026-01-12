@@ -9,7 +9,7 @@ import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { withFormBuildContext } from '@/_server/domains/_context/form/withFormBuildContext'
 import { createPage } from '@/_server/domains/page/createPage'
 import { createInsertSchema } from 'drizzle-zod'
 import { IPage, pagesTable } from '../../../../../db/schema'
@@ -31,7 +31,9 @@ async function createPageHandler(
     const data = validatedFields.data!
     const formId = data.form_id!
 
-    const result = await withFormContext(env)(formId, () => createPage(data))
+    const result = await withFormBuildContext(env)(formId, () =>
+        createPage(data)
+    )
 
     return {
         status: 'success',

@@ -8,7 +8,7 @@ import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { withFormBuildContext } from '@/_server/domains/_context/form/withFormBuildContext'
 import { deleteImageSection } from '@/_server/domains/section/image/deleteImageSection'
 import z from 'zod'
 
@@ -29,7 +29,7 @@ async function deleteImageSectionHandler(
     const data = validatedFields.data! as IDeleteImage
     const formId = data.form_id!
 
-    const result = await withFormContext(env)(formId, () =>
+    const result = await withFormBuildContext(env)(formId, () =>
         deleteImageSection(data)
     )
 

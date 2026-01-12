@@ -8,7 +8,7 @@ import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { withFormBuildContext } from '@/_server/domains/_context/form/withFormBuildContext'
 import { deleteVideoSection } from '@/_server/domains/section/video/deleteVideoSection'
 import z from 'zod'
 
@@ -29,7 +29,7 @@ async function deleteVideoSectionHandler(
     const data = validatedFields.data! as IDeleteVideo
     const formId = data.form_id!
 
-    const result = await withFormContext(env)(formId, () =>
+    const result = await withFormBuildContext(env)(formId, () =>
         deleteVideoSection(data)
     )
 

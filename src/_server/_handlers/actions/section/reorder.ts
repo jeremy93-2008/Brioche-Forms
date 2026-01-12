@@ -9,7 +9,7 @@ import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { withFormBuildContext } from '@/_server/domains/_context/form/withFormBuildContext'
 import { editSectionOrders } from '@/_server/domains/section/editSectionOrders'
 import { z } from 'zod'
 
@@ -39,7 +39,7 @@ async function reorderSectionsHandler(
     const data = validatedFields.data! as Required<ISectionReorderInput>
     const { form_id, updates } = data
 
-    const result = await withFormContext(env)(form_id, () =>
+    const result = await withFormBuildContext(env)(form_id, () =>
         editSectionOrders(form_id, updates)
     )
 

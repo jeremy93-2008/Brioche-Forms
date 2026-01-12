@@ -8,7 +8,7 @@ import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { withFormBuildContext } from '@/_server/domains/_context/form/withFormBuildContext'
 import { deleteChoicesSection } from '@/_server/domains/section/question/choices/deleteChoicesSection'
 import z from 'zod'
 
@@ -36,7 +36,7 @@ async function deleteChoicesSectionHandler(
     const validatedData = validatedFields.data! as IDeleteChoices
     const formId = validatedData.form_id!
 
-    const result = await withFormContext(env)(formId, () =>
+    const result = await withFormBuildContext(env)(formId, () =>
         deleteChoicesSection(validatedData.data)
     )
 

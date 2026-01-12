@@ -1,7 +1,7 @@
 import { IVideoWithPageId } from '@/_server/_handlers/actions/video/create'
-import { getDbClient } from '@/_server/domains/_context/form/withFormContext'
-import { v7 as uuidv7 } from 'uuid'
+import { getDbClient } from '@/_server/domains/_context/db.client'
 import { videosTable } from '@db/tables'
+import { v7 as uuidv7 } from 'uuid'
 
 export async function createVideoSection(data: IVideoWithPageId) {
     const videoId = uuidv7()

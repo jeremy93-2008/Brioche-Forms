@@ -8,7 +8,7 @@ import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { withFormBuildContext } from '@/_server/domains/_context/form/withFormBuildContext'
 import { deletePage } from '@/_server/domains/page/deletePage'
 import z from 'zod'
 
@@ -28,7 +28,9 @@ async function deletePageHandler(
     const data = validatedFields.data! as Required<IDeletePage>
     const formId = data.form_id!
 
-    const result = await withFormContext(env)(formId, () => deletePage(data))
+    const result = await withFormBuildContext(env)(formId, () =>
+        deletePage(data)
+    )
 
     return {
         status: 'success',

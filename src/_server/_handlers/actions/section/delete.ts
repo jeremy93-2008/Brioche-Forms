@@ -8,7 +8,7 @@ import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { withFormBuildContext } from '@/_server/domains/_context/form/withFormBuildContext'
 import { deleteSection } from '@/_server/domains/section/deleteSection'
 import z from 'zod'
 
@@ -28,7 +28,9 @@ async function deleteSectionHandler(
     const data = validatedFields.data! as Required<IDeleteSection>
     const formId = data.form_id!
 
-    const result = await withFormContext(env)(formId, () => deleteSection(data))
+    const result = await withFormBuildContext(env)(formId, () =>
+        deleteSection(data)
+    )
 
     return {
         status: 'success',

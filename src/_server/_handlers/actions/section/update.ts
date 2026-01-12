@@ -8,7 +8,7 @@ import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { withFormBuildContext } from '@/_server/domains/_context/form/withFormBuildContext'
 import { editSection } from '@/_server/domains/section/editSection'
 import { createUpdateSchema } from 'drizzle-zod'
 import { ISection, sectionsTable } from '../../../../../db/schema'
@@ -30,7 +30,9 @@ async function editSectionHandler(
     const data = validatedFields.data! as Required<ISection>
     const formId = data.form_id!
 
-    const result = await withFormContext(env)(formId, () => editSection(data))
+    const result = await withFormBuildContext(env)(formId, () =>
+        editSection(data)
+    )
 
     return { status: 'success', data: result }
 }

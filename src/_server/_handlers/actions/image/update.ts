@@ -8,7 +8,7 @@ import { type IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { withFormBuildContext } from '@/_server/domains/_context/form/withFormBuildContext'
 import { editMedia } from '@/_server/domains/media/editMedia'
 import { editImageSection } from '@/_server/domains/section/image/editImageSection'
 import { createUpdateSchema } from 'drizzle-zod'
@@ -39,7 +39,7 @@ async function editImageSectionHandler(
     const data = validatedFields.data! as Partial<IImageExtended>
     const formId = data.form_id!
 
-    const result = await withFormContext(env)(formId, async () => {
+    const result = await withFormBuildContext(env)(formId, async () => {
         const editResult = await editImageSection(data)
         if (!data.url) return editResult
         await editMedia({

@@ -1,4 +1,4 @@
-import { getDbClient } from '@/_server/domains/_context/form/withFormContext'
+import { getDbClient } from '@/_server/domains/_context/db.client'
 import { mediaTable } from '@db/tables'
 import { CurrentServerUser } from '@stackframe/stack'
 import { and, eq } from 'drizzle-orm'

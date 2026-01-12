@@ -1,5 +1,5 @@
 import { IMediaWhere } from '@/_server/_handlers/queries/media/get'
-import { getDbClient } from '@/_server/domains/_context/form/withFormContext'
+import { getDbClient } from '@/_server/domains/_context/db.client'
 import { IFieldsWhere } from '@/_server/domains/types'
 import { mediaTable } from '@db/tables'
 import { CurrentServerUser } from '@stackframe/stack'

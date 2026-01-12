@@ -9,7 +9,7 @@ import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
-import { withFormContext } from '@/_server/domains/_context/form/withFormContext'
+import { withFormBuildContext } from '@/_server/domains/_context/form/withFormBuildContext'
 import { createSection } from '@/_server/domains/section/createSection'
 import { createQuestionSection } from '@/_server/domains/section/question/createQuestionSection'
 import { questionsTable } from '@db/tables'
@@ -44,7 +44,7 @@ async function createQuestionSectionHandler(
     const data = validatedFields.data! as Required<IQuestionWithPageId>
     const formId = data.form_id!
 
-    const result = await withFormContext(env)(formId, async () => {
+    const result = await withFormBuildContext(env)(formId, async () => {
         const new_section = await createSection({
             title: 'Pregunta',
             description: '',
