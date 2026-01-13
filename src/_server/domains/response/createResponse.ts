@@ -1,9 +1,9 @@
-import { IResponseWithAnswers } from '@/_server/_handlers/actions/response/create'
 import { getDbClient } from '@/_server/domains/_context/db.client'
 import { responsesTable } from '@db/tables'
+import { IResponse } from '@db/types'
 import { v7 as uuidv7 } from 'uuid'
 
-export async function createResponse(data: Partial<IResponseWithAnswers>) {
+export async function createResponse(data: Partial<IResponse>) {
     const responseId = uuidv7()
 
     await getDbClient()

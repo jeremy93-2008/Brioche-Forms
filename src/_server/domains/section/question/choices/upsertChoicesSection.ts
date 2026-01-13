@@ -7,7 +7,7 @@ import { v7 as uuidv7 } from 'uuid'
 
 export async function upsertChoicesSection(data: IChoice[]) {
     if (data.length === 0) {
-        throw new Error('No choices provided for creation.')
+        throw new Error('No choices provided for upsert.')
     }
 
     const result = await getDbClient()
