@@ -4,7 +4,7 @@ import { IFullPage, IFullSection } from '@/_server/domains/form/getFullForms'
 import { PageComponent } from '@/_template/form/_components/questionnaire/_components/stepper/page/component'
 import { SectionComponent } from '@/_template/form/_components/questionnaire/_components/stepper/page/section/component'
 import { cn } from '@/_utils/clsx-tw'
-import { ArrowLeftIcon, ArrowRightIcon, SendIcon } from 'lucide-react'
+import { ArrowLeftIcon, ArrowRightIcon, SaveIcon, SendIcon } from 'lucide-react'
 import { use, useState } from 'react'
 
 export type ITypeStepper = 'all' | 'by_component'
@@ -87,43 +87,52 @@ export function StepperComponent() {
 
             <section
                 className={cn(
-                    'flex gap-4 justify-start w-full px-40 mb-8',
+                    'flex gap-4 justify-between w-full px-40 mb-8',
                     componentsSteps.type === 'all' && 'justify-center'
                 )}
             >
-                {componentsSteps.type === 'by_component' && (
-                    <>
-                        <Button
-                            variant="secondary"
-                            onClick={handleStepChange(stepperIndex - 1)}
-                            disabled={stepperIndex === 0}
-                        >
-                            <ArrowLeftIcon />
-                            Anterior
-                        </Button>
-                        <Button
-                            variant="secondary"
-                            onClick={handleStepChange(stepperIndex + 1)}
-                            className={cn(
-                                stepperIndex ===
-                                    componentsSteps.steps.length - 1 && 'hidden'
-                            )}
-                        >
-                            <ArrowRightIcon />
-                            Siguiente
-                        </Button>
-                    </>
-                )}
-                <Button
-                    className={cn(
-                        stepperIndex !== componentsSteps.steps.length - 1 &&
-                            componentsSteps.type === 'by_component' &&
-                            'hidden'
+                <section className="flex gap-4">
+                    {componentsSteps.type === 'by_component' && (
+                        <>
+                            <Button
+                                variant="secondary"
+                                onClick={handleStepChange(stepperIndex - 1)}
+                                disabled={stepperIndex === 0}
+                            >
+                                <ArrowLeftIcon />
+                                Anterior
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                onClick={handleStepChange(stepperIndex + 1)}
+                                className={cn(
+                                    stepperIndex ===
+                                        componentsSteps.steps.length - 1 &&
+                                        'hidden'
+                                )}
+                            >
+                                <ArrowRightIcon />
+                                Siguiente
+                            </Button>
+                        </>
                     )}
-                >
-                    <SendIcon />
-                    Enviar formulario
-                </Button>
+                    <Button
+                        className={cn(
+                            stepperIndex !== componentsSteps.steps.length - 1 &&
+                                componentsSteps.type === 'by_component' &&
+                                'hidden'
+                        )}
+                    >
+                        <SendIcon />
+                        Enviar formulario
+                    </Button>
+                </section>
+                <section className="flex gap-4">
+                    <Button variant="secondary">
+                        <SaveIcon />
+                        Guardar y continuar más tarde
+                    </Button>
+                </section>
             </section>
         </section>
     )

@@ -60,7 +60,20 @@ export async function getFullForms(data: Partial<IForm>) {
                     },
                 },
             },
-            responses: true,
+            responses: {
+                with: {
+                    answers: {
+                        with: {
+                            choice: true,
+                            multipleChoices: {
+                                with: {
+                                    choice: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
         },
     })
 }

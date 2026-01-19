@@ -84,7 +84,9 @@ async function upsertResponseSectionHandler(
                 long_answer:
                     ans.question_type === 'long_answer' ? ans.value : null,
                 date_answer:
-                    ans.question_type === 'date' ? Number(ans.value) : null,
+                    ans.question_type === 'short_answer:date'
+                        ? Number(ans.value)
+                        : null,
             }))
         )
 

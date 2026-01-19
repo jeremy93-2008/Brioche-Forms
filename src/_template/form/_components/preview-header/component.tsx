@@ -56,15 +56,13 @@ export function PreviewHeaderComponent() {
                 </Tooltip>
 
                 {data.isPublished ? (
-                    <>
-                        <span className="flex gap-2 bg-green-500 text-green-950 px-3 py-1 rounded-lg items-center mr-16 text-sm">
-                            <EyeIcon />
-                            Formulario publicado
-                        </span>
-                    </>
+                    <span className="flex gap-2 text-green-500 px-2 py-0.5 rounded-lg items-center mr-16 text-xs">
+                        <EyeIcon className="w-5" />
+                        Formulario publicado
+                    </span>
                 ) : (
-                    <span className="flex gap-2 bg-amber-400 text-amber-950 px-2 py-0.5 rounded-lg items-center mr-16 text-xs">
-                        <EyeOffIcon />
+                    <span className="flex gap-2 text-amber-400 px-2 py-0.5 rounded-lg items-center mr-16 text-xs">
+                        <EyeOffIcon className="w-5" />
                         Formulario no publicado
                     </span>
                 )}
