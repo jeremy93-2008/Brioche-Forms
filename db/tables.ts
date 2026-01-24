@@ -233,6 +233,7 @@ export const answersTable = sqliteTable('answers', {
     short_answer: text('short_answer'),
     long_answer: text('long_answer'),
     date_answer: int('date_answer'),
+    type: text('type').notNull(),
     form_id: text('form_id')
         .notNull()
         .references(() => formsTable.id, {

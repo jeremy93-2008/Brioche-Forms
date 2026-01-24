@@ -1,11 +1,21 @@
 import { Button } from '@/_components/ui/button'
+import { ToastMessages } from '@/_constants/toast'
+import { useServerActionState } from '@/_hooks/useServerActionState'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
+import UpsertResponseAction, {
+    IResponseWithAnswers,
+    IResponseWithAnswersReturn,
+} from '@/_server/_handlers/actions/response/upsert'
+import { IReturnAction } from '@/_server/_handlers/actions/types'
 import { IFullPage, IFullSection } from '@/_server/domains/form/getFullForms'
 import { PageComponent } from '@/_template/form/_components/questionnaire/_components/stepper/page/component'
 import { SectionComponent } from '@/_template/form/_components/questionnaire/_components/stepper/page/section/component'
 import { cn } from '@/_utils/clsx-tw'
+import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { ArrowLeftIcon, ArrowRightIcon, SaveIcon, SendIcon } from 'lucide-react'
 import { use, useState } from 'react'
+import { useWatch } from 'react-hook-form'
+import { toast } from 'sonner'
 
 export type ITypeStepper = 'all' | 'by_component'
 
@@ -14,7 +24,12 @@ export type IComponentStep = {
     type: ITypeStepper
 }
 
-export function StepperComponent() {
+export interface IStepperComponentProps {
+    isPreviewMode?: boolean
+}
+
+export function StepperComponent(props: IStepperComponentProps) {
+    const { isPreviewMode = false } = props
     const { data } = use(SingleFormSelectedContext)!
 
     const [stepperIndex, setStepperIndex] = useState(0)
@@ -46,6 +61,30 @@ export function StepperComponent() {
                 },
                 { timeout: 250 }
             )
+        }
+    }
+
+    const currentResponse = useWatch<IResponseWithAnswers>()
+
+    const { isPending, runAction: runUpsertResponseAction } =
+        useServerActionState<IResponseWithAnswers, IResponseWithAnswersReturn>(
+            UpsertResponseAction
+        )
+
+    const handlePartialSave = () => {
+        if (isPreviewMode) {
+            return () => {
+                toast.info(ToastMessages.previewModeAction)
+            }
+        }
+        return async () => {
+            const responseData: IReturnAction<IResponseWithAnswersReturn> =
+                await runUpsertResponseAction({
+                    ...currentResponse,
+                    is_partial_response: 1,
+                } as IResponseWithAnswers)
+
+            showToastFromResult(responseData, ToastMessages.genericSuccess)
         }
     }
 
@@ -128,10 +167,16 @@ export function StepperComponent() {
                     </Button>
                 </section>
                 <section className="flex gap-4">
-                    <Button variant="secondary">
-                        <SaveIcon />
-                        Guardar y continuar más tarde
-                    </Button>
+                    {data.savePartialResponses && (
+                        <Button
+                            onClick={handlePartialSave()}
+                            variant="secondary"
+                            isLoading={isPending}
+                        >
+                            {!isPending && <SaveIcon />}
+                            Guardar y continuar más tarde
+                        </Button>
+                    )}
                 </section>
             </section>
         </section>

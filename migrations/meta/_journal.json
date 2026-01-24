@@ -64,6 +64,13 @@
       "when": 1768049548279,
       "tag": "0008_steep_killer_shrike",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1769016133213,
+      "tag": "0009_military_squirrel_girl",
+      "breakpoints": true
     }
   ]
 }

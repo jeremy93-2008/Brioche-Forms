@@ -40,10 +40,10 @@ export type IResponseWithAnswers = z.infer<typeof schema>
 export type IResponseWithAnswersReturn = { id: string }
 
 async function upsertResponseSectionHandler(
-    _data: Partial<IResponseWithAnswers>,
+    _data: IResponseWithAnswers,
     ctx: IMiddlewaresAccessCtx<IResponseWithAnswers>,
     env: ServerEnv
-): Promise<IReturnAction<Partial<IResponseWithAnswersReturn>>> {
+): Promise<IReturnAction<IResponseWithAnswersReturn>> {
     const validatedFields = ctx.validatedFields
     const data = validatedFields.data! as Required<IResponseWithAnswers>
     const formId = data.form_id
@@ -70,6 +70,7 @@ async function upsertResponseSectionHandler(
                 form_id: formId,
                 response_id: response.id,
                 question_id: ans.question_id,
+                type: ans.question_type,
                 choice_id:
                     ans.question_type === 'single_choice' && ans.choice_ids
                         ? ans.choice_ids[0]
@@ -116,8 +117,8 @@ async function upsertResponseSectionHandler(
 }
 
 export default defineServerRequest<
-    Partial<IResponseWithAnswers>,
-    Partial<IResponseWithAnswersReturn>,
+    IResponseWithAnswers,
+    IResponseWithAnswersReturn,
     IMiddlewaresAccessCtx<IResponseWithAnswers>
 >(upsertResponseSectionHandler, [
     requireAuth(),

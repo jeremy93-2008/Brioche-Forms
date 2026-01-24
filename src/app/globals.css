@@ -314,4 +314,8 @@ body {
 
 .bn-editor {
     --bn-colors-editor-background: var(--color-card);
+
+    &[contenteditable="false"] .bn-block .bn-block-content select {
+        display: none;
+    }
 }

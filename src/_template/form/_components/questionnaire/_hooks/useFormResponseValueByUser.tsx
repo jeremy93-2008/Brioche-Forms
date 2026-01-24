@@ -14,7 +14,15 @@ export function useFormResponseValueByUser(
         (response) => response.respondent_id === user.id
     )
 
-    if (!currentResponseByUser) return null
+    if (!currentResponseByUser)
+        return {
+            id: null,
+            respondent_id: user.id,
+            respondent_name: user.name,
+            is_partial_response: data.savePartialResponses,
+            form_id: data.id,
+            answers: [],
+        }
 
     return {
         id: currentResponseByUser.id,
@@ -26,15 +34,7 @@ export function useFormResponseValueByUser(
             return {
                 id: answer.id,
                 question_id: answer.question_id,
-                question_type: answer.long_answer
-                    ? 'long_answer'
-                    : answer.short_answer
-                      ? 'short_answer'
-                      : answer.date_answer
-                        ? 'short_answer:date'
-                        : answer.multipleChoices.length > 0
-                          ? 'multiple_choice'
-                          : 'single_choice',
+                question_type: answer.type,
                 choice_ids: [
                     answer.choice_id,
                     ...answer.multipleChoices.map((mc) => mc.choice_id),

@@ -16,7 +16,12 @@ import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
 import EditTextAction from '@/_server/_handlers/actions/text/update'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
-import { BlockNoteEditor } from '@blocknote/core'
+import { codeBlockOptions } from '@blocknote/code-block'
+import {
+    BlockNoteEditor,
+    BlockNoteSchema,
+    createCodeBlockSpec,
+} from '@blocknote/core'
 import { filterSuggestionItems } from '@blocknote/core/extensions'
 import { es } from '@blocknote/core/locales'
 import {
@@ -59,6 +64,11 @@ export function FormSectionTextEditComponent(
     const editor = useCreateBlockNote({
         dictionary: es,
         initialContent: JSON.parse(data.content) ?? {},
+        schema: BlockNoteSchema.create().extend({
+            blockSpecs: {
+                codeBlock: createCodeBlockSpec(codeBlockOptions),
+            },
+        }),
     })
 
     const onSaveContent = async () => {

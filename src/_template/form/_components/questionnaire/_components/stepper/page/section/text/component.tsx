@@ -13,6 +13,8 @@ import * as Skeleton from '@/_components/ui/skeleton'
 import * as Tabs from '@/_components/ui/tabs'
 import * as Toggle from '@/_components/ui/toggle'
 import * as Tooltip from '@/_components/ui/tooltip'
+import { codeBlockOptions } from '@blocknote/code-block'
+import { BlockNoteSchema, createCodeBlockSpec } from '@blocknote/core'
 import { es } from '@blocknote/core/locales'
 import { useCreateBlockNote } from '@blocknote/react'
 import { BlockNoteView } from '@blocknote/shadcn'
@@ -28,6 +30,11 @@ export function TextSectionComponent(props: ITextSectionComponentProps) {
     const editor = useCreateBlockNote({
         dictionary: es,
         initialContent: JSON.parse(data.content) ?? {},
+        schema: BlockNoteSchema.create().extend({
+            blockSpecs: {
+                codeBlock: createCodeBlockSpec(codeBlockOptions),
+            },
+        }),
     })
 
     return (

@@ -18,6 +18,7 @@ export async function upsertAnswersResponse(data: IAnswer[]) {
                 response_id: answer.response_id,
                 question_id: answer.question_id,
                 form_id: answer.form_id,
+                type: answer.type,
                 choice_id: answer.choice_id,
                 choice_free_text: answer.choice_free_text,
                 short_answer: answer.short_answer,
@@ -28,6 +29,7 @@ export async function upsertAnswersResponse(data: IAnswer[]) {
         .onConflictDoUpdate({
             target: answersTable.id,
             set: {
+                type: sql.raw(`excluded.${answersTable.type.name}`),
                 choice_id: sql.raw(`excluded.${answersTable.choice_id.name}`),
                 choice_free_text: sql.raw(
                     `excluded.${answersTable.choice_free_text.name}`

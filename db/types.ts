@@ -39,3 +39,14 @@ export type ISharedNotification = typeof sharedNotificationsTable.$inferSelect
 export type ISharedForms = typeof sharedFormsTable.$inferSelect
 export type ISharedFolders = typeof sharedFoldersTable.$inferSelect
 export type IMedia = typeof mediaTable.$inferSelect
+
+export type IAnswerType =
+    | 'single_choice'
+    | 'multiple_choice'
+    | 'short_answer'
+    | 'long_answer'
+    | 'short_answer:date'
+    | 'short_answer:email'
+    | 'short_answer:phone'
+    | 'short_answer:opinion_scale'
+    | 'short_answer:rating'

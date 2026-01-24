@@ -13,7 +13,7 @@ export function FormTemplate(props: IFormTemplateProps) {
     return (
         <section className="flex flex-col font-sans h-screen">
             {isPreviewMode && <PreviewHeaderComponent />}
-            <QuestionnaireComponent />
+            <QuestionnaireComponent isPreviewMode={isPreviewMode} />
         </section>
     )
 }

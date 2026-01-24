@@ -1,13 +1,19 @@
 'use client'
+import { Toaster } from '@/_components/ui/sonner'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
 import { IResponseWithAnswers } from '@/_server/_handlers/actions/response/upsert'
 import { LazyStepperSectionComponent } from '@/_template/form/_components/questionnaire/_components/stepper/lazyImport'
 import { useFormResponseValueByUser } from '@/_template/form/_components/questionnaire/_hooks/useFormResponseValueByUser'
 import { useGetCurrentRespondent } from '@/_template/form/_components/questionnaire/_hooks/useGetCurrentRespondent'
-import { use } from 'react'
+import React, { use } from 'react'
 import { FormProvider, useForm } from 'react-hook-form'
 
-export function QuestionnaireComponent() {
+interface IQuestionnaireComponentProps {
+    isPreviewMode?: boolean
+}
+
+export function QuestionnaireComponent(props: IQuestionnaireComponentProps) {
+    const { isPreviewMode = false } = props
     const { data } = use(SingleFormSelectedContext)!
 
     const currentRespondent = useGetCurrentRespondent()
@@ -24,7 +30,8 @@ export function QuestionnaireComponent() {
             ${data.theme}`}
         >
             <FormProvider {...form}>
-                <LazyStepperSectionComponent />
+                <Toaster position="top-center" />
+                <LazyStepperSectionComponent isPreviewMode={isPreviewMode} />
             </FormProvider>
         </div>
     )

@@ -12,8 +12,11 @@ export function VideoSectionComponent(props: IVideoSectionComponentProps) {
 
     return (
         <div className="w-full flex flex-col items-center justify-center p-4">
-            <iframe src={getVideoEmbedUrl(data.url)} />
-            <span>{data.caption}</span>
+            <iframe
+                className="w-2/3 min-w-[460px] min-h-[380px] h-[20vh]"
+                src={getVideoEmbedUrl(data.url)}
+            />
+            <span className="mt-3">{data.caption}</span>
         </div>
     )
 }

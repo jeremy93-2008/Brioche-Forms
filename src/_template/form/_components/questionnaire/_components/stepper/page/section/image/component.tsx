@@ -11,7 +11,7 @@ export function ImageSectionComponent(props: IImageSectionComponentProps) {
         <div className="w-full flex flex-col items-center justify-center p-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={data.url} alt={data.caption ?? ''} />
-            <span>{data.caption}</span>
+            <span className="mt-3">{data.caption}</span>
         </div>
     )
 }
