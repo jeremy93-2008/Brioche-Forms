@@ -1,4 +1,4 @@
-import { IResponseWithAnswers } from '@/_server/_handlers/actions/response/upsert'
+import { IResponseWithAnswers } from '@/_server/_handlers/actions/response/scheme'
 import { getDbClient } from '@/_server/domains/_context/db.client'
 import { responsesTable } from '@db/tables'
 import { and, eq } from 'drizzle-orm'

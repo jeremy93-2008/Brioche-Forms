@@ -5,39 +5,22 @@ import {
     IMiddlewaresAccessCtx,
     ServerEnv,
 } from '@/_server/__internals/defineServerRequest'
+import {
+    IResponseWithAnswers,
+    IResponseWithAnswersReturn,
+    responseWithAnswersScheme,
+} from '@/_server/_handlers/actions/response/scheme'
 import type { IReturnAction } from '@/_server/_handlers/actions/types'
 import { requireAuth } from '@/_server/_middlewares/requireAuth'
 import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAccess'
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { withTransactionContext } from '@/_server/domains/_context/withTransactionContext'
+import { validateAnswersFromQuestions } from '@/_server/domains/_validator/validateAnswersFromQuestions'
 import { upsertMultiChoicesAnswer } from '@/_server/domains/response/answers/multichoicea/upsertMultiChoicesAnswer'
 import { upsertAnswersResponse } from '@/_server/domains/response/answers/upsertAnswersResponse'
 import { createResponse } from '@/_server/domains/response/createResponse'
 import { editResponse } from '@/_server/domains/response/editResponse'
-import { IMultipleChoice } from '@db/types'
-import z from 'zod'
-
-const schema = z.object({
-    id: z.string().nullable(),
-    form_id: z.string(),
-    respondent_id: z.string(),
-    respondent_name: z.string(),
-    is_partial_response: z.number(),
-    answers: z.array(
-        z.object({
-            id: z.string().nullable(),
-            question_id: z.string(),
-            question_type: z.string(),
-            value: z.string().nullable(),
-            choice_ids: z.array(z.string()).nullable(),
-            choice_free_text: z.string().nullable(),
-        })
-    ),
-})
-
-export type IResponseWithAnswers = z.infer<typeof schema>
-
-export type IResponseWithAnswersReturn = { id: string }
+import { IAnswerType, IMultipleChoice } from '@db/types'
 
 async function upsertResponseSectionHandler(
     _data: IResponseWithAnswers,
@@ -47,6 +30,19 @@ async function upsertResponseSectionHandler(
     const validatedFields = ctx.validatedFields
     const data = validatedFields.data! as Required<IResponseWithAnswers>
     const formId = data.form_id
+    const validateAnswers = validateAnswersFromQuestions(formId)
+
+    const areAnswersValid = await validateAnswers(data.answers)
+
+    if (!areAnswersValid) {
+        return {
+            status: 'error',
+            error: {
+                message: 'Answers validation failed',
+                trace: new Error().stack,
+            },
+        }
+    }
 
     const result = await withTransactionContext()(async () => {
         const response = data.id
@@ -70,7 +66,7 @@ async function upsertResponseSectionHandler(
                 form_id: formId,
                 response_id: response.id,
                 question_id: ans.question_id,
-                type: ans.question_type,
+                type: ans.question_type as IAnswerType,
                 choice_id:
                     ans.question_type === 'single_choice' && ans.choice_ids
                         ? ans.choice_ids[0]
@@ -122,6 +118,6 @@ export default defineServerRequest<
     IMiddlewaresAccessCtx<IResponseWithAnswers>
 >(upsertResponseSectionHandler, [
     requireAuth(),
-    requireValidation(schema),
+    requireValidation(responseWithAnswersScheme),
     requireResourceAccess(['read', 'write']),
 ])

@@ -2,10 +2,11 @@ import { Button } from '@/_components/ui/button'
 import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
-import UpsertResponseAction, {
+import {
     IResponseWithAnswers,
     IResponseWithAnswersReturn,
-} from '@/_server/_handlers/actions/response/upsert'
+} from '@/_server/_handlers/actions/response/scheme'
+import UpsertResponseAction from '@/_server/_handlers/actions/response/upsert'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
 import { IFullPage, IFullSection } from '@/_server/domains/form/getFullForms'
 import { PageComponent } from '@/_template/form/_components/questionnaire/_components/stepper/page/component'
@@ -14,7 +15,7 @@ import { cn } from '@/_utils/clsx-tw'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { ArrowLeftIcon, ArrowRightIcon, SaveIcon, SendIcon } from 'lucide-react'
 import { use, useState } from 'react'
-import { useWatch } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
 import { toast } from 'sonner'
 
 export type ITypeStepper = 'all' | 'by_component'
@@ -82,6 +83,26 @@ export function StepperComponent(props: IStepperComponentProps) {
                 await runUpsertResponseAction({
                     ...currentResponse,
                     is_partial_response: 1,
+                } as IResponseWithAnswers)
+
+            showToastFromResult(responseData, ToastMessages.genericSuccess)
+        }
+    }
+
+    const { handleSubmit } = useFormContext()
+
+    const handleFullSave = () => {
+        if (isPreviewMode) {
+            return () => {
+                toast.info(ToastMessages.previewModeAction)
+            }
+        }
+
+        return async () => {
+            const responseData: IReturnAction<IResponseWithAnswersReturn> =
+                await runUpsertResponseAction({
+                    ...currentResponse,
+                    is_partial_response: 0,
                 } as IResponseWithAnswers)
 
             showToastFromResult(responseData, ToastMessages.genericSuccess)
@@ -156,6 +177,7 @@ export function StepperComponent(props: IStepperComponentProps) {
                         </>
                     )}
                     <Button
+                        onClick={handleSubmit(handleFullSave())}
                         className={cn(
                             stepperIndex !== componentsSteps.steps.length - 1 &&
                                 componentsSteps.type === 'by_component' &&

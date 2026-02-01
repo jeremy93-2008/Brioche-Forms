@@ -1,4 +1,4 @@
-import { IResponseWithAnswers } from '@/_server/_handlers/actions/response/upsert'
+import { IResponseWithAnswers } from '@/_server/_handlers/actions/response/scheme'
 import { ChangeEvent } from 'react'
 import { useFormContext } from 'react-hook-form'
 import { v7 } from 'uuid'

@@ -1,4 +1,4 @@
-import { IResponseWithAnswers } from '@/_server/_handlers/actions/response/upsert'
+import { IResponseWithAnswers } from '@/_server/_handlers/actions/response/scheme'
 import { useMemo } from 'react'
 import { useWatch } from 'react-hook-form'
 

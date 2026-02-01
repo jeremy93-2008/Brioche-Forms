@@ -1,5 +1,5 @@
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
-import { IResponseWithAnswers } from '@/_server/_handlers/actions/response/upsert'
+import { IResponseWithAnswers } from '@/_server/_handlers/actions/response/scheme'
 import { ICurrentRespondent } from '@/_template/form/_components/questionnaire/_hooks/useGetCurrentRespondent'
 import { use } from 'react'
 
