@@ -8,6 +8,7 @@ import {
 } from '@/_server/_handlers/actions/response/scheme'
 import UpsertResponseAction from '@/_server/_handlers/actions/response/upsert'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
+import { IInvalidAnswers } from '@/_server/domains/_validator/validateAnswersFromQuestions'
 import { IFullPage, IFullSection } from '@/_server/domains/form/getFullForms'
 import { PageComponent } from '@/_template/form/_components/questionnaire/_components/stepper/page/component'
 import { SectionComponent } from '@/_template/form/_components/questionnaire/_components/stepper/page/section/component'
@@ -15,7 +16,12 @@ import { cn } from '@/_utils/clsx-tw'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { ArrowLeftIcon, ArrowRightIcon, SaveIcon, SendIcon } from 'lucide-react'
 import { use, useState } from 'react'
-import { useFormContext, useWatch } from 'react-hook-form'
+import {
+    ResolverError,
+    SubmitErrorHandler,
+    useFormContext,
+    useWatch,
+} from 'react-hook-form'
 import { toast } from 'sonner'
 
 export type ITypeStepper = 'all' | 'by_component'
@@ -65,6 +71,37 @@ export function StepperComponent(props: IStepperComponentProps) {
         }
     }
 
+    const focusOnFirstError = (
+        errors: ResolverError<IResponseWithAnswers>['errors']
+    ) => {
+        const invalidAnswersArray: IInvalidAnswers[] = JSON.parse(
+            errors.answers?.root?.message ?? '[]'
+        )
+        if (invalidAnswersArray.length === 0) return
+        const firstErrorQuestionId = invalidAnswersArray[0].question_id
+
+        const errorElement = document.querySelector(
+            `[id="question:${firstErrorQuestionId}"]`
+        )
+        if (!errorElement) return
+
+        const singleStepIdx = errorElement
+            .closest('[data-step-idx]')
+            ?.getAttribute('data-step-idx')
+
+        if (singleStepIdx) setStepperIndex(Number(singleStepIdx))
+
+        window.requestIdleCallback(
+            () => {
+                errorElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                })
+            },
+            { timeout: 250 }
+        )
+    }
+
     const currentResponse = useWatch<IResponseWithAnswers>()
 
     const { isPending, runAction: runUpsertResponseAction } =
@@ -109,6 +146,15 @@ export function StepperComponent(props: IStepperComponentProps) {
         }
     }
 
+    const handleError: () => SubmitErrorHandler<IResponseWithAnswers> =
+        () => (errors) => {
+            if (process.env.NODE_ENV === 'development')
+                console.error('Form submission errors:', errors)
+
+            focusOnFirstError(errors)
+            toast.error(ToastMessages.formValidationError)
+        }
+
     return (
         <section className="flex flex-col gap-0 mt-2 mb-6 overflow-x-hidden">
             <section
@@ -137,9 +183,15 @@ export function StepperComponent(props: IStepperComponentProps) {
                             )}
                         >
                             {'sections' in step ? (
-                                <PageComponent data={step as IFullPage} />
+                                <PageComponent
+                                    data={step as IFullPage}
+                                    stepIdx={idx}
+                                />
                             ) : (
-                                <SectionComponent data={step as IFullSection} />
+                                <SectionComponent
+                                    data={step as IFullSection}
+                                    stepIdx={idx}
+                                />
                             )}
                         </div>
                     ))}
@@ -177,7 +229,7 @@ export function StepperComponent(props: IStepperComponentProps) {
                         </>
                     )}
                     <Button
-                        onClick={handleSubmit(handleFullSave())}
+                        onClick={handleSubmit(handleFullSave(), handleError())}
                         className={cn(
                             stepperIndex !== componentsSteps.steps.length - 1 &&
                                 componentsSteps.type === 'by_component' &&

@@ -9,10 +9,12 @@ import { useCallback } from 'react'
 
 interface ISectionComponentProps {
     data: IFullSection
+    isPageChild?: boolean
+    stepIdx?: number
 }
 
 export function SectionComponent(props: ISectionComponentProps) {
-    const { data } = props
+    const { data, isPageChild = false, stepIdx } = props
 
     const getTypeOfSection: (
         section: IFullForm['pages'][number]['sections'][number]
@@ -25,7 +27,10 @@ export function SectionComponent(props: ISectionComponentProps) {
     }, [])
 
     return (
-        <Card className="w-full flex flex-col gap-2 items-start justify-center p-4 mb-6">
+        <Card
+            className="w-full flex flex-col gap-2 items-start justify-center p-4 mb-6"
+            {...(isPageChild ? { 'data-step-idx': stepIdx } : {})}
+        >
             <h2 className="text-xl text-primary font-semibold mb-0">
                 {data.title}
             </h2>

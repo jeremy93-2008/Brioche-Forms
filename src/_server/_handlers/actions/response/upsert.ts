@@ -16,6 +16,7 @@ import { requireResourceAccess } from '@/_server/_middlewares/requireResourceAcc
 import { requireValidation } from '@/_server/_middlewares/requireValidation'
 import { withTransactionContext } from '@/_server/domains/_context/withTransactionContext'
 import { validateAnswersFromQuestions } from '@/_server/domains/_validator/validateAnswersFromQuestions'
+import { GetQuestionsByFormId } from '@/_server/domains/question/getQuestionsByFormId'
 import { upsertMultiChoicesAnswer } from '@/_server/domains/response/answers/multichoicea/upsertMultiChoicesAnswer'
 import { upsertAnswersResponse } from '@/_server/domains/response/answers/upsertAnswersResponse'
 import { createResponse } from '@/_server/domains/response/createResponse'
@@ -30,9 +31,14 @@ async function upsertResponseSectionHandler(
     const validatedFields = ctx.validatedFields
     const data = validatedFields.data! as Required<IResponseWithAnswers>
     const formId = data.form_id
-    const validateAnswers = validateAnswersFromQuestions(formId)
 
-    const areAnswersValid = await validateAnswers(data.answers)
+    const questions = await GetQuestionsByFormId(formId)
+    const validateAnswers = validateAnswersFromQuestions(questions)
+
+    const areAnswersValid =
+        data.is_partial_response === 1
+            ? true
+            : validateAnswers(data.answers).isValid
 
     if (!areAnswersValid) {
         return {

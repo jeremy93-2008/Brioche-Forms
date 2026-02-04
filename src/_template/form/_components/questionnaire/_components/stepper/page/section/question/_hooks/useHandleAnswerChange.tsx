@@ -1,6 +1,6 @@
 import { IResponseWithAnswers } from '@/_server/_handlers/actions/response/scheme'
 import { ChangeEvent } from 'react'
-import { useFormContext } from 'react-hook-form'
+import { FieldPathValue, useFormContext } from 'react-hook-form'
 import { v7 } from 'uuid'
 
 interface IUseHandleAnswerChangeProps {
@@ -13,7 +13,14 @@ interface IUseHandleAnswerChangeProps {
 export function useHandleAnswerChange(props: IUseHandleAnswerChangeProps) {
     const { answers, currentQuestionAnswer, questionId, questionType } = props
 
-    const { setValue } = useFormContext<IResponseWithAnswers>()
+    const { setValue: setFormValue } = useFormContext<IResponseWithAnswers>()
+
+    const setValue = <T extends keyof IResponseWithAnswers>(
+        name: T,
+        value: FieldPathValue<IResponseWithAnswers, T>
+    ) => {
+        setFormValue(name, value, { shouldDirty: true, shouldValidate: true })
+    }
 
     const setAnswerById = (
         id: string | null | undefined = undefined,
@@ -36,9 +43,19 @@ export function useHandleAnswerChange(props: IUseHandleAnswerChangeProps) {
         setValue('answers', [...currentAnswersWithoutCurrent, newAnswer])
     }
 
+    const removeAnswerById = (id: string | null | undefined = undefined) => {
+        const currentAnswers = answers || []
+        const currentAnswersWithoutCurrent = currentAnswers.filter(
+            (answer) => answer.id !== id
+        )
+        setValue('answers', [...currentAnswersWithoutCurrent])
+    }
+
     const handleAnswerValueChange = (
         evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
+        if (evt.target.value === '')
+            return removeAnswerById(currentQuestionAnswer?.id)
         setAnswerById(currentQuestionAnswer?.id, 'value', evt.target.value)
     }
 
@@ -76,11 +93,16 @@ export function useHandleAnswerChange(props: IUseHandleAnswerChangeProps) {
             } else {
                 newChoiceIds = newChoiceIds.filter((id) => id !== choiceId)
             }
+            if (newChoiceIds.length === 0)
+                return removeAnswerById(currentQuestionAnswer?.id)
             setAnswerById(currentQuestionAnswer?.id, 'choice_ids', newChoiceIds)
         }
 
     const handleFreeTextChoiceChange =
         () => (evt: ChangeEvent<HTMLInputElement>) => {
+            if (evt.target.value === '')
+                return removeAnswerById(currentQuestionAnswer?.id)
+
             setAnswerById(
                 currentQuestionAnswer?.id,
                 'choice_free_text',

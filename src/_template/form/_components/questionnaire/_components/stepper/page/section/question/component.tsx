@@ -6,6 +6,7 @@ import { IQuestionTypeValues } from '@/_constants/question'
 import { IFullQuestion } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-question-edit/types'
 import { useAnswerQuestion } from '@/_template/form/_components/questionnaire/_components/stepper/page/section/question/_hooks/useAnswerQuestion'
 import { useHandleAnswerChange } from '@/_template/form/_components/questionnaire/_components/stepper/page/section/question/_hooks/useHandleAnswerChange'
+import { useQuestionAnswerError } from '@/_template/form/_components/questionnaire/_components/stepper/page/section/question/_hooks/useQuestionAnswerError'
 import { cn } from '@/_utils/clsx-tw'
 import { Checkbox } from '@stackframe/stack-ui'
 import { StarIcon } from 'lucide-react'
@@ -40,6 +41,8 @@ export function QuestionSectionComponent(
         currentQuestionAnswer,
     })
 
+    const { invalidAnswers } = useQuestionAnswerError()
+
     return (
         <div className="w-full flex flex-col gap-2 items-start justify-center p-4">
             <div className="content">
@@ -49,6 +52,12 @@ export function QuestionSectionComponent(
             <div className="answer w-4/6">
                 {(data.type as IQuestionTypeValues) === 'short_answer' && (
                     <Input
+                        className={cn(
+                            invalidAnswers[data.id]
+                                ? 'border-red-500 bg-red-500/20!'
+                                : ''
+                        )}
+                        id={`question:${data.id}`}
                         type="text"
                         value={currentQuestionAnswer?.value ?? ''}
                         onChange={handleAnswerValueChange}
@@ -56,12 +65,24 @@ export function QuestionSectionComponent(
                 )}
                 {(data.type as IQuestionTypeValues) === 'long_answer' && (
                     <Textarea
+                        className={cn(
+                            invalidAnswers[data.id]
+                                ? 'border-red-500 bg-red-500/20!'
+                                : ''
+                        )}
+                        id={`question:${data.id}`}
                         value={currentQuestionAnswer?.value ?? ''}
                         onChange={handleAnswerValueChange}
                     />
                 )}
                 {(data.type as IQuestionTypeValues) === 'short_answer:date' && (
                     <Input
+                        className={cn(
+                            invalidAnswers[data.id]
+                                ? 'border-red-500 bg-red-500/20!'
+                                : ''
+                        )}
+                        id={`question:${data.id}`}
                         type="date"
                         value={currentQuestionAnswer?.value ?? ''}
                         onChange={handleAnswerValueChange}
@@ -70,6 +91,12 @@ export function QuestionSectionComponent(
                 {(data.type as IQuestionTypeValues) ===
                     'short_answer:email' && (
                     <Input
+                        className={cn(
+                            invalidAnswers[data.id]
+                                ? 'border-red-500 bg-red-500/20!'
+                                : ''
+                        )}
+                        id={`question:${data.id}`}
                         type="email"
                         value={currentQuestionAnswer?.value ?? ''}
                         onChange={handleAnswerValueChange}
@@ -78,6 +105,12 @@ export function QuestionSectionComponent(
                 {(data.type as IQuestionTypeValues) ===
                     'short_answer:phone' && (
                     <Input
+                        className={cn(
+                            invalidAnswers[data.id]
+                                ? 'border-red-500 bg-red-500/20!'
+                                : ''
+                        )}
+                        id={`question:${data.id}`}
                         type="tel"
                         value={currentQuestionAnswer?.value ?? ''}
                         onChange={handleAnswerValueChange}
@@ -85,7 +118,14 @@ export function QuestionSectionComponent(
                 )}
                 {(data.type as IQuestionTypeValues) ===
                     'short_answer:opinion_scale' && (
-                    <>
+                    <section
+                        className={cn(
+                            invalidAnswers[data.id]
+                                ? 'border-red-500 bg-red-500/20!'
+                                : ''
+                        )}
+                        id={`question:${data.id}`}
+                    >
                         <input type="hidden" />
                         {[...Array(10)].map((_, idx) => (
                             <button
@@ -102,11 +142,18 @@ export function QuestionSectionComponent(
                                 {idx + 1}
                             </button>
                         ))}
-                    </>
+                    </section>
                 )}
                 {(data.type as IQuestionTypeValues) ===
                     'short_answer:rating' && (
-                    <>
+                    <section
+                        className={cn(
+                            invalidAnswers[data.id]
+                                ? 'border-red-500 bg-red-500/20!'
+                                : ''
+                        )}
+                        id={`question:${data.id}`}
+                    >
                         <input type="hidden" />
                         {[...Array(5)].map((_, idx) => (
                             <button
@@ -125,13 +172,19 @@ export function QuestionSectionComponent(
                                 />
                             </button>
                         ))}
-                    </>
+                    </section>
                 )}
                 {(data.type as IQuestionTypeValues) === 'single_choice' && (
                     <div className="flex flex-col gap-2">
                         <RadioGroup
                             value={currentSingleChoiceAnswer}
                             onValueChange={handleSingleChoiceChange}
+                            className={cn(
+                                invalidAnswers[data.id]
+                                    ? 'border-red-500 bg-red-500/20!'
+                                    : ''
+                            )}
+                            id={`question:${data.id}`}
                         >
                             {data.choices
                                 .sort((a, b) => a.order.localeCompare(b.order))
@@ -170,42 +223,58 @@ export function QuestionSectionComponent(
                     </div>
                 )}
                 {(data.type as IQuestionTypeValues) === 'multiple_choice' && (
-                    <div className="flex flex-col gap-2">
-                        {data.choices
-                            .sort((a, b) => a.order.localeCompare(b.order))
-                            .map((choice) => (
-                                <label
-                                    key={choice.id}
-                                    className="flex items-center gap-2"
-                                >
-                                    <Checkbox
-                                        name={`question-${data.id}`}
-                                        checked={currentMultipleChoiceAnswers.includes(
-                                            choice.id
+                    <section
+                        className={cn(
+                            invalidAnswers[data.id]
+                                ? 'border-red-500 bg-red-500/20!'
+                                : ''
+                        )}
+                        id={`question:${data.id}`}
+                    >
+                        <div className="flex flex-col gap-2">
+                            {data.choices
+                                .sort((a, b) => a.order.localeCompare(b.order))
+                                .map((choice) => (
+                                    <label
+                                        key={choice.id}
+                                        className="flex items-center gap-2"
+                                    >
+                                        <Checkbox
+                                            name={`question-${data.id}`}
+                                            checked={currentMultipleChoiceAnswers.includes(
+                                                choice.id
+                                            )}
+                                            onCheckedChange={handleMultipleChoiceChange(
+                                                choice.id
+                                            )}
+                                        />
+                                        {choice.is_free_text ? (
+                                            <>
+                                                <span>Otro: </span>
+                                                <Input
+                                                    value={
+                                                        currentQuestionAnswer?.choice_free_text ??
+                                                        ''
+                                                    }
+                                                    onChange={handleFreeTextChoiceChange()}
+                                                    className="w-full"
+                                                    type="text"
+                                                />
+                                            </>
+                                        ) : (
+                                            <span>{choice.content}</span>
                                         )}
-                                        onCheckedChange={handleMultipleChoiceChange(
-                                            choice.id
-                                        )}
-                                    />
-                                    {choice.is_free_text ? (
-                                        <>
-                                            <span>Otro: </span>
-                                            <Input
-                                                value={
-                                                    currentQuestionAnswer?.choice_free_text ??
-                                                    ''
-                                                }
-                                                onChange={handleFreeTextChoiceChange()}
-                                                className="w-full"
-                                                type="text"
-                                            />
-                                        </>
-                                    ) : (
-                                        <span>{choice.content}</span>
-                                    )}
-                                </label>
-                            ))}
-                    </div>
+                                    </label>
+                                ))}
+                        </div>
+                    </section>
+                )}
+            </div>
+            <div className="flex flex-col gap-2">
+                {invalidAnswers[data.id] && (
+                    <span className="text-red-600 text-sm">
+                        {invalidAnswers[data.id].message}
+                    </span>
                 )}
             </div>
         </div>
