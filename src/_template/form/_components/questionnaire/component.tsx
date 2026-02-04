@@ -38,6 +38,13 @@ export function QuestionnaireComponent(props: IQuestionnaireComponentProps) {
             id="stepper-wrapper"
             className={`min-h-[calc(100vh-61px)] overflow-y-auto ${data.formStyle === 'standard' ? 'published-form-standard bg-background' : ''} 
             ${data.theme}`}
+            style={
+                data.backgroundColor
+                    ? {
+                          background: data.backgroundColor,
+                      }
+                    : {}
+            }
         >
             <FormProvider {...form}>
                 <LazyStepperSectionComponent isPreviewMode={isPreviewMode} />

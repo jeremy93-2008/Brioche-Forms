@@ -1,4 +1,5 @@
 import { Button } from '@/_components/ui/button'
+import { Card } from '@/_components/ui/card'
 import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
@@ -156,7 +157,20 @@ export function StepperComponent(props: IStepperComponentProps) {
         }
 
     return (
-        <section className="flex flex-col gap-0 mt-2 mb-6 overflow-x-hidden">
+        <section className="flex flex-col gap-0 mb-6 overflow-x-hidden">
+            {data.headerImage && (
+                <section className="flex mx-40 flex-col gap-0 mb-2">
+                    <img
+                        src={data.headerImage}
+                        alt="Form header"
+                        className="w-full h-48 object-cover rounded-b-lg"
+                    />
+                </section>
+            )}
+            <Card className="mt-6 mx-40 gap-4 px-4 text-primary">
+                <span className="text-2xl font-bold">{data.title}</span>
+                <p>{data.description}</p>
+            </Card>
             <section
                 className={cn(
                     'flex justify-center w-full px-32',
