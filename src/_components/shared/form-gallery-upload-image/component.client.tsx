@@ -23,19 +23,25 @@ import UploadMediaAction, {
 import { IReturnAction } from '@/_server/_handlers/actions/types'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { IMedia } from '@db/types'
-import { ChevronsUpDown, Circle, CircleCheckBig } from 'lucide-react'
+import {
+    ChevronsUpDown,
+    Circle,
+    CircleCheckBig,
+    LoaderCircleIcon,
+} from 'lucide-react'
 import Image from 'next/image'
 import { FormEvent, useState } from 'react'
 
 interface IFormGalleryUploadImageComponentProps {
     selectedImageUrl: string
+    defaultOpen?: boolean
     afterUpload: (result: IReturnAction<IMediaUploadResult>) => void
 }
 
 export function FormGalleryUploadImageComponent(
     props: IFormGalleryUploadImageComponentProps
 ) {
-    const { selectedImageUrl, afterUpload } = props
+    const { selectedImageUrl, defaultOpen, afterUpload } = props
     const { isPending, runAction } = useServerActionState<
         FormData,
         IMediaUploadResult
@@ -78,7 +84,7 @@ export function FormGalleryUploadImageComponent(
     return (
         <section className="flex flex-col">
             <form onSubmit={onSaveUpload}>
-                <Collapsible defaultOpen={false}>
+                <Collapsible defaultOpen={defaultOpen ?? false}>
                     <CollapsibleTrigger className="flex items-center justify-between mb-2 w-full cursor-pointer">
                         <section className="flex items-baseline">
                             <h3 className="text-xs mt-2 mb-2">Galería</h3>
@@ -94,6 +100,14 @@ export function FormGalleryUploadImageComponent(
                     </CollapsibleTrigger>
                     <CollapsibleContent>
                         <section className="flex flex-wrap gap-1 overflow-y-auto mt-1 mb-3 py-2 px-3 max-h-96 border border-b-4 rounded-lg">
+                            {!mediasResult && (
+                                <section className="w-full h-24 flex flex-col items-center justify-center">
+                                    <LoaderCircleIcon className="w-6 h-6 animate-spin text-gray-500" />
+                                    <span className="text-xs text-gray-500 mt-2">
+                                        Cargando imágenes...
+                                    </span>
+                                </section>
+                            )}
                             {mediasResult?.status === 'success' &&
                                 mediasResult.data.map((item) => (
                                     <div

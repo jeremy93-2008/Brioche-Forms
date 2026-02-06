@@ -6,4 +6,5 @@ export const ToastMessages = {
         'No se pueden guardar los cambios en modo vista previa. Para crear respuestas, por favor publica el formulario.',
     formValidationError:
         'Se encontraron errores en el formulario. Por favor, revisa tus respuestas e intenta nuevamente.',
+    cleanBackgroundColorSuccess: 'Color de fondo limpiado exitosamente.',
 }

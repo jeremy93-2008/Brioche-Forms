@@ -255,7 +255,7 @@ export function StepperComponent(props: IStepperComponentProps) {
                     </Button>
                 </section>
                 <section className="flex gap-4">
-                    {data.savePartialResponses && (
+                    {data.savePartialResponses === 1 && (
                         <Button
                             onClick={handlePartialSave()}
                             variant="secondary"
