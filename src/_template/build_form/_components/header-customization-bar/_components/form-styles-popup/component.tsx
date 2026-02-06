@@ -4,11 +4,11 @@ import {
     FormFieldEditDialogContent,
     FormFieldEditDialogTrigger,
 } from '@/_components/shared/form-field-edit-dialog/component.client'
+import { LabelTooltipComponent } from '@/_components/shared/label-tooltip/component'
 import { Button } from '@/_components/ui/button'
 import { ColorPicker } from '@/_components/ui/color-picker'
 import { Field, FieldSet } from '@/_components/ui/field'
 import { ImagePicker } from '@/_components/ui/image-picker'
-import { Label } from '@/_components/ui/label'
 import {
     Select,
     SelectContent,
@@ -56,7 +56,31 @@ export function FormStylesPopupComponent() {
                                 {...register('id')}
                             />
                             <Field className="flex flex-row">
-                                <Label htmlFor="formStyle">Estilo</Label>
+                                <LabelTooltipComponent
+                                    className="flex flex-1"
+                                    labelText="Estilo"
+                                    htmlFor="formStyle"
+                                    tooltipContent={
+                                        <>
+                                            El modo Brioche es el modo
+                                            <br />
+                                            Por defecto, y es el modo de
+                                            <br />
+                                            está aplicación. El modo estándar es
+                                            un
+                                            <br />
+                                            modo más tradicional, con un diseño
+                                            <br />
+                                            más simple y minimalista. Puedes
+                                            <br />
+                                            cambiar entre ambos modos para ver
+                                            <br />
+                                            cuál se adapta mejor a tus
+                                            <br />
+                                            necesidades y preferencias.
+                                        </>
+                                    }
+                                />
                                 <Controller
                                     control={control}
                                     name="formStyle"
@@ -68,7 +92,10 @@ export function FormStylesPopupComponent() {
                                             value={value}
                                             onValueChange={onChange}
                                         >
-                                            <SelectTrigger id="formStyle">
+                                            <SelectTrigger
+                                                className="flex-[0.96]"
+                                                id="formStyle"
+                                            >
                                                 <SelectValue placeholder="Seleccionar estilo" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -93,7 +120,38 @@ export function FormStylesPopupComponent() {
                                 />
                             </Field>
                             <Field className="flex flex-row">
-                                <Label htmlFor="theme">Modo</Label>
+                                <LabelTooltipComponent
+                                    className="flex flex-1"
+                                    labelText="Modo"
+                                    htmlFor="theme"
+                                    tooltipContent={
+                                        <>
+                                            El modo claro es ideal
+                                            <br />
+                                            para entornos bien iluminados, ya
+                                            que
+                                            <br />
+                                            utiliza colores claros y brillantes.
+                                            <br />
+                                            El modo oscuro es perfecto para
+                                            <br />
+                                            entornos con poca luz, ya que
+                                            utiliza
+                                            <br />
+                                            colores oscuros que reducen la
+                                            fatiga
+                                            <br />
+                                            visual. El modo sistema se adapta al
+                                            <br />
+                                            tema de tu dispositivo, cambiando
+                                            <br />
+                                            automáticamente entre claro y oscuro
+                                            <br />
+                                            según la configuración de tu
+                                            sistema.
+                                        </>
+                                    }
+                                />
                                 <Controller
                                     control={control}
                                     name="theme"
@@ -105,7 +163,10 @@ export function FormStylesPopupComponent() {
                                             value={value}
                                             onValueChange={onChange}
                                         >
-                                            <SelectTrigger id="theme">
+                                            <SelectTrigger
+                                                className="flex-[0.96]"
+                                                id="theme"
+                                            >
                                                 <SelectValue placeholder="Seleccionar modo" />
                                             </SelectTrigger>
                                             <SelectContent>
@@ -129,12 +190,29 @@ export function FormStylesPopupComponent() {
                                 />
                             </Field>
                             <Field className="flex flex-row">
-                                <Label
-                                    className="flex-[1.08] min-w-[220px]"
+                                <LabelTooltipComponent
+                                    className="flex flex-[1.08] min-w-[220px]"
+                                    labelText="Color de fondo"
                                     htmlFor="backgroundColor"
-                                >
-                                    Color de fondo
-                                </Label>
+                                    tooltipContent={
+                                        <>
+                                            Elige un color de fondo para tu
+                                            <br />
+                                            formulario. Puedes seleccionar un
+                                            <br />
+                                            color sólido o un degradado, según
+                                            <br />
+                                            tus preferencias. El color de fondo
+                                            <br />
+                                            puede ayudar a mejorar la apariencia
+                                            de tu
+                                            <br />
+                                            formulario y hacerlo más atractivo
+                                            <br />
+                                            para los usuarios.
+                                        </>
+                                    }
+                                />
                                 <Controller
                                     control={control}
                                     name="backgroundColor"
@@ -152,9 +230,32 @@ export function FormStylesPopupComponent() {
                             </Field>
 
                             <Field className="flex flex-row">
-                                <Label className="flex-[1.08]">
-                                    Imagen de cabecera
-                                </Label>
+                                <LabelTooltipComponent
+                                    className="flex flex-[1.08]"
+                                    labelText="Imagen de cabecera"
+                                    htmlFor="headerImage"
+                                    tooltipContent={
+                                        <>
+                                            Puedes subir una imagen de cabecera
+                                            <br />
+                                            para personalizar aún más tu
+                                            <br />
+                                            formulario. La imagen de cabecera se
+                                            <br />
+                                            mostrará en la parte superior del
+                                            <br />
+                                            formulario, y puede ser una forma
+                                            <br />
+                                            efectiva de captar la atención de
+                                            los
+                                            <br />
+                                            usuarios y hacer que tu formulario
+                                            se
+                                            <br />
+                                            destaque.
+                                        </>
+                                    }
+                                />
                                 <Controller
                                     control={control}
                                     name="headerImage"

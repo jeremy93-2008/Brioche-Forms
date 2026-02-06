@@ -10,6 +10,7 @@ import { type ReactNode } from 'react'
 interface ILabelTooltipProps {
     labelText: string
     tooltipContent: ReactNode
+    htmlFor?: string
     className?: string
 }
 
@@ -18,9 +19,12 @@ interface ILabelTooltipProps {
  * @param props - ILabelTooltipProps
  */
 export function LabelTooltipComponent(props: ILabelTooltipProps) {
-    const { labelText, className, tooltipContent } = props
+    const { labelText, className, htmlFor, tooltipContent } = props
     return (
-        <Label className={`flex flex-16 items-center ${className || ''}`}>
+        <Label
+            htmlFor={htmlFor}
+            className={`flex flex-16 items-center ${className || ''}`}
+        >
             {labelText}
             <Tooltip>
                 <TooltipTrigger asChild>
