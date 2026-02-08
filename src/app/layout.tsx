@@ -1,3 +1,4 @@
+import { FormAlertDialogProvider } from '@/_components/shared/form-alert-dialog/_providers/provider'
 import { Toaster } from '@/_components/ui/sonner'
 import { stackClientApp } from '@/_stack/client'
 import { StackProvider, StackTheme } from '@stackframe/stack'
@@ -44,7 +45,9 @@ export default function RootLayout({
                             enableSystem
                         >
                             <Toaster position="top-center" />
-                            {children}
+                            <FormAlertDialogProvider>
+                                {children}
+                            </FormAlertDialogProvider>
                         </ThemeProvider>
                     </StackTheme>
                 </StackProvider>
