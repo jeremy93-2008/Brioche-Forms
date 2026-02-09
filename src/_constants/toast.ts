@@ -7,4 +7,5 @@ export const ToastMessages = {
     formValidationError:
         'Se encontraron errores en el formulario. Por favor, revisa tus respuestas e intenta nuevamente.',
     cleanBackgroundColorSuccess: 'Color de fondo limpiado exitosamente.',
+    publishedSuccess: 'Formulario publicado exitosamente.',
 }

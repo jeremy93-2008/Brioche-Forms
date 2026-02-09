@@ -35,9 +35,11 @@ export interface IFormAlertDialogContext {
     promiseWithResolvers?: PromiseWithResolvers<boolean>
 }
 
-export type IFormAlertDialogOptions = Omit<
-    IFormAlertDialogContext,
-    'isOpen' | 'onOpenChange' | 'onDataChange' | 'type'
+export type IFormAlertDialogOptions = Partial<
+    Omit<
+        IFormAlertDialogContext,
+        'isOpen' | 'onOpenChange' | 'onDataChange' | 'type'
+    >
 >
 
 export const FormAlertDialogContext = createContext<IFormAlertDialogContext>({

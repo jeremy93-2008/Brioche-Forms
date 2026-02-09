@@ -5,9 +5,7 @@ import { and, eq, notInArray, sql } from 'drizzle-orm'
 import { v7 as uuidv7 } from 'uuid'
 
 export async function upsertMultiChoicesAnswer(data: IMultipleChoice[]) {
-    if (data.length === 0) {
-        throw new Error('No Multichoice Answer provided for upsert.')
-    }
+    if (data.length === 0) return
 
     const result = await getDbClient()
         .tx.insert(multipleChoicesTable)

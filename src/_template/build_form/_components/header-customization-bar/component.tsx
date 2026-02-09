@@ -1,34 +1,53 @@
 'use client'
 import { useFormAlertDialog } from '@/_components/shared/form-alert-dialog/_hooks/useFormAlertDialog'
 import { Button } from '@/_components/ui/button'
+import { ToastMessages } from '@/_constants/toast'
+import { useServerActionState } from '@/_hooks/useServerActionState'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
+import updateFormAction from '@/_server/_handlers/actions/form/update'
 import { FormPreferencesPopupComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-preferences-popup/component'
 import { FormStylesPopupComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-styles-popup/component'
-import { Play, UploadCloud } from 'lucide-react'
+import { showToastFromResult } from '@/_utils/showToastFromResult'
+import { Play, TableIcon, UploadCloud } from 'lucide-react'
 import Link from 'next/link'
-import { use } from 'react'
+import { startTransition, use, useOptimistic } from 'react'
 
 export function HeaderCustomizationBarComponent() {
     const { data } = use(SingleFormSelectedContext)!
+
+    const [isPublished, setIsPublished] = useOptimistic<number, number>(
+        data.isPublished,
+        (state, newIsPublished) => newIsPublished
+    )
+
+    const { runAction, isPending } = useServerActionState(updateFormAction)
 
     const { confirmDialog } = useFormAlertDialog()
 
     const onPublishClick = async () => {
         if (
             await confirmDialog(
-                '¿Estás seguro de que deseas publicar este formulario?'
+                '¿Estás seguro de que deseas publicar este formulario?',
+                {
+                    description:
+                        'Una vez publicado, el formulario estará disponible para que los usuarios lo completen. Asegúrate de haber revisado todas las preguntas y configuraciones antes de proceder.',
+                    actionText: 'Publicar ahora',
+                }
             )
         ) {
-            console.log('Publicando formulario...')
+            const result = await runAction({
+                id: data.id,
+                isPublished: 1,
+                acceptResponses: 1,
+                isDraft: 0,
+            })
+            startTransition(() => {
+                setIsPublished(1)
+            })
+            showToastFromResult(result, ToastMessages.publishedSuccess)
         } else {
             console.log('Publicación cancelada.')
         }
-        /**const result = await updateFormAction({
-            id: data.id,
-            isPublished: 1,
-            acceptResponses: 1,
-            isDraft: 0,
-        })*/
     }
 
     return (
@@ -47,10 +66,22 @@ export function HeaderCustomizationBarComponent() {
                         Previsualizar
                     </Button>
                 </Link>
-                <Button onClick={onPublishClick} variant="link">
-                    <UploadCloud />
-                    Publicar
-                </Button>
+                {isPublished === 0 && (
+                    <Button
+                        onClick={onPublishClick}
+                        variant="link"
+                        isLoading={isPending}
+                    >
+                        {!isPending && <UploadCloud />}
+                        Publicar
+                    </Button>
+                )}
+                {isPublished === 1 && (
+                    <Button variant="default">
+                        <TableIcon />
+                        Resultados
+                    </Button>
+                )}
             </div>
         </section>
     )

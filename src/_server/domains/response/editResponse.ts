@@ -2,10 +2,9 @@ import { IResponseWithAnswers } from '@/_server/_handlers/actions/response/schem
 import { getDbClient } from '@/_server/domains/_context/db.client'
 import { responsesTable } from '@db/tables'
 import { and, eq } from 'drizzle-orm'
-import { v7 as uuidv7 } from 'uuid'
 
 export async function editResponse(data: Partial<IResponseWithAnswers>) {
-    const responseId = uuidv7()
+    const responseId = data.id!
 
     await getDbClient()
         .tx.update(responsesTable)
