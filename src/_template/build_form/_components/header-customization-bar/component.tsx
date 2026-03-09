@@ -77,10 +77,12 @@ export function HeaderCustomizationBarComponent() {
                     </Button>
                 )}
                 {isPublished === 1 && (
-                    <Button variant="default">
-                        <TableIcon />
-                        Resultados
-                    </Button>
+                    <Link href={`/form/${data.id}/result`} target="_blank">
+                        <Button variant="default">
+                            <TableIcon />
+                            Respuestas
+                        </Button>
+                    </Link>
                 )}
             </div>
         </section>

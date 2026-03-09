@@ -1,0 +1,1 @@
+ALTER TABLE `forms` ADD `show_section_titles` integer DEFAULT 1 NOT NULL;

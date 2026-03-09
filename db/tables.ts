@@ -31,6 +31,7 @@ export const formsTable = sqliteTable('forms', {
     questionnaireDisplayMode: text('questionnaire_display_mode')
         .notNull()
         .default('all_pages'), // e.g., 'all_pages', 'page_by_page', 'section_by_page'
+    showSectionTitles: int('show_section_titles').notNull().default(1),
 })
 
 export const tagsFormsTable = sqliteTable('tags_forms', {
