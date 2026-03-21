@@ -17,7 +17,7 @@ export function CreateNewVideoButtonComponent(
     return (
         <CreateNewSectionButtonComponent
             buttonText="Nuevo Video"
-            buttonIcon={<ClapperboardIcon className="w-10! h-10!" />}
+            buttonIcon={<ClapperboardIcon className="w-5! h-5!" />}
             dialogTitle="Crear nuevo video"
             serverAction={CreateVideoAction}
             afterSave={afterSave}

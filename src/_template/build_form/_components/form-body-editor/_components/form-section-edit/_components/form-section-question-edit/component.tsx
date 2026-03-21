@@ -80,7 +80,7 @@ export function FormSectionQuestionEditComponent(
     const sortableItem = use(SortableItemContext)
 
     return (
-        <FieldSet className="relative flex-col">
+        <FieldSet className="relative flex-col mx-3">
             <section className="absolute flex justify-end -top-8 right-0">
                 <Button
                     onClick={handleSubmit(onSaveContent)}
@@ -88,6 +88,7 @@ export function FormSectionQuestionEditComponent(
                     size="sm"
                     isLoading={isPending}
                     disabled={!formState.isDirty}
+                    variant="secondary"
                 >
                     Guardar
                 </Button>

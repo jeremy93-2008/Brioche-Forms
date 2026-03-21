@@ -29,7 +29,7 @@ export function CreateNewQuestionButtonComponent(
     return (
         <CreateNewSectionButtonComponent
             buttonText="Nueva pregunta"
-            buttonIcon={<BadgeQuestionMarkIcon className="w-10! h-10!" />}
+            buttonIcon={<BadgeQuestionMarkIcon className="w-5! h-5!" />}
             dialogTitle="Crear nueva pregunta"
             serverAction={CreateQuestionAction}
             afterSave={afterSave}

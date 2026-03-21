@@ -1,3 +1,4 @@
+'use client'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/_components/ui/tabs'
 import { FormResultFormResponsesComponent } from '@/_template/form_result/_components/form-response-result/component'
 import { FormResultHeaderComponent } from '@/_template/form_result/_components/header-result/component'

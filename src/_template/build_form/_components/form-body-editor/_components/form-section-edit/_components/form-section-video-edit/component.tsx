@@ -92,6 +92,7 @@ export function FormSectionVideoEditComponent(
                     size="sm"
                     isLoading={isPending}
                     disabled={!formState.isDirty}
+                    variant="secondary"
                 >
                     Guardar
                 </Button>

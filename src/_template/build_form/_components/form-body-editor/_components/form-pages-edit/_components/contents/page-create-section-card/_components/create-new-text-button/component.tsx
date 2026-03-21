@@ -17,7 +17,7 @@ export function CreateNewTextButtonComponent(
     return (
         <CreateNewSectionButtonComponent
             buttonText="Nuevo texto"
-            buttonIcon={<CaseSensitiveIcon className="w-10! h-10!" />}
+            buttonIcon={<CaseSensitiveIcon className="w-5! h-5!" />}
             dialogTitle="Crear nuevo texto"
             serverAction={CreateTextAction}
             afterSave={afterSave}

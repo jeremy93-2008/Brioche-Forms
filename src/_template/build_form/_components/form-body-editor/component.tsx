@@ -1,4 +1,3 @@
-import { Separator } from '@/_components/ui/separator'
 import { FormDescriptionEditComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-description-edit/component'
 import { FormInfoRightComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-info-right/component'
 import { FormPagesEditComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/component'
@@ -7,7 +6,7 @@ import { FormTitleEditComponent } from '@/_template/build_form/_components/form-
 export function FormBodyEditorComponent() {
     return (
         <section className="flex items-center w-full font-sans">
-            <section className="flex flex-col flex-1 mx-16 mt-1 mb-16 px-8 py-4 gap-2 bg-card border rounded-xl">
+            <section className="flex flex-col flex-1 mx-8  px-8 py-4 gap-2 rounded-xl">
                 <section className="flex justify-between items-center font-sans">
                     <FormTitleEditComponent />
                     <FormInfoRightComponent />
@@ -15,8 +14,7 @@ export function FormBodyEditorComponent() {
                 <section className="flex items-center font-sans">
                     <FormDescriptionEditComponent />
                 </section>
-                <Separator className="my-4" />
-                <section className="flex items-center font-sans">
+                <section className="flex items-center font-sans mt-3">
                     <FormPagesEditComponent />
                 </section>
             </section>

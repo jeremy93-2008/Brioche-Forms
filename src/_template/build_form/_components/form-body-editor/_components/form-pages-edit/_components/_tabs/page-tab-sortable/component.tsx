@@ -43,12 +43,11 @@ export function PageTabSortableComponent({
             value={page.id}
         >
             <section className="w-fit flex-none flex items-center group">
-                {isActive && (
-                    <DragHandler
-                        className="w-0 opacity-0 group-hover:opacity-100 group-hover:w-4 transition-width"
-                        iconClassName="!w-4 !h-4"
-                    />
-                )}
+                <DragHandler
+                    type="vertical"
+                    className={`${!isActive && 'opacity-40 pointer-events-none'}`}
+                    iconClassName="!w-4 !h-4"
+                />
                 {page.title || 'Página sin título'}
                 {isActive && !sortable?.isDragging && (
                     <>

@@ -1,14 +1,15 @@
 import { SortableItemContext } from '@/_components/dnd/sortableItem'
-import { GripVerticalIcon } from 'lucide-react'
+import { GripHorizontalIcon, GripVerticalIcon } from 'lucide-react'
 import { use } from 'react'
 
 interface IDragHandlerProps {
+    type?: 'vertical' | 'horizontal'
     className?: string
     iconClassName?: string
 }
 
 export function DragHandler(props: IDragHandlerProps) {
-    const { className, iconClassName } = props
+    const { type = 'horizontal', className, iconClassName } = props
     const sortItemContext = use(SortableItemContext)
 
     return (
@@ -17,7 +18,12 @@ export function DragHandler(props: IDragHandlerProps) {
             {...sortItemContext?.listeners}
             className={`cursor-grab active:cursor-grabbing ${className || ''}`}
         >
-            <GripVerticalIcon className={iconClassName} />
+            {type === 'horizontal' && (
+                <GripHorizontalIcon className={iconClassName} />
+            )}
+            {type === 'vertical' && (
+                <GripVerticalIcon className={iconClassName} />
+            )}
         </section>
     )
 }

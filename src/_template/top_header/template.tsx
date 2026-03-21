@@ -8,13 +8,13 @@ import { LogoLinkComponent } from '@/_template/top_header/_components/logo-link/
 export function TopHeaderTemplate() {
     return (
         <header className="flex flex-col w-full">
-            <section className="flex items-center justify-between mx-3 font-montserrat">
-                <div className="flex items-center gap-6 mx-3 font-montserrat">
+            <section className="flex items-center justify-between mx-0 font-montserrat">
+                <div className="flex items-center gap-[0.3rem] mx-2 font-montserrat">
                     <LogoLinkComponent />
                     <WorkspaceSelectorComponent />
                 </div>
 
-                <div className="flex items-center gap-6 mx-3 font-montserrat">
+                <div className="flex items-center gap-4 mx-2 font-montserrat">
                     <NotificationsComponent />
                     <ProfileComponent />
                 </div>

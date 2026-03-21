@@ -92,7 +92,7 @@ export function FormSectionTextEditComponent(
     }, [editor])
 
     return (
-        <section className="relative flex flex-col ">
+        <section className="relative flex flex-col mt-2">
             <section className="absolute flex justify-end top-[-2rem] right-0">
                 <Button.Button
                     onClick={onSaveContent}
@@ -100,6 +100,7 @@ export function FormSectionTextEditComponent(
                     size="sm"
                     isLoading={isPending}
                     disabled={!isContentModified}
+                    variant="secondary"
                 >
                     Guardar
                 </Button.Button>

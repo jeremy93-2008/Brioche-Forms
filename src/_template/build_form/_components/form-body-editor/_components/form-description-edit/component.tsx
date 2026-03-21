@@ -9,9 +9,9 @@ import { Textarea } from '@/_components/ui/textarea'
 import { useAfterSaveOptimisticData } from '@/_hooks/useAfterSaveOptimisticData/useAfterSaveOptimisticData'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
 import EditFormAction from '@/_server/_handlers/actions/form/update'
+import { type IForm } from '@db/types'
 import { Pen } from 'lucide-react'
 import { use } from 'react'
-import { type IForm } from '@db/types'
 
 export function FormDescriptionEditComponent() {
     const { data } = use(SingleFormSelectedContext)!
@@ -24,7 +24,7 @@ export function FormDescriptionEditComponent() {
             afterSave={afterSave}
         >
             <FormFieldEditDialogTrigger>
-                <Button className="text-sm group" variant="link">
+                <Button className="text-sm group" variant="ghost" size="sm">
                     <section>
                         {data?.description || (
                             <span className="opacity-50">
@@ -32,7 +32,7 @@ export function FormDescriptionEditComponent() {
                             </span>
                         )}
                     </section>
-                    <Pen className="opacity-0 w-0 transition-opacity group-hover:opacity-100" />
+                    <Pen className="w-2! h-2!" />
                 </Button>
             </FormFieldEditDialogTrigger>
             <FormFieldEditDialogContent<IForm>>

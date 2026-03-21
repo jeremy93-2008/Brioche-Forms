@@ -40,7 +40,7 @@ export function FormStylesPopupComponent() {
             serverAction={updateFormAction}
         >
             <FormFieldEditDialogTrigger>
-                <Button variant="link">
+                <Button variant="ghost">
                     <Paintbrush2 />
                     Estilos
                 </Button>

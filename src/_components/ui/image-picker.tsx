@@ -25,7 +25,6 @@ function ImagePicker(props: IImagePickerProps) {
                     variant={'outline'}
                     className={cn(
                         'flex justify-start text-left font-normal',
-                        !image && 'text-muted-foreground',
                         className
                     )}
                 >
@@ -38,7 +37,7 @@ function ImagePicker(props: IImagePickerProps) {
                                 </span>
                             </div>
                         ) : (
-                            <CameraIcon className="h-4 w-4" />
+                            <CameraIcon className="h-4 w-4 stroke-secondary" />
                         )}
                         {!image && (
                             <div className="truncate w-[174px] flex-1">

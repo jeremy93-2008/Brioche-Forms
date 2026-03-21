@@ -52,7 +52,7 @@ export function HeaderCustomizationBarComponent() {
 
     return (
         <section className="flex items-center justify-between w-full">
-            <div className="flex items-center w-full gap-2 mx-20">
+            <div className="flex items-center w-full gap-2 mx-18">
                 <h1 className="text-xl font-montserrat">
                     Constructor de formulario
                 </h1>
@@ -61,7 +61,7 @@ export function HeaderCustomizationBarComponent() {
                 <FormStylesPopupComponent />
                 <FormPreferencesPopupComponent />
                 <Link href={`/form/${data.id}/preview`} target="_blank">
-                    <Button variant="link">
+                    <Button variant="ghost">
                         <Play />
                         Previsualizar
                     </Button>
@@ -69,7 +69,7 @@ export function HeaderCustomizationBarComponent() {
                 {isPublished === 0 && (
                     <Button
                         onClick={onPublishClick}
-                        variant="link"
+                        variant="default"
                         isLoading={isPending}
                     >
                         {!isPending && <UploadCloud />}

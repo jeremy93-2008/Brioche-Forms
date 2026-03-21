@@ -7,7 +7,7 @@ export const SectionConstants = {
                 backgroundColor: 'default',
                 textColor: 'default',
                 textAlignment: 'left',
-                level: 2,
+                level: 3,
                 isToggleable: false,
             },
             content: [
@@ -27,13 +27,7 @@ export const SectionConstants = {
                 textColor: 'default',
                 textAlignment: 'left',
             },
-            content: [
-                {
-                    type: 'text',
-                    text: 'Empieza añadiendo una nueva sección o editando esta.',
-                    styles: {},
-                },
-            ],
+            content: [],
             children: [],
         },
         {
@@ -76,13 +70,7 @@ export const SectionConstants = {
                 textColor: 'default',
                 textAlignment: 'left',
             },
-            content: [
-                {
-                    type: 'text',
-                    text: 'Edita este texto.',
-                    styles: {},
-                },
-            ],
+            content: [],
             children: [],
         },
     ]),

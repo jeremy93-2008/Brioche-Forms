@@ -12,47 +12,47 @@ import {
 
 export const QuestionTypes = [
     {
-        icon: <CircleDotIcon />,
+        icon: <CircleDotIcon className="stroke-primary" />,
         value: 'single_choice',
         label: 'Opción múltiple (única respuesta)',
     },
     {
-        icon: <ShapesIcon />,
+        icon: <ShapesIcon className="stroke-primary" />,
         value: 'multiple_choice',
         label: 'Opción múltiple (varias respuestas)',
     },
     {
-        icon: <CaseLowerIcon />,
+        icon: <CaseLowerIcon className="stroke-primary" />,
         value: 'short_answer',
         label: 'Respuesta corta',
     },
     {
-        icon: <BookOpenIcon />,
+        icon: <BookOpenIcon className="stroke-primary" />,
         value: 'long_answer',
         label: 'Respuesta larga',
     },
     {
-        icon: <Calendar1Icon />,
+        icon: <Calendar1Icon className="stroke-primary" />,
         value: 'short_answer:date',
         label: 'Fecha',
     },
     {
-        icon: <PhoneIcon />,
+        icon: <PhoneIcon className="stroke-primary" />,
         value: 'short_answer:phone',
         label: 'Teléfono',
     },
     {
-        icon: <MailIcon />,
+        icon: <MailIcon className="stroke-primary" />,
         value: 'short_answer:email',
         label: 'Correo electrónico',
     },
     {
-        icon: <StarIcon />,
+        icon: <StarIcon className="stroke-primary" />,
         value: 'short_answer:rating',
         label: 'Valoración',
     },
     {
-        icon: <TrendingUpIcon />,
+        icon: <TrendingUpIcon className="stroke-primary" />,
         value: 'short_answer:opinion_scale',
         label: 'Escala de opinión',
     },

@@ -47,8 +47,9 @@ export function FormQuestionChoiceSingleEditComponent(
         <ChoiceWrapper id={item.id} isDraggable={item.id !== 'new'}>
             {item.id !== 'new' && !item.is_free_text && (
                 <DragHandler
+                    type="vertical"
                     className="flex-0 p-2 pr-0"
-                    iconClassName="!w-4 !h-4 stroke-secondary"
+                    iconClassName="!w-4 !h-4 stroke-white/80"
                 />
             )}
             {type === 'single_choice' && (
@@ -115,7 +116,7 @@ export function FormQuestionChoiceSingleEditComponent(
                             onClick={() =>
                                 onChoiceChange('delete', { id: item.id })
                             }
-                            variant="destructive"
+                            variant="ghost"
                             className="flex justify-center flex-0"
                         >
                             <TrashIcon size={16} />

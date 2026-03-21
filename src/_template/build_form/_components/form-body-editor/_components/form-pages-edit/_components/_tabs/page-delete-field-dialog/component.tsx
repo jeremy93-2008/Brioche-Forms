@@ -7,8 +7,8 @@ import {
 import { Button } from '@/_components/ui/button'
 import type { useAfterSaveOptimisticData } from '@/_hooks/useAfterSaveOptimisticData/useAfterSaveOptimisticData'
 import DeletePageAction from '@/_server/_handlers/actions/page/delete'
-import { Trash } from 'lucide-react'
 import { IPage } from '@db/types'
+import { Trash } from 'lucide-react'
 
 interface IPageDeleteFieldDialogComponentProps {
     pageId: string
@@ -30,11 +30,7 @@ export function PageDeleteFieldDialogComponent(
             saveButtonVariant="destructive"
         >
             <FormFieldEditDialogTrigger>
-                <Button
-                    className="w-0 !px-0 opacity-0 group-hover:px-2 group-hover:w-6 group-hover:opacity-100"
-                    variant="ghost"
-                    size="xs"
-                >
+                <Button variant="ghost" size="xs">
                     <Trash className="!w-3 !h-3" color="red" />
                 </Button>
             </FormFieldEditDialogTrigger>

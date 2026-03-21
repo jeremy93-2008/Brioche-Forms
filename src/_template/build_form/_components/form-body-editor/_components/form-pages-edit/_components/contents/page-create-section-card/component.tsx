@@ -19,30 +19,35 @@ export function PageCreateSectionCardComponent(
     const { data } = use(SingleFormSelectedContext)!
 
     return (
-        <Card className="flex flex-col justify-center mt-4 px-4 pt-8 pb-4">
-            <h2 className="text-center">Añadir una nueva sección</h2>
-            <section className="flex gap-6 justify-center mt-2 mb-4">
-                <CreateNewQuestionButtonComponent
-                    formId={data.id}
-                    pageId={page.id}
-                    nextOrder={nextOrder}
-                />
-                <CreateNewTextButtonComponent
-                    formId={data.id}
-                    pageId={page.id}
-                    nextOrder={nextOrder}
-                />
-                <CreateNewImageButtonComponent
-                    formId={data.id}
-                    pageId={page.id}
-                    nextOrder={nextOrder}
-                />
-                <CreateNewVideoButtonComponent
-                    formId={data.id}
-                    pageId={page.id}
-                    nextOrder={nextOrder}
-                />
-            </section>
-        </Card>
+        <section className="flex justify-center mt-3">
+            <Card className="flex w-full bg-transparent flex-col justify-center px-12">
+                <h2 className="text-sm text-center">
+                    Añadir una nueva sección
+                </h2>
+                <section className="flex gap-6 justify-center">
+                    <CreateNewQuestionButtonComponent
+                        formId={data.id}
+                        pageId={page.id}
+                        nextOrder={nextOrder}
+                    />
+                    <CreateNewTextButtonComponent
+                        formId={data.id}
+                        pageId={page.id}
+                        nextOrder={nextOrder}
+                    />
+
+                    <CreateNewImageButtonComponent
+                        formId={data.id}
+                        pageId={page.id}
+                        nextOrder={nextOrder}
+                    />
+                    <CreateNewVideoButtonComponent
+                        formId={data.id}
+                        pageId={page.id}
+                        nextOrder={nextOrder}
+                    />
+                </section>
+            </Card>
+        </section>
     )
 }

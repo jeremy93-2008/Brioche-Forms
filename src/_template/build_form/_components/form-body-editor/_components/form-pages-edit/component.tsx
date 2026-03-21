@@ -73,39 +73,52 @@ export function FormPagesEditComponent() {
             value={currentTabValue}
             onValueChange={setCurrentTabValue}
         >
-            <TabsList className="w-full justify-between">
-                <section className="flex flex-1 items-center font-sans overflow-x-auto">
-                    <DndContext
-                        onDragEnd={withDndDragEnd(moveItem)}
-                        modifiers={[restrictToHorizontalAxis]}
-                    >
-                        <SortableContext
-                            id="pages"
-                            items={sortedPages}
-                            strategy={horizontalListSortingStrategy}
-                        >
-                            {sortedPages.map((page, idx) => (
-                                <SortableItem key={page.id} id={page.id}>
-                                    <PageTabSortableComponent
-                                        key={page.id}
-                                        page={page}
-                                        formId={data.id}
-                                        isActive={currentTabValue === page.id}
-                                        canDelete={
-                                            idx > 0 && data.pages.length > 1
-                                        }
-                                        afterSaveUpdate={handleAfterSave({
-                                            type: 'update',
-                                        })}
-                                        afterSaveDelete={handleAfterSaveWhenDeleted(
-                                            onAfterOptimisticDataUpdatedWhenDeleted
-                                        )}
-                                    />
-                                </SortableItem>
-                            ))}
-                        </SortableContext>
-                    </DndContext>
+            <section className="flex items-center w-full">
+                <section className="flex flex-1 items-center gap-2">
+                    <TabsList className="justify-between">
+                        <section className="flex flex-1 items-center font-sans overflow-x-auto">
+                            <DndContext
+                                onDragEnd={withDndDragEnd(moveItem)}
+                                modifiers={[restrictToHorizontalAxis]}
+                            >
+                                <SortableContext
+                                    id="pages"
+                                    items={sortedPages}
+                                    strategy={horizontalListSortingStrategy}
+                                >
+                                    {sortedPages.map((page, idx) => (
+                                        <SortableItem
+                                            key={page.id}
+                                            id={page.id}
+                                        >
+                                            <PageTabSortableComponent
+                                                key={page.id}
+                                                page={page}
+                                                formId={data.id}
+                                                isActive={
+                                                    currentTabValue === page.id
+                                                }
+                                                canDelete={
+                                                    idx > 0 &&
+                                                    data.pages.length > 1
+                                                }
+                                                afterSaveUpdate={handleAfterSave(
+                                                    {
+                                                        type: 'update',
+                                                    }
+                                                )}
+                                                afterSaveDelete={handleAfterSaveWhenDeleted(
+                                                    onAfterOptimisticDataUpdatedWhenDeleted
+                                                )}
+                                            />
+                                        </SortableItem>
+                                    ))}
+                                </SortableContext>
+                            </DndContext>
+                        </section>
+                    </TabsList>
                 </section>
+
                 <section>
                     <PageCreateFieldDialogComponent
                         formId={data.id}
@@ -116,7 +129,8 @@ export function FormPagesEditComponent() {
                         )}
                     />
                 </section>
-            </TabsList>
+            </section>
+
             {sortedPages.map((page) => (
                 <TabsContent key={page.id} value={page.id}>
                     <PageSectionsSortableComponent

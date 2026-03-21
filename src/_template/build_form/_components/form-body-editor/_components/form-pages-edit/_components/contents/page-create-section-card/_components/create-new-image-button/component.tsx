@@ -17,7 +17,7 @@ export function CreateNewImageButtonComponent(
     return (
         <CreateNewSectionButtonComponent
             buttonText="Nueva Imagen"
-            buttonIcon={<ImageIcon className="w-10! h-10!" />}
+            buttonIcon={<ImageIcon className="w-5! h-5!" />}
             dialogTitle="Crear nueva imagen"
             serverAction={CreateImageAction}
             afterSave={afterSave}

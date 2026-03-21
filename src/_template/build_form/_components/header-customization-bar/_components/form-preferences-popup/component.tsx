@@ -30,7 +30,7 @@ export function FormPreferencesPopupComponent() {
             serverAction={updateFormAction}
         >
             <FormFieldEditDialogTrigger>
-                <Button variant="link">
+                <Button variant="ghost">
                     <CogIcon />
                     Ajustes
                 </Button>

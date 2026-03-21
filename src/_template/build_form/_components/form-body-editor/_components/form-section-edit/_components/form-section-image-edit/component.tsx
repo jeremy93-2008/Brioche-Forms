@@ -80,6 +80,7 @@ export function FormSectionImageEditComponent(
                     size="sm"
                     isLoading={isPending}
                     disabled={!formState.isDirty}
+                    variant="secondary"
                 >
                     Guardar
                 </Button>

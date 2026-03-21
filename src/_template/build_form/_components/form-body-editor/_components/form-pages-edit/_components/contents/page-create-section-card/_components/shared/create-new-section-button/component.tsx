@@ -46,7 +46,7 @@ export function CreateNewSectionButtonComponent<T extends { id: string }>(
             saveButtonVariant="default"
         >
             <FormFieldEditDialogTrigger>
-                <Button className="flex flex-col h-32 w-38" variant="link">
+                <Button className="flex" variant="link">
                     {buttonIcon}
                     {buttonText}
                 </Button>

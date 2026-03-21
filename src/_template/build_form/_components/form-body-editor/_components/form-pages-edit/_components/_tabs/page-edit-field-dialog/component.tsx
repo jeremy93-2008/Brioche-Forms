@@ -8,8 +8,8 @@ import { Button } from '@/_components/ui/button'
 import { Input } from '@/_components/ui/input'
 import { type useAfterSaveOptimisticData } from '@/_hooks/useAfterSaveOptimisticData/useAfterSaveOptimisticData'
 import EditPageAction from '@/_server/_handlers/actions/page/update'
-import { Pen } from 'lucide-react'
 import { IPage } from '@db/types'
+import { Pen } from 'lucide-react'
 
 interface IPageEditFieldDialogComponentProps {
     page: IPage
@@ -29,11 +29,7 @@ export function PageEditFieldDialogComponent(
             afterSave={afterSave}
         >
             <FormFieldEditDialogTrigger>
-                <Button
-                    className="w-0 !px-0 opacity-0 group-hover:px-2 group-hover:w-6 group-hover:opacity-100"
-                    variant="ghost"
-                    size="xs"
-                >
+                <Button variant="ghost" size="xs">
                     <Pen className="!w-3 !h-3" />
                 </Button>
             </FormFieldEditDialogTrigger>

@@ -33,13 +33,13 @@ export function FormSectionEditComponent(
     }, [data])
 
     return (
-        <Card className="group/section py-0 mb-2 group/section">
+        <Card className="group/section bg-background my-2 py-0">
             <div className="mx-4 my-4 py-2 px-2 relative">
                 <DragHandler
-                    className="opacity-0 group-hover/section:opacity-100 absolute top-0 -left-2 transition-opacity"
-                    iconClassName="w-5 h-5 stroke-secondary"
+                    className="flex w-full justify-center absolute top-0 opacity-20 group-hover/section:opacity-100 transition-opacity"
+                    iconClassName="w-5 h-5 stroke-white"
                 />
-                <section className="ml-2">
+                <section>
                     <FormSectionHeaderComponent data={data} formId={formId} />
                 </section>
                 {sortableItem?.data.sortable.containerId === 'sections' &&
@@ -71,7 +71,7 @@ export function FormSectionEditComponent(
                     )}
                 {sortableItem?.isDragging && (
                     <div>
-                        <EllipsisIcon className="w-8 h-8 mx-auto mt-4 mb-6 stroke-secondary" />
+                        <EllipsisIcon className="w-8 h-8 mx-auto mt-4 mb-6 stroke-white" />
                     </div>
                 )}
             </div>

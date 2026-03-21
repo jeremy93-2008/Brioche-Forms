@@ -65,10 +65,9 @@ function ColorPicker(props: IColorPickerProps) {
         <Dialog>
             <DialogTrigger asChild>
                 <Button
-                    variant={'outline'}
+                    variant="outline"
                     className={cn(
                         'flex justify-start text-left font-normal',
-                        !background && 'text-muted-foreground',
                         className
                     )}
                 >
@@ -79,7 +78,7 @@ function ColorPicker(props: IColorPickerProps) {
                                 style={{ background }}
                             ></div>
                         ) : (
-                            <Paintbrush className="h-4 w-4" />
+                            <Paintbrush className="h-4 w-4 stroke-secondary" />
                         )}
                         {!background && (
                             <div className="truncate w-[174px] flex-1">

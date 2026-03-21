@@ -31,9 +31,9 @@ export function FormSectionHeaderComponent(
                 afterSave={afterSave}
             >
                 <FormFieldEditDialogTrigger>
-                    <Button className="text-sm" variant="link">
+                    <Button className="text-md" variant="ghost">
                         <h3>{data.title || 'Sección sin título'}</h3>
-                        <Pen className="opacity-0 transition-opacity group-hover/section:opacity-100 " />
+                        <Pen />
                     </Button>
                 </FormFieldEditDialogTrigger>
                 <FormFieldEditDialogContent<ISection>>
