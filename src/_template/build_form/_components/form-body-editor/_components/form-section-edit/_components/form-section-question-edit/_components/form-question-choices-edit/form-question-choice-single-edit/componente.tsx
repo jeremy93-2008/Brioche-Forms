@@ -44,7 +44,13 @@ export function FormQuestionChoiceSingleEditComponent(
     }
 
     return (
-        <ChoiceWrapper id={item.id} isDraggable={item.id !== 'new'}>
+        <ChoiceWrapper
+            className={
+                item.is_free_text === 1 ? 'ml-9 w-[calc(100%-2.2rem)]' : ''
+            }
+            id={item.id}
+            isDraggable={item.id !== 'new'}
+        >
             {item.id !== 'new' && !item.is_free_text && (
                 <DragHandler
                     type="vertical"
@@ -119,7 +125,7 @@ export function FormQuestionChoiceSingleEditComponent(
                             variant="ghost"
                             className="flex justify-center flex-0"
                         >
-                            <TrashIcon size={16} />
+                            <TrashIcon color="#ff4466cc" size={16} />
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>

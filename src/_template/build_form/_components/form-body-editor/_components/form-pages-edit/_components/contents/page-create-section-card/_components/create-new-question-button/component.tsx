@@ -56,13 +56,13 @@ export function CreateNewQuestionButtonComponent(
                     />
                     <FieldGroup>
                         <Field>
-                            <FieldLabel htmlFor="title">
+                            <FieldLabel htmlFor="name">
                                 Título de la pregunta
                             </FieldLabel>
                             <Input
-                                id="title"
+                                id="name"
                                 placeholder="Pregunta sin título..."
-                                {...form.register('title')}
+                                {...form.register('name')}
                             />
                         </Field>
                         <Field>
