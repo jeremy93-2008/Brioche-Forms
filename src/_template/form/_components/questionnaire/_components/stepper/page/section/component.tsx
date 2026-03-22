@@ -31,7 +31,13 @@ export function SectionComponent(props: ISectionComponentProps) {
             className="w-full flex flex-col gap-2 items-start justify-center p-4 mb-6"
             {...(isPageChild ? { 'data-step-idx': stepIdx } : {})}
         >
-            <h2 className="text-md text-primary mb-0">{data.title}</h2>
+            <h2 className="flex items-center gap-2 text-md text-primary mb-0">
+                {data.title}
+                {getTypeOfSection(data) === 'question' &&
+                    data.questions[0].is_required && (
+                        <span className="text-red-500">*</span>
+                    )}
+            </h2>
             {getTypeOfSection(data) === 'question' && (
                 <QuestionSectionComponent data={data.questions[0]} />
             )}

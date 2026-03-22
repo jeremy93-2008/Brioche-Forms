@@ -74,7 +74,7 @@ export function FormPagesEditComponent() {
             onValueChange={setCurrentTabValue}
         >
             <section className="flex items-center w-full">
-                <section className="flex flex-1 items-center gap-2">
+                <section className="flex items-center">
                     <TabsList className="justify-between">
                         <section className="flex flex-1 items-center font-sans overflow-x-auto">
                             <DndContext

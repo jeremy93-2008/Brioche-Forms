@@ -57,27 +57,19 @@ export function CreateNewQuestionButtonComponent(
                     <FieldGroup>
                         <Field>
                             <FieldLabel htmlFor="name">
-                                Título de la pregunta
+                                Pregunta <span className="text-red-500">*</span>
                             </FieldLabel>
                             <Input
                                 id="name"
-                                placeholder="Pregunta sin título..."
+                                placeholder="Escriba su pregunta..."
                                 {...form.register('name')}
                             />
                         </Field>
                         <Field>
-                            <FieldLabel htmlFor="content">
-                                Contenido de la pregunta
+                            <FieldLabel>
+                                Tipo de pregunta
+                                <span className="text-red-500">*</span>
                             </FieldLabel>
-                            <Textarea
-                                className="resize-none"
-                                id="content"
-                                placeholder="Escriba su pregunta..."
-                                {...form.register('content')}
-                            />
-                        </Field>
-                        <Field>
-                            <FieldLabel>Tipo de pregunta</FieldLabel>
                             <Controller
                                 control={form.control}
                                 name="type"
@@ -111,6 +103,20 @@ export function CreateNewQuestionButtonComponent(
                                         </SelectContent>
                                     </Select>
                                 )}
+                            />
+                        </Field>
+                        <Field>
+                            <FieldLabel htmlFor="content">
+                                Descripción de la pregunta
+                                <span className="text-xs text-gray-500">
+                                    (opcional)
+                                </span>
+                            </FieldLabel>
+                            <Textarea
+                                className="resize-none"
+                                id="content"
+                                placeholder="Escriba su descripción opcional de su pregunta..."
+                                {...form.register('content')}
                             />
                         </Field>
                     </FieldGroup>

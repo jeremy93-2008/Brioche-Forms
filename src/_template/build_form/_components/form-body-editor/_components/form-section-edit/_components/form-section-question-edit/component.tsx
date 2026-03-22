@@ -25,8 +25,8 @@ import { IFullForm } from '@/_server/domains/form/getFullForms'
 import { FormQuestionChoicesEditComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-section-edit/_components/form-section-question-edit/_components/form-question-choices-edit/component'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { IQuestion } from '@db/types'
-import { ChevronsUpDown, EllipsisIcon } from 'lucide-react'
-import { use } from 'react'
+import { ChevronsUpDown, EllipsisIcon, MinusIcon, PlusIcon } from 'lucide-react'
+import { use, useState } from 'react'
 import { Controller, useForm, useWatch } from 'react-hook-form'
 
 export type IQuestionWithChoices = IQuestion & {
@@ -41,6 +41,8 @@ export function FormSectionQuestionEditComponent(
     props: IFormSectionQuestionEditComponentProps
 ) {
     const { data } = props
+
+    const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
 
     const { register, control, formState, handleSubmit } =
         useForm<IQuestionWithChoices>({
@@ -136,22 +138,9 @@ export function FormSectionQuestionEditComponent(
                     <span className="ml-2">Requerido</span>
                 </Label>
             </section>
-            <Field className="mt-4 mb-2">
+            <Field className="mt-3">
                 <Label
-                    className="block text-sm font-medium mb-1"
-                    htmlFor={`question-content-${data.id}`}
-                >
-                    Contenido de la pregunta
-                </Label>
-                <Textarea
-                    id={`question-content-${data.id}`}
-                    defaultValue={data.content}
-                    {...register('content')}
-                />
-            </Field>
-            <Field className="mb-2">
-                <Label
-                    className="block text-sm font-medium mb-1"
+                    className="block text-sm font-medium"
                     htmlFor={`question-type-${data.id}`}
                 >
                     Tipo de pregunta
@@ -190,7 +179,7 @@ export function FormSectionQuestionEditComponent(
             </Field>
             {(currentQuestionType === 'single_choice' ||
                 currentQuestionType === 'multiple_choice') && (
-                <Field className="mb-4">
+                <Field>
                     {!sortableItem?.isSorting && (
                         <Collapsible defaultOpen>
                             <CollapsibleTrigger>
@@ -236,6 +225,40 @@ export function FormSectionQuestionEditComponent(
                     )}
                 </Field>
             )}
+            <Field>
+                <Collapsible
+                    open={isDescriptionExpanded}
+                    onOpenChange={setIsDescriptionExpanded}
+                >
+                    <CollapsibleTrigger asChild>
+                        <Button
+                            variant="link"
+                            className="flex text-xs font-medium mb-1"
+                        >
+                            {!isDescriptionExpanded ? (
+                                <>
+                                    <PlusIcon />
+                                    Añadir una descripción adicional para la
+                                    pregunta
+                                </>
+                            ) : (
+                                <>
+                                    <MinusIcon />
+                                    Descripción adicional para la pregunta
+                                </>
+                            )}
+                        </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                        <Textarea
+                            id={`question-content-${data.id}`}
+                            className="text-xs"
+                            defaultValue={data.content}
+                            {...register('content')}
+                        />
+                    </CollapsibleContent>
+                </Collapsible>
+            </Field>
         </FieldSet>
     )
 }

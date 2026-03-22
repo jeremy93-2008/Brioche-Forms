@@ -180,35 +180,39 @@ export function StepperComponent(props: IStepperComponentProps) {
                 )}
             >
                 {componentsSteps.type === 'all' &&
-                    componentsSteps.steps.map((page) => (
-                        <div key={page.id} className="p-8 pb-3">
-                            <PageComponent data={page as IFullPage} />
-                        </div>
-                    ))}
+                    componentsSteps.steps
+                        .toSorted((a, b) => a.order.localeCompare(b.order))
+                        .map((page) => (
+                            <div key={page.id} className="p-8 pb-3">
+                                <PageComponent data={page as IFullPage} />
+                            </div>
+                        ))}
                 {componentsSteps.type === 'by_component' &&
-                    componentsSteps.steps.map((step, idx) => (
-                        <div
-                            key={step.id}
-                            className={cn(
-                                'p-8 pb-0 transition duration-500 ease-in-out overflow-x-hidden',
-                                stepperIndex === idx
-                                    ? 'w-full opacity-100'
-                                    : 'w-0 opacity-0 p-0 h-0'
-                            )}
-                        >
-                            {'sections' in step ? (
-                                <PageComponent
-                                    data={step as IFullPage}
-                                    stepIdx={idx}
-                                />
-                            ) : (
-                                <SectionComponent
-                                    data={step as IFullSection}
-                                    stepIdx={idx}
-                                />
-                            )}
-                        </div>
-                    ))}
+                    componentsSteps.steps
+                        .toSorted((a, b) => a.order.localeCompare(b.order))
+                        .map((step, idx) => (
+                            <div
+                                key={step.id}
+                                className={cn(
+                                    'p-8 pb-0 transition duration-500 ease-in-out overflow-x-hidden',
+                                    stepperIndex === idx
+                                        ? 'w-full opacity-100'
+                                        : 'w-0 opacity-0 p-0 h-0'
+                                )}
+                            >
+                                {'sections' in step ? (
+                                    <PageComponent
+                                        data={step as IFullPage}
+                                        stepIdx={idx}
+                                    />
+                                ) : (
+                                    <SectionComponent
+                                        data={step as IFullSection}
+                                        stepIdx={idx}
+                                    />
+                                )}
+                            </div>
+                        ))}
             </section>
 
             <section

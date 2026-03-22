@@ -12,16 +12,6 @@ import {
 
 export const QuestionTypes = [
     {
-        icon: <CircleDotIcon className="stroke-primary" />,
-        value: 'single_choice',
-        label: 'Opción múltiple (única respuesta)',
-    },
-    {
-        icon: <ShapesIcon className="stroke-primary" />,
-        value: 'multiple_choice',
-        label: 'Opción múltiple (varias respuestas)',
-    },
-    {
         icon: <CaseLowerIcon className="stroke-primary" />,
         value: 'short_answer',
         label: 'Respuesta corta',
@@ -30,6 +20,16 @@ export const QuestionTypes = [
         icon: <BookOpenIcon className="stroke-primary" />,
         value: 'long_answer',
         label: 'Respuesta larga',
+    },
+    {
+        icon: <CircleDotIcon className="stroke-primary" />,
+        value: 'single_choice',
+        label: 'Opción múltiple (única respuesta)',
+    },
+    {
+        icon: <ShapesIcon className="stroke-primary" />,
+        value: 'multiple_choice',
+        label: 'Opción múltiple (varias respuestas)',
     },
     {
         icon: <Calendar1Icon className="stroke-primary" />,

@@ -31,7 +31,7 @@ export function PageCreateFieldDialogComponent(
             saveButtonVariant="default"
         >
             <FormFieldEditDialogTrigger>
-                <Button className="ml-8" variant="ghost" size="xs">
+                <Button className="ml-2" variant="ghost" size="sm">
                     <Plus />
                     Añadir Página
                 </Button>

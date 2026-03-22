@@ -16,11 +16,13 @@ export function PageComponent(props: IPageComponentProps) {
             <Card className="text-lg text-primary px-4 py-2 mb-6">
                 {data.title}
             </Card>
-            {data.sections.map((section) => (
-                <div key={section.id} className="mb-8">
-                    <SectionComponent data={section} isPageChild={true} />
-                </div>
-            ))}
+            {data.sections
+                .toSorted((a, b) => a.order.localeCompare(b.order))
+                .map((section) => (
+                    <div key={section.id} className="mb-8">
+                        <SectionComponent data={section} isPageChild={true} />
+                    </div>
+                ))}
         </section>
     )
 }

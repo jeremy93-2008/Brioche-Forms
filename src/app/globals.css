@@ -313,7 +313,7 @@ body {
 }
 
 .bn-editor {
-    --bn-colors-editor-background: var(--background);
+    --bn-colors-editor-background: var(--card);
 
     &[contenteditable="false"] .bn-block .bn-block-content select {
         display: none;

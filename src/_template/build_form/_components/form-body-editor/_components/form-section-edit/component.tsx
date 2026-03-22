@@ -33,7 +33,7 @@ export function FormSectionEditComponent(
     }, [data])
 
     return (
-        <Card className="group/section bg-background my-2 py-0">
+        <Card className="group/section my-2 py-0">
             <div className="mx-4 my-4 py-2 px-2 relative">
                 <DragHandler
                     className="flex w-full justify-center absolute top-0 opacity-20 group-hover/section:opacity-100 transition-opacity"

@@ -45,10 +45,7 @@ export function QuestionSectionComponent(
 
     return (
         <div className="w-full flex flex-col gap-2 items-start justify-center p-4">
-            <div className="content">
-                {data.content}{' '}
-                {data.is_required ? <sup className="text-red-500">*</sup> : ''}
-            </div>
+            {data.content && <div className="content">{data.content}</div>}
             <div className="answer w-4/6">
                 {(data.type as IQuestionTypeValues) === 'short_answer' && (
                     <Input
