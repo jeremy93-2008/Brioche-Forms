@@ -54,6 +54,12 @@ export function CreateNewQuestionButtonComponent(
                         value={nextOrder}
                         {...form.register('order')}
                     />
+                    <input
+                        type="hidden"
+                        id="is_required"
+                        value={1}
+                        {...form.register('is_required')}
+                    />
                     <FieldGroup>
                         <Field>
                             <FieldLabel htmlFor="name">

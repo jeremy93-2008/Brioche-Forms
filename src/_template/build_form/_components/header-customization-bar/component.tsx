@@ -5,10 +5,13 @@ import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
 import updateFormAction from '@/_server/_handlers/actions/form/update'
-import { FormPreferencesPopupComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-preferences-popup/component'
-import { FormStylesPopupComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form-styles-popup/component'
+import { FormDescriptionEditComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form/form-description-edit/component'
+import { FormInfoRightComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form/form-info-right/component'
+import { FormTitleEditComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form/form-title-edit/component'
+import { FormPreferencesPopupComponent } from '@/_template/build_form/_components/header-customization-bar/_components/popup/form-preferences-popup/component'
+import { FormStylesPopupComponent } from '@/_template/build_form/_components/header-customization-bar/_components/popup/form-styles-popup/component'
 import { showToastFromResult } from '@/_utils/showToastFromResult'
-import { Play, TableIcon, UploadCloud } from 'lucide-react'
+import { FileIcon, Play, TableIcon, UploadCloud } from 'lucide-react'
 import Link from 'next/link'
 import { startTransition, use, useOptimistic } from 'react'
 
@@ -41,6 +44,7 @@ export function HeaderCustomizationBarComponent() {
                 acceptResponses: 1,
                 isDraft: 0,
             })
+
             startTransition(() => {
                 setIsPublished(1)
             })
@@ -51,40 +55,49 @@ export function HeaderCustomizationBarComponent() {
     }
 
     return (
-        <section className="flex items-center justify-between w-full">
-            <div className="flex items-center w-full gap-2 mx-18">
-                <h1 className="text-xl font-montserrat">
-                    Constructor de formulario
-                </h1>
-            </div>
-            <div className="flex items-center justify-end font-sans gap-2 mx-16 my-2">
-                <FormStylesPopupComponent />
-                <FormPreferencesPopupComponent />
-                <Link href={`/form/${data.id}/preview`} target="_blank">
-                    <Button variant="ghost">
-                        <Play />
-                        Previsualizar
-                    </Button>
-                </Link>
-                {isPublished === 0 && (
-                    <Button
-                        onClick={onPublishClick}
-                        variant="default"
-                        isLoading={isPending}
-                    >
-                        {!isPending && <UploadCloud />}
-                        Publicar
-                    </Button>
-                )}
-                {isPublished === 1 && (
-                    <Link href={`/form/${data.id}/result`} target="_blank">
-                        <Button variant="default">
-                            <TableIcon />
-                            Respuestas
+        <section className=" mt-3 mb-2">
+            <section className="flex items-center justify-between w-full">
+                <div className="flex flex-1 items-center w-full gap-3 mx-18">
+                    <section className="flex items-center gap-2">
+                        <FileIcon />
+                        <FormTitleEditComponent />
+                    </section>
+                    <section className="flex items-center gap-2">
+                        <FormInfoRightComponent />
+                    </section>
+                </div>
+                <div className="flex items-center justify-end font-sans gap-2 mx-16">
+                    <FormStylesPopupComponent />
+                    <FormPreferencesPopupComponent />
+                    <Link href={`/form/${data.id}/preview`} target="_blank">
+                        <Button variant="ghost">
+                            <Play />
+                            Previsualizar
                         </Button>
                     </Link>
-                )}
-            </div>
+                    {isPublished === 0 && (
+                        <Button
+                            onClick={onPublishClick}
+                            variant="default"
+                            isLoading={isPending}
+                        >
+                            {!isPending && <UploadCloud />}
+                            Publicar
+                        </Button>
+                    )}
+                    {isPublished === 1 && (
+                        <Link href={`/form/${data.id}/result`} target="_blank">
+                            <Button variant="default">
+                                <TableIcon />
+                                Respuestas
+                            </Button>
+                        </Link>
+                    )}
+                </div>
+            </section>
+            <section className="flex justify-between items-center font-sans mt-1 mx-16">
+                <FormDescriptionEditComponent />
+            </section>
         </section>
     )
 }
