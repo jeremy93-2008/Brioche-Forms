@@ -7,6 +7,7 @@ import { useSortableItems } from '@/_hooks/useSortableItems'
 import { nextOrder } from '@/_hooks/useSortableItems/fractional-indexing'
 import { ISortableItem } from '@/_hooks/useSortableItems/types'
 import { withDndDragEnd } from '@/_lib/dnd'
+import { AutoSaveContext } from '@/_provider/auto-save/auto-save-provider'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
 import ReorderPagesAction from '@/_server/_handlers/actions/page/reorder'
 import { PageCreateFieldDialogComponent } from '@/_template/build_form/_components/form-body-editor/_components/form-pages-edit/_components/_tabs/page-create-field-dialog/component'
@@ -23,6 +24,7 @@ import { startTransition, use, useState } from 'react'
 
 export function FormPagesEditComponent() {
     const { data, updateOptimisticData } = use(SingleFormSelectedContext)!
+    const { flushNow } = use(AutoSaveContext)
     const [currentTabValue, setCurrentTabValue] = useState<string>(
         data.pages[0]?.id || ''
     )
@@ -71,7 +73,10 @@ export function FormPagesEditComponent() {
         <Tabs
             className="w-full"
             value={currentTabValue}
-            onValueChange={setCurrentTabValue}
+            onValueChange={(value) => {
+                flushNow()
+                setCurrentTabValue(value)
+            }}
         >
             <section className="flex items-center w-full">
                 <section className="flex items-center">

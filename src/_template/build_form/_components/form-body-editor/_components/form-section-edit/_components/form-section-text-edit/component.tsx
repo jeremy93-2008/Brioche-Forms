@@ -12,10 +12,7 @@ import * as Skeleton from '@/_components/ui/skeleton'
 import * as Tabs from '@/_components/ui/tabs'
 import * as Toggle from '@/_components/ui/toggle'
 import * as Tooltip from '@/_components/ui/tooltip'
-import { ToastMessages } from '@/_constants/toast'
-import { useServerActionState } from '@/_hooks/useServerActionState'
-import EditTextAction from '@/_server/_handlers/actions/text/update'
-import { showToastFromResult } from '@/_utils/showToastFromResult'
+import { AutoSaveContext } from '@/_provider/auto-save/auto-save-provider'
 import { codeBlockOptions } from '@blocknote/code-block'
 import {
     BlockNoteEditor,
@@ -32,7 +29,7 @@ import {
 } from '@blocknote/react'
 import { BlockNoteView } from '@blocknote/shadcn'
 import { IText } from '@db/types'
-import { useEffect, useState } from 'react'
+import { use, useEffect, useRef } from 'react'
 
 import '@blocknote/core/fonts/inter.css'
 import '@blocknote/shadcn/style.css'
@@ -57,9 +54,13 @@ export function FormSectionTextEditComponent(
     props: IFormSectionTextEditComponentProps
 ) {
     const { data, sectionId, formId } = props
-    const [isContentModified, setIsContentModified] = useState(false)
+    const { markDirty } = use(AutoSaveContext)
+    const lastContentRef = useRef(data.content)
+    const markDirtyRef = useRef(markDirty)
+    markDirtyRef.current = markDirty
 
-    const { isPending, runAction } = useServerActionState(EditTextAction)
+    const dataRef = useRef({ id: data.id, order: data.order, formId, sectionId })
+    dataRef.current = { id: data.id, order: data.order, formId, sectionId }
 
     const editor = useCreateBlockNote({
         dictionary: es,
@@ -71,40 +72,30 @@ export function FormSectionTextEditComponent(
         }),
     })
 
-    const onSaveContent = async () => {
-        const result = await runAction({
-            id: data.id,
-            content: JSON.stringify(editor.document),
-            section_id: sectionId,
-            order: 'latest',
-            form_id: formId,
-        })
-
-        showToastFromResult(result, ToastMessages.genericSuccess)
-
-        setIsContentModified(false)
-    }
-
     useEffect(() => {
         editor.onChange(() => {
-            setIsContentModified(true)
+            const newContent = JSON.stringify(editor.document)
+            if (newContent === lastContentRef.current) return
+            lastContentRef.current = newContent
+            const d = dataRef.current
+            markDirtyRef.current({
+                type: 'text',
+                id: d.id,
+                formId: d.formId,
+                sectionId: d.sectionId,
+                payload: {
+                    id: d.id,
+                    content: newContent,
+                    section_id: d.sectionId,
+                    form_id: d.formId,
+                    order: d.order,
+                },
+            })
         })
     }, [editor])
 
     return (
         <section className="relative flex flex-col mt-2">
-            <section className="absolute flex justify-end top-[-2rem] right-0">
-                <Button.Button
-                    onClick={onSaveContent}
-                    className="mb-4"
-                    size="sm"
-                    isLoading={isPending}
-                    disabled={!isContentModified}
-                    variant="secondary"
-                >
-                    Guardar
-                </Button.Button>
-            </section>
             <BlockNoteView
                 editor={editor}
                 slashMenu={false}

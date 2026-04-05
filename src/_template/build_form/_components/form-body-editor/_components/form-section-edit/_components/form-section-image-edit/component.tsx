@@ -1,21 +1,17 @@
 import { FormGalleryUploadImageComponent } from '@/_components/shared/form-gallery-upload-image/component.client'
-import { Button } from '@/_components/ui/button'
 import { Field, FieldSet } from '@/_components/ui/field'
 import { Input } from '@/_components/ui/input'
 import { Label } from '@/_components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/_components/ui/tabs'
-import { ToastMessages } from '@/_constants/toast'
-import { useServerActionState } from '@/_hooks/useServerActionState'
-import EditImageAction from '@/_server/_handlers/actions/image/update'
+import { AutoSaveContext } from '@/_provider/auto-save/auto-save-provider'
 import { IMediaUploadResult } from '@/_server/_handlers/actions/media/upload'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
 
 import { IFullForm } from '@/_server/domains/form/getFullForms'
-import { showToastFromResult } from '@/_utils/showToastFromResult'
 import { IImage } from '@db/types'
 import { clsx } from 'clsx'
 import { CameraIcon } from 'lucide-react'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, use, useCallback, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 interface IFormSectionImageEditComponentProps {
@@ -26,8 +22,9 @@ export function FormSectionImageEditComponent(
     props: IFormSectionImageEditComponentProps
 ) {
     const { data } = props
+    const { markDirty, flushNow } = use(AutoSaveContext)
 
-    const { register, formState, handleSubmit, setValue } = useForm<IImage>({
+    const { register, setValue, getValues } = useForm<IImage>({
         defaultValues: {
             id: data.id,
             section_id: data.section_id,
@@ -37,7 +34,6 @@ export function FormSectionImageEditComponent(
             caption: data.caption,
         },
     })
-    const { isPending, runAction } = useServerActionState(EditImageAction)
 
     const [displayedImageUrl, setDisplayedImageUrl] = useState<string>(
         data.url || ''
@@ -45,46 +41,41 @@ export function FormSectionImageEditComponent(
 
     const [activeTab, setActiveTab] = useState<'upload' | 'url'>('upload')
 
-    const onSaveContent = async (fields: IImage) => {
-        const result = await runAction({
+    const emitDirty = useCallback(() => {
+        const fields = getValues()
+        markDirty({
+            type: 'image',
             id: data.id,
-            form_id: data.form_id,
-            section_id: data.section_id,
-            url: fields.url,
-            caption: fields.caption,
-            order: fields.order,
-        } as IImage)
-
-        setDisplayedImageUrl(fields.url)
-
-        showToastFromResult(result, ToastMessages.genericSuccess)
-    }
+            formId: data.form_id,
+            sectionId: data.section_id,
+            payload: {
+                id: fields.id,
+                form_id: fields.form_id,
+                section_id: fields.section_id,
+                url: fields.url,
+                caption: fields.caption,
+                order: fields.order,
+            },
+        })
+    }, [data.id, data.form_id, data.section_id, getValues, markDirty])
 
     const onLinkInputBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
         setDisplayedImageUrl(evt.currentTarget.value)
+        emitDirty()
+        flushNow()
     }
 
     const afterUpload = (result: IReturnAction<IMediaUploadResult>) => {
         if (result.status === 'success') {
             setDisplayedImageUrl(result.data.url)
             setValue('url', result.data.url, { shouldDirty: true })
+            emitDirty()
+            flushNow()
         }
     }
 
     return (
         <FieldSet className="relative flex-col">
-            <section className="absolute flex justify-end -top-8 right-0">
-                <Button
-                    onClick={handleSubmit(onSaveContent)}
-                    className="mb-4"
-                    size="sm"
-                    isLoading={isPending}
-                    disabled={!formState.isDirty}
-                    variant="secondary"
-                >
-                    Guardar
-                </Button>
-            </section>
             <input type="hidden" id="id" value={data.id} {...register('id')} />
             <input
                 type="hidden"
@@ -185,7 +176,9 @@ export function FormSectionImageEditComponent(
                     <Input
                         id="caption-image"
                         defaultValue={data.caption ?? ''}
-                        {...register('caption')}
+                        {...register('caption', {
+                            onChange: () => emitDirty(),
+                        })}
                     />
                 </Field>
             </section>

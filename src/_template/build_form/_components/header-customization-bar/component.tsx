@@ -7,6 +7,7 @@ import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selecte
 import updateFormAction from '@/_server/_handlers/actions/form/update'
 import { FormDescriptionEditComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form/form-description-edit/component'
 import { FormInfoRightComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form/form-info-right/component'
+import { SaveStatusIndicatorComponent } from '@/_template/build_form/_components/header-customization-bar/_components/save-status-indicator/component'
 import { FormTitleEditComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form/form-title-edit/component'
 import { FormPreferencesPopupComponent } from '@/_template/build_form/_components/header-customization-bar/_components/popup/form-preferences-popup/component'
 import { FormStylesPopupComponent } from '@/_template/build_form/_components/header-customization-bar/_components/popup/form-styles-popup/component'
@@ -63,6 +64,7 @@ export function HeaderCustomizationBarComponent() {
                         <FormTitleEditComponent />
                     </section>
                     <section className="flex items-center gap-2">
+                        <SaveStatusIndicatorComponent />
                         <FormInfoRightComponent />
                     </section>
                 </div>

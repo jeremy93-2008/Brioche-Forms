@@ -6,11 +6,13 @@ import {
 import { Button } from '@/_components/ui/button'
 import { Input } from '@/_components/ui/input'
 import { useAfterSaveOptimisticData } from '@/_hooks/useAfterSaveOptimisticData/useAfterSaveOptimisticData'
+import { AutoSaveContext } from '@/_provider/auto-save/auto-save-provider'
 import DeleteSectionAction from '@/_server/_handlers/actions/section/delete'
 import EditSectionAction from '@/_server/_handlers/actions/section/update'
 import { IFullForm } from '@/_server/domains/form/getFullForms'
 import { ISection } from '@db/types'
 import { Pen, Trash } from 'lucide-react'
+import { use } from 'react'
 
 interface IFormSectionEditNameComponentProps {
     data: IFullForm['pages'][0]['sections'][0]
@@ -22,6 +24,7 @@ export function FormSectionHeaderComponent(
 ) {
     const { data, formId } = props
     const { afterSave } = useAfterSaveOptimisticData({ type: 'update' })
+    const { clearDirty } = use(AutoSaveContext)
 
     return (
         <section className="flex items-center">
@@ -65,6 +68,12 @@ export function FormSectionHeaderComponent(
                 serverAction={DeleteSectionAction}
                 saveButtonText="Eliminar"
                 saveButtonVariant="destructive"
+                afterSave={() => {
+                    for (const t of data.texts) clearDirty(t.id)
+                    for (const i of data.images) clearDirty(i.id)
+                    for (const v of data.videos) clearDirty(v.id)
+                    for (const q of data.questions) clearDirty(q.id)
+                }}
             >
                 <FormFieldEditDialogTrigger>
                     <Button
