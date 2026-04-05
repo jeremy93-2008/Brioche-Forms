@@ -63,9 +63,9 @@ export function HeaderCustomizationBarComponent() {
                         <FileIcon />
                         <FormTitleEditComponent />
                     </section>
-                    <section className="flex items-center gap-2">
-                        <SaveStatusIndicatorComponent />
+                    <section className="flex items-center gap-4">
                         <FormInfoRightComponent />
+                        <SaveStatusIndicatorComponent />
                     </section>
                 </div>
                 <div className="flex items-center justify-end font-sans gap-2 mx-16">

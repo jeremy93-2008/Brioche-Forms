@@ -30,7 +30,7 @@ export function SaveStatusIndicatorComponent() {
     if (!config) return null
 
     return (
-        <section className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        <section className="flex items-center gap-1 text-xs text-muted-foreground">
             {config.icon}
             <span>{config.text}</span>
             {saveStatus === 'error' && (

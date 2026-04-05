@@ -46,7 +46,7 @@ export function FormSectionVideoEditComponent(
     props: IFormSectionVideoEditComponentProps
 ) {
     const { data } = props
-    const { markDirty, flushNow } = use(AutoSaveContext)
+    const { markDirty, markDirtyAndFlush } = use(AutoSaveContext)
 
     const { getVideoEmbedUrl, checkProvider } = useVideoEmbedUrl()
     const { register, getValues } = useForm<IEditableVideo>({
@@ -62,10 +62,10 @@ export function FormSectionVideoEditComponent(
 
     const embeddedUrl = getVideoEmbedUrl(displayedVideoUrl, selectedProvider)
 
-    const emitDirty = useCallback(() => {
+    const buildDirtyEntry = useCallback(() => {
         const fields = getValues()
-        markDirty({
-            type: 'video',
+        return {
+            type: 'video' as const,
             id: data.id,
             formId: data.form_id,
             sectionId: data.section_id,
@@ -77,8 +77,8 @@ export function FormSectionVideoEditComponent(
                 caption: fields.caption,
                 order: data.order,
             },
-        })
-    }, [data.id, data.form_id, data.section_id, data.order, getValues, markDirty])
+        }
+    }, [data.id, data.form_id, data.section_id, data.order, getValues])
 
     return (
         <FieldSet className="relative flex-col">
@@ -135,10 +135,8 @@ export function FormSectionVideoEditComponent(
                             }
                         },
                         onBlur: () => {
-                            const urlField = getValues('url')
-                            setDisplayedVideoUrl(urlField)
-                            emitDirty()
-                            flushNow()
+                            setDisplayedVideoUrl(getValues('url'))
+                            markDirtyAndFlush(buildDirtyEntry())
                         },
                     })}
                 />
@@ -154,7 +152,7 @@ export function FormSectionVideoEditComponent(
                     id="video-caption"
                     className="flex flex-1"
                     {...register('caption', {
-                        onChange: () => emitDirty(),
+                        onChange: () => markDirty(buildDirtyEntry()),
                     })}
                 />
             </Field>

@@ -40,7 +40,7 @@ export function FormSectionQuestionEditComponent(
     const { data } = props
 
     const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
-    const { markDirty, flushNow } = use(AutoSaveContext)
+    const { markDirty, markDirtyAndFlush } = use(AutoSaveContext)
 
     const { register, control, getValues } = useForm<IQuestionWithChoices>({
         defaultValues: {
@@ -56,10 +56,10 @@ export function FormSectionQuestionEditComponent(
         },
     })
 
-    const emitDirty = useCallback(() => {
+    const buildDirtyEntry = useCallback(() => {
         const fields = getValues()
-        markDirty({
-            type: 'question',
+        return {
+            type: 'question' as const,
             id: data.id,
             formId: data.form_id,
             sectionId: data.section_id,
@@ -76,8 +76,8 @@ export function FormSectionQuestionEditComponent(
                 },
                 choices: fields.choices,
             },
-        })
-    }, [data.id, data.form_id, data.section_id, getValues, markDirty])
+        }
+    }, [data.id, data.form_id, data.section_id, getValues])
 
     const currentQuestionType = useWatch({ name: 'type', control })
 
@@ -103,7 +103,7 @@ export function FormSectionQuestionEditComponent(
                 id="name"
                 value={data.name}
                 {...register('name', {
-                    onChange: () => emitDirty(),
+                    onChange: () => markDirty(buildDirtyEntry()),
                 })}
             />
             <input
@@ -123,10 +123,7 @@ export function FormSectionQuestionEditComponent(
                                 checked={value === 1}
                                 onCheckedChange={(checked) => {
                                     onChange(checked ? 1 : 0)
-                                    setTimeout(() => {
-                                        emitDirty()
-                                        flushNow()
-                                    }, 0)
+                                    markDirtyAndFlush(buildDirtyEntry())
                                 }}
                             />
                         )}
@@ -150,10 +147,7 @@ export function FormSectionQuestionEditComponent(
                             value={value}
                             onValueChange={(newValue) => {
                                 onChange(newValue)
-                                setTimeout(() => {
-                                    emitDirty()
-                                    flushNow()
-                                }, 0)
+                                markDirtyAndFlush(buildDirtyEntry())
                             }}
                         >
                             <SelectTrigger
@@ -205,7 +199,7 @@ export function FormSectionQuestionEditComponent(
                                                 data={value}
                                                 onDataChange={(newChoices) => {
                                                     onChange(newChoices)
-                                                    setTimeout(() => emitDirty(), 0)
+                                                    markDirty(buildDirtyEntry())
                                                 }}
                                                 questionId={data.id}
                                                 formId={data.form_id}
@@ -260,7 +254,7 @@ export function FormSectionQuestionEditComponent(
                             className="text-xs"
                             defaultValue={data.content}
                             {...register('content', {
-                                onChange: () => emitDirty(),
+                                onChange: () => markDirty(buildDirtyEntry()),
                             })}
                         />
                     </CollapsibleContent>

@@ -22,7 +22,7 @@ export function FormSectionImageEditComponent(
     props: IFormSectionImageEditComponentProps
 ) {
     const { data } = props
-    const { markDirty, flushNow } = use(AutoSaveContext)
+    const { markDirty, markDirtyAndFlush } = use(AutoSaveContext)
 
     const { register, setValue, getValues } = useForm<IImage>({
         defaultValues: {
@@ -41,10 +41,10 @@ export function FormSectionImageEditComponent(
 
     const [activeTab, setActiveTab] = useState<'upload' | 'url'>('upload')
 
-    const emitDirty = useCallback(() => {
+    const buildDirtyEntry = useCallback(() => {
         const fields = getValues()
-        markDirty({
-            type: 'image',
+        return {
+            type: 'image' as const,
             id: data.id,
             formId: data.form_id,
             sectionId: data.section_id,
@@ -56,21 +56,19 @@ export function FormSectionImageEditComponent(
                 caption: fields.caption,
                 order: fields.order,
             },
-        })
-    }, [data.id, data.form_id, data.section_id, getValues, markDirty])
+        }
+    }, [data.id, data.form_id, data.section_id, getValues])
 
     const onLinkInputBlur = (evt: React.FocusEvent<HTMLInputElement>) => {
         setDisplayedImageUrl(evt.currentTarget.value)
-        emitDirty()
-        flushNow()
+        markDirtyAndFlush(buildDirtyEntry())
     }
 
     const afterUpload = (result: IReturnAction<IMediaUploadResult>) => {
         if (result.status === 'success') {
             setDisplayedImageUrl(result.data.url)
             setValue('url', result.data.url, { shouldDirty: true })
-            emitDirty()
-            flushNow()
+            markDirtyAndFlush(buildDirtyEntry())
         }
     }
 
@@ -177,7 +175,7 @@ export function FormSectionImageEditComponent(
                         id="caption-image"
                         defaultValue={data.caption ?? ''}
                         {...register('caption', {
-                            onChange: () => emitDirty(),
+                            onChange: () => markDirty(buildDirtyEntry()),
                         })}
                     />
                 </Field>

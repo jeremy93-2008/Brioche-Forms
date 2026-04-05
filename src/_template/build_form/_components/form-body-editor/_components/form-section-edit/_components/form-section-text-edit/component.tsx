@@ -12,7 +12,10 @@ import * as Skeleton from '@/_components/ui/skeleton'
 import * as Tabs from '@/_components/ui/tabs'
 import * as Toggle from '@/_components/ui/toggle'
 import * as Tooltip from '@/_components/ui/tooltip'
-import { AutoSaveContext } from '@/_provider/auto-save/auto-save-provider'
+import {
+    AutoSaveContext,
+    DirtyEntry,
+} from '@/_provider/auto-save/auto-save-provider'
 import { codeBlockOptions } from '@blocknote/code-block'
 import {
     BlockNoteEditor,
@@ -50,17 +53,37 @@ const getCustomSlashMenuItems = (
     }),
 ]
 
+interface TextEditorLatestValues {
+    markDirty: (entry: DirtyEntry) => void
+    lastContent: string
+    id: string
+    order: string
+    formId: string
+    sectionId: string
+}
+
 export function FormSectionTextEditComponent(
     props: IFormSectionTextEditComponentProps
 ) {
     const { data, sectionId, formId } = props
     const { markDirty } = use(AutoSaveContext)
-    const lastContentRef = useRef(data.content)
-    const markDirtyRef = useRef(markDirty)
-    markDirtyRef.current = markDirty
 
-    const dataRef = useRef({ id: data.id, order: data.order, formId, sectionId })
-    dataRef.current = { id: data.id, order: data.order, formId, sectionId }
+    const latestValues = useRef<TextEditorLatestValues>({
+        markDirty,
+        lastContent: data.content,
+        id: data.id,
+        order: data.order,
+        formId,
+        sectionId,
+    })
+    latestValues.current = {
+        ...latestValues.current,
+        markDirty,
+        id: data.id,
+        order: data.order,
+        formId,
+        sectionId,
+    }
 
     const editor = useCreateBlockNote({
         dictionary: es,
@@ -75,20 +98,21 @@ export function FormSectionTextEditComponent(
     useEffect(() => {
         editor.onChange(() => {
             const newContent = JSON.stringify(editor.document)
-            if (newContent === lastContentRef.current) return
-            lastContentRef.current = newContent
-            const d = dataRef.current
-            markDirtyRef.current({
+            if (newContent === latestValues.current.lastContent) return
+            latestValues.current.lastContent = newContent
+
+            const { id, formId, sectionId, order } = latestValues.current
+            latestValues.current.markDirty({
                 type: 'text',
-                id: d.id,
-                formId: d.formId,
-                sectionId: d.sectionId,
+                id,
+                formId,
+                sectionId,
                 payload: {
-                    id: d.id,
+                    id,
                     content: newContent,
-                    section_id: d.sectionId,
-                    form_id: d.formId,
-                    order: d.order,
+                    section_id: sectionId,
+                    form_id: formId,
+                    order,
                 },
             })
         })
