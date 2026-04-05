@@ -24,7 +24,7 @@ import { startTransition, use, useState } from 'react'
 
 export function FormPagesEditComponent() {
     const { data, updateOptimisticData } = use(SingleFormSelectedContext)!
-    const { flushNow } = use(AutoSaveContext)
+    const { flushNow, trackExternalSave } = use(AutoSaveContext)
     const [currentTabValue, setCurrentTabValue] = useState<string>(
         data.pages[0]?.id || ''
     )
@@ -56,10 +56,12 @@ export function FormPagesEditComponent() {
                 },
             })
         })
-        await ReorderPagesAction({
-            form_id: data.id,
-            updates: modifiedPages,
-        })
+        await trackExternalSave(
+            ReorderPagesAction({
+                form_id: data.id,
+                updates: modifiedPages,
+            })
+        )
     }
 
     const { sortedItems: sortedPages, moveItem } = useSortableItems(

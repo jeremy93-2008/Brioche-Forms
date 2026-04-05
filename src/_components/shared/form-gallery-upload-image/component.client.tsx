@@ -21,7 +21,7 @@ import UploadMediaAction, {
     IMediaUploadResult,
 } from '@/_server/_handlers/actions/media/upload'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
-import { showToastFromResult } from '@/_utils/showToastFromResult'
+import { showLogFromResult } from '@/_utils/showLogFromResult'
 import { IMedia } from '@db/types'
 import {
     ChevronsUpDown,
@@ -76,7 +76,7 @@ export function FormGalleryUploadImageComponent(
 
         afterUpload(result)
 
-        showToastFromResult(result, ToastMessages.genericSuccess)
+        showLogFromResult(result, ToastMessages.genericSuccess)
 
         await mutate()
     }

@@ -14,7 +14,7 @@ import { IFullPage, IFullSection } from '@/_server/domains/form/getFullForms'
 import { PageComponent } from '@/_template/form/_components/questionnaire/_components/stepper/page/component'
 import { SectionComponent } from '@/_template/form/_components/questionnaire/_components/stepper/page/section/component'
 import { cn } from '@/_utils/clsx-tw'
-import { showToastFromResult } from '@/_utils/showToastFromResult'
+import { showLogFromResult } from '@/_utils/showLogFromResult'
 import { ArrowLeftIcon, ArrowRightIcon, SaveIcon, SendIcon } from 'lucide-react'
 import { use, useState } from 'react'
 import {
@@ -123,7 +123,7 @@ export function StepperComponent(props: IStepperComponentProps) {
                     is_partial_response: 1,
                 } as IResponseWithAnswers)
 
-            showToastFromResult(responseData, ToastMessages.genericSuccess)
+            showLogFromResult(responseData, ToastMessages.genericSuccess)
         }
     }
 
@@ -143,7 +143,7 @@ export function StepperComponent(props: IStepperComponentProps) {
                     is_partial_response: 0,
                 } as IResponseWithAnswers)
 
-            showToastFromResult(responseData, ToastMessages.genericSuccess)
+            showLogFromResult(responseData, ToastMessages.genericSuccess)
         }
     }
 

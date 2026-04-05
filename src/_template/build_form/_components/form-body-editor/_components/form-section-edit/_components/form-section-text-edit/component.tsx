@@ -14,7 +14,7 @@ import * as Toggle from '@/_components/ui/toggle'
 import * as Tooltip from '@/_components/ui/tooltip'
 import {
     AutoSaveContext,
-    DirtyEntry,
+    IDirtyEntry,
 } from '@/_provider/auto-save/auto-save-provider'
 import { codeBlockOptions } from '@blocknote/code-block'
 import {
@@ -54,7 +54,7 @@ const getCustomSlashMenuItems = (
 ]
 
 interface TextEditorLatestValues {
-    markDirty: (entry: DirtyEntry) => void
+    markDirty: (entry: IDirtyEntry) => void
     lastContent: string
     id: string
     order: string

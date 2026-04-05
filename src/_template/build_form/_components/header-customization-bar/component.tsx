@@ -3,6 +3,7 @@ import { useFormAlertDialog } from '@/_components/shared/form-alert-dialog/_hook
 import { Button } from '@/_components/ui/button'
 import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
+import { AutoSaveContext } from '@/_provider/auto-save/auto-save-provider'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
 import updateFormAction from '@/_server/_handlers/actions/form/update'
 import { FormDescriptionEditComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form/form-description-edit/component'
@@ -11,7 +12,7 @@ import { SaveStatusIndicatorComponent } from '@/_template/build_form/_components
 import { FormTitleEditComponent } from '@/_template/build_form/_components/header-customization-bar/_components/form/form-title-edit/component'
 import { FormPreferencesPopupComponent } from '@/_template/build_form/_components/header-customization-bar/_components/popup/form-preferences-popup/component'
 import { FormStylesPopupComponent } from '@/_template/build_form/_components/header-customization-bar/_components/popup/form-styles-popup/component'
-import { showToastFromResult } from '@/_utils/showToastFromResult'
+import { showLogFromResult } from '@/_utils/showLogFromResult'
 import { FileIcon, Play, TableIcon, UploadCloud } from 'lucide-react'
 import Link from 'next/link'
 import { startTransition, use, useOptimistic } from 'react'
@@ -25,6 +26,7 @@ export function HeaderCustomizationBarComponent() {
     )
 
     const { runAction, isPending } = useServerActionState(updateFormAction)
+    const { trackExternalSave } = use(AutoSaveContext)
 
     const { confirmDialog } = useFormAlertDialog()
 
@@ -39,17 +41,19 @@ export function HeaderCustomizationBarComponent() {
                 }
             )
         ) {
-            const result = await runAction({
-                id: data.id,
-                isPublished: 1,
-                acceptResponses: 1,
-                isDraft: 0,
-            })
+            const result = await trackExternalSave(
+                runAction({
+                    id: data.id,
+                    isPublished: 1,
+                    acceptResponses: 1,
+                    isDraft: 0,
+                })
+            )
 
             startTransition(() => {
                 setIsPublished(1)
             })
-            showToastFromResult(result, ToastMessages.publishedSuccess)
+            showLogFromResult(result, ToastMessages.publishedSuccess)
         } else {
             console.log('Publicación cancelada.')
         }

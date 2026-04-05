@@ -5,6 +5,7 @@ import { useSortableItems } from '@/_hooks/useSortableItems'
 import { nextOrder } from '@/_hooks/useSortableItems/fractional-indexing'
 import { ISortableItem } from '@/_hooks/useSortableItems/types'
 import { withDndDragEnd } from '@/_lib/dnd'
+import { AutoSaveContext } from '@/_provider/auto-save/auto-save-provider'
 import { SingleFormSelectedContext } from '@/_provider/forms/single-form-selected'
 import ReorderSectionsAction from '@/_server/_handlers/actions/section/reorder'
 import { IFullForm } from '@/_server/domains/form/getFullForms'
@@ -25,6 +26,7 @@ export function PageSectionsSortableComponent({
     formId,
 }: IPageSectionsContentProps) {
     const { updateOptimisticData } = use(SingleFormSelectedContext)!
+    const { trackExternalSave } = use(AutoSaveContext)
 
     const handleMove = async <T extends ISortableItem>(
         movedSection: T,
@@ -38,10 +40,12 @@ export function PageSectionsSortableComponent({
                 },
             })
         })
-        await ReorderSectionsAction({
-            form_id: formId,
-            updates: modifiedSections,
-        })
+        await trackExternalSave(
+            ReorderSectionsAction({
+                form_id: formId,
+                updates: modifiedSections,
+            })
+        )
     }
 
     const { sortedItems: sortedSections, moveItem } = useSortableItems(

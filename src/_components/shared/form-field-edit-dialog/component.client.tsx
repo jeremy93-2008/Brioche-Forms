@@ -12,8 +12,9 @@ import {
 } from '@/_components/ui/dialog'
 import { ToastMessages } from '@/_constants/toast'
 import { useServerActionState } from '@/_hooks/useServerActionState'
+import { AutoSaveContext } from '@/_provider/auto-save/auto-save-provider'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
-import { showToastFromResult } from '@/_utils/showToastFromResult'
+import { showLogFromResult } from '@/_utils/showLogFromResult'
 import React, { createContext, use, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -172,6 +173,8 @@ export function FormFieldEditDialogContent<T>(
         errorMessage,
     } = use(FormFieldEditDialogCtx)
 
+    const { trackExternalSave } = use(AutoSaveContext)
+
     const { isPending, runAction: runEditFormAction } =
         useServerActionState(serverAction)
 
@@ -179,11 +182,11 @@ export function FormFieldEditDialogContent<T>(
 
     const onEditTitle = async (data: Partial<T>) => {
         if (isPending) return
-        const result = (await runEditFormAction(
-            data
+        const result = (await trackExternalSave(
+            runEditFormAction(data)
         )) as unknown as IReturnAction<T>
 
-        showToastFromResult(
+        showLogFromResult(
             result,
             successMessage ?? ToastMessages.genericSuccess,
             errorMessage ??
