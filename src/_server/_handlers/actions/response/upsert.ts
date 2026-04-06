@@ -22,6 +22,8 @@ import { upsertAnswersResponse } from '@/_server/domains/response/answers/upsert
 import { createResponse } from '@/_server/domains/response/createResponse'
 import { editResponse } from '@/_server/domains/response/editResponse'
 import { IAnswerType, IMultipleChoice } from '@db/types'
+import { getSimpleForms } from '@/_server/domains/form/getSimpleForm'
+import { stackServerApp } from '@/_stack/server'
 
 async function upsertResponseSectionHandler(
     _data: IResponseWithAnswers,
@@ -31,6 +33,21 @@ async function upsertResponseSectionHandler(
     const validatedFields = ctx.validatedFields
     const data = validatedFields.data! as Required<IResponseWithAnswers>
     const formId = data.form_id
+
+    const form = await getSimpleForms({ id: formId })
+
+    if (form.length === 1 && form[0].mustLoginToRespond == 1) {
+        const authResult = await stackServerApp.getUser()
+        if (!authResult) {
+            return {
+                status: 'error',
+                error: {
+                    message: 'Authentication required to respond to this form',
+                    trace: new Error().stack,
+                },
+            }
+        }
+    }
 
     const questions = await GetQuestionsByFormId(formId)
     const validateAnswers = validateAnswersFromQuestions(questions)
@@ -88,7 +105,9 @@ async function upsertResponseSectionHandler(
                     ans.question_type === 'long_answer' ? ans.value : null,
                 date_answer:
                     ans.question_type === 'short_answer:date'
-                        ? Number(ans.value)
+                        ? ans.value
+                            ? new Date(ans.value).getTime()
+                            : null
                         : null,
             }))
         )
@@ -122,8 +141,4 @@ export default defineServerRequest<
     IResponseWithAnswers,
     IResponseWithAnswersReturn,
     IMiddlewaresAccessCtx<IResponseWithAnswers>
->(upsertResponseSectionHandler, [
-    requireAuth(),
-    requireValidation(responseWithAnswersScheme),
-    requireResourceAccess(['read', 'write']),
-])
+>(upsertResponseSectionHandler, [requireValidation(responseWithAnswersScheme)])

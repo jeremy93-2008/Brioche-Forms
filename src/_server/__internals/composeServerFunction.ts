@@ -4,6 +4,7 @@ import { ServerEnv } from '@/_server/__internals/defineServerRequest'
 import { IMapCtx } from '@/_server/__internals/types'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
 import { runHooks } from './_utils/runHooks'
+import { DrizzleQueryError } from 'drizzle-orm'
 
 export type ComposeServerFunctionHandler<TInput, TOutput, TCtx, TEnv> = (
     data: TInput,
@@ -63,6 +64,7 @@ export function composeServerFunction<
             return result
         } catch (e) {
             if ((env as unknown as ServerEnv).logging.loglevel === 'debug') {
+                console.error(e)
                 return {
                     status: 'error',
                     error: {
