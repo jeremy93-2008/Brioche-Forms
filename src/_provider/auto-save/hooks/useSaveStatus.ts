@@ -3,35 +3,31 @@ import { useRef, useState } from 'react'
 
 export type ISaveStatus = 'idle' | 'saving' | 'saved' | 'error'
 
-const SAVED_DISPLAY_MS = 3000
+interface ISaveStatusState {
+    activeSaveCount: number
+    latestSaveTime: number | null
+}
 
 export function useSaveStatus() {
     const [saveStatus, setSaveStatus] = useState<ISaveStatus>('idle')
 
-    const activeSaveCount = useRef(0)
-    const latestSaveTime = useRef<number | null>(null)
-    const savedTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-    const clearSavedTimer = () => {
-        if (savedTimer.current) {
-            clearTimeout(savedTimer.current)
-            savedTimer.current = null
-        }
-    }
+    const state = useRef<ISaveStatusState>({
+        activeSaveCount: 0,
+        latestSaveTime: null,
+    })
 
     const beginSave = () => {
-        activeSaveCount.current++
-        clearSavedTimer()
+        state.current.activeSaveCount++
         setSaveStatus('saving')
     }
 
     const endSave = (success: boolean) => {
-        activeSaveCount.current = Math.max(0, activeSaveCount.current - 1)
-        if (activeSaveCount.current > 0) return
+        state.current.activeSaveCount = Math.max(0, state.current.activeSaveCount - 1)
+        if (state.current.activeSaveCount > 0) return
 
         if (success) {
+            state.current.latestSaveTime = Date.now()
             setSaveStatus('saved')
-            latestSaveTime.current = Date.now()
         } else {
             setSaveStatus('error')
         }
@@ -51,15 +47,15 @@ export function useSaveStatus() {
         }
     }
 
-    const cleanup = () => clearSavedTimer()
+    const isActive = () => state.current.activeSaveCount > 0
+    const latestSaveTime = () => state.current.latestSaveTime
 
     return {
         saveStatus,
         beginSave,
         endSave,
         trackExternalSave,
-        isActive: () => activeSaveCount.current > 0,
-        latestSaveTime: () => latestSaveTime.current,
-        cleanup,
+        isActive,
+        latestSaveTime,
     }
 }

@@ -1,158 +1,99 @@
 import { IReturnAction } from '@/_server/_handlers/actions/types'
-import { IDirtyEntry, IBulkUpdatePayload } from '@/_provider/auto-save/types'
+import { IDirtyEntry } from '@/_provider/auto-save/types'
+import { useDebouncedCallback } from '@/_provider/auto-save/hooks/useDebouncedCallback'
+import { useDirtyTracker } from '@/_provider/auto-save/hooks/useDirtyTracker'
+import { useRetryStrategy } from '@/_provider/auto-save/hooks/useRetryStrategy'
 import { useRef } from 'react'
 
 const DEBOUNCE_MS = 1500
-const MAX_RETRIES = 3
-const RETRY_DELAYS = [5000, 10000, 20000]
+const RETRY_CONFIG = { maxRetries: 3, delays: [5000, 10000, 20000] }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type SaveActionFn = (payload: any) => Promise<IReturnAction<any>>
-
-export interface IAutoSaveEngineState {
-    dirtyMap: Map<string, IDirtyEntry>
-    debounceTimer: ReturnType<typeof setTimeout> | null
-    retryTimer: ReturnType<typeof setTimeout> | null
-    pendingFlush: boolean
-    retryCount: number
-}
+type ISaveActionFn = (payload: any) => Promise<IReturnAction<any>>
 
 interface IAutoSaveEngineDeps {
     formId: string
-    saveAction: SaveActionFn
+    saveAction: ISaveActionFn
     beginSave: () => void
     endSave: (success: boolean) => void
     isActive: () => boolean
 }
 
 export function useAutoSaveEngine(deps: IAutoSaveEngineDeps) {
-    const depsRef = useRef(deps)
-    depsRef.current = deps
+    const { formId, saveAction, beginSave, endSave, isActive } = deps
 
-    const state = useRef<IAutoSaveEngineState>({
-        dirtyMap: new Map(),
-        debounceTimer: null,
-        retryTimer: null,
-        pendingFlush: false,
-        retryCount: 0,
-    })
-
-    const buildPayload = (): IBulkUpdatePayload | null => {
-        const entries = Array.from(state.current.dirtyMap.values())
-        if (entries.length === 0) return null
-
-        const payload: IBulkUpdatePayload = {
-            form_id: depsRef.current.formId,
-        }
-
-        const grouped = Object.groupBy(entries, (entry) => entry.type)
-
-        if (grouped.text?.length)
-            payload.texts = grouped.text.map((entry) => entry.payload)
-        if (grouped.image?.length)
-            payload.images = grouped.image.map((entry) => entry.payload)
-        if (grouped.video?.length)
-            payload.videos = grouped.video.map((entry) => entry.payload)
-        if (grouped.question?.length)
-            payload.questions = grouped.question.map((entry) => entry.payload)
-
-        return payload
-    }
+    const dirtyTracker = useDirtyTracker(formId)
+    const debounce = useDebouncedCallback(DEBOUNCE_MS)
+    const retry = useRetryStrategy(RETRY_CONFIG)
+    const pendingFlush = useRef(false)
 
     const flush = async () => {
-        if (depsRef.current.isActive()) {
-            state.current.pendingFlush = true
+        if (isActive()) {
+            pendingFlush.current = true
             return
         }
 
-        const payload = buildPayload()
-        if (!payload) return
+        const snapshot = dirtyTracker.snapshot()
+        if (!snapshot) return
 
-        const savingIds = Array.from(state.current.dirtyMap.keys())
-        depsRef.current.beginSave()
+        beginSave()
 
         try {
-            const result = await depsRef.current.saveAction(payload)
+            const result = await saveAction(snapshot.payload)
             const success = result.status === 'success'
 
             if (success) {
-                for (const id of savingIds) state.current.dirtyMap.delete(id)
-                state.current.retryCount = 0
+                dirtyTracker.clearMany(snapshot.ids)
+                retry.resetRetryCount()
             } else {
-                scheduleRetry()
+                retry.scheduleRetry(flush)
             }
 
-            depsRef.current.endSave(success)
+            endSave(success)
         } catch {
-            scheduleRetry()
-            depsRef.current.endSave(false)
+            retry.scheduleRetry(flush)
+            endSave(false)
         } finally {
-            if (state.current.pendingFlush) {
-                state.current.pendingFlush = false
+            if (pendingFlush.current) {
+                pendingFlush.current = false
                 flush()
             }
         }
     }
 
-    const scheduleRetry = () => {
-        if (state.current.retryCount >= MAX_RETRIES) return
-        const delay = RETRY_DELAYS[state.current.retryCount] ?? 20000
-        state.current.retryCount++
-        state.current.retryTimer = setTimeout(flush, delay)
+    const markDirty = (entry: IDirtyEntry) => {
+        dirtyTracker.register(entry)
+        retry.resetRetryCount()
+        debounce.schedule(flush)
     }
 
-    const cancelDebounce = () => {
-        if (state.current.debounceTimer) {
-            clearTimeout(state.current.debounceTimer)
-            state.current.debounceTimer = null
-        }
+    const markDirtyAndFlush = (entry: IDirtyEntry) => {
+        dirtyTracker.register(entry)
+        retry.resetRetryCount()
+        debounce.flushSync(flush)
     }
 
-    const cancelRetryTimer = () => {
-        if (state.current.retryTimer) {
-            clearTimeout(state.current.retryTimer)
-            state.current.retryTimer = null
-        }
+    const flushNow = () => {
+        debounce.flushSync(flush)
     }
 
-    const registerDirtyEntry = (entry: IDirtyEntry) => {
-        state.current.dirtyMap.set(entry.id, entry)
-        state.current.retryCount = 0
-        cancelRetryTimer()
+    const retrySave = () => {
+        retry.resetRetryCount()
+        flush()
     }
-
-    const actions = useRef({
-        markDirty(entry: IDirtyEntry) {
-            registerDirtyEntry(entry)
-            cancelDebounce()
-            state.current.debounceTimer = setTimeout(flush, DEBOUNCE_MS)
-        },
-        markDirtyAndFlush(entry: IDirtyEntry) {
-            registerDirtyEntry(entry)
-            cancelDebounce()
-            flush()
-        },
-        flushNow() {
-            cancelDebounce()
-            flush()
-        },
-        clearDirty(id: string) {
-            state.current.dirtyMap.delete(id)
-        },
-        retrySave() {
-            state.current.retryCount = 0
-            cancelRetryTimer()
-            flush()
-        },
-    })
-
-    const hasPendingChanges = () =>
-        state.current.dirtyMap.size > 0
 
     const cleanup = () => {
-        cancelDebounce()
-        cancelRetryTimer()
+        debounce.cleanup()
+        retry.cleanup()
     }
 
-    return { actions: actions.current, hasPendingChanges, cleanup }
+    return {
+        markDirty,
+        markDirtyAndFlush,
+        flushNow,
+        clearDirty: dirtyTracker.clear,
+        retrySave,
+        hasPendingChanges: dirtyTracker.hasPendingChanges,
+        cleanup,
+    }
 }

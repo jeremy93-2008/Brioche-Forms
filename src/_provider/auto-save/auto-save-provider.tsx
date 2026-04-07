@@ -1,7 +1,8 @@
 'use client'
 import { IReturnAction } from '@/_server/_handlers/actions/types'
-import { IAutoSaveEngineState, useAutoSaveEngine } from '@/_provider/auto-save/hooks/useAutoSaveEngine'
+import { useAutoSaveEngine } from '@/_provider/auto-save/hooks/useAutoSaveEngine'
 import { ISaveStatus, useSaveStatus } from '@/_provider/auto-save/hooks/useSaveStatus'
+import { IDirtyEntry } from '@/_provider/auto-save/types'
 import React, { createContext, useEffect } from 'react'
 
 export type { ISaveStatus } from '@/_provider/auto-save/hooks/useSaveStatus'
@@ -22,8 +23,6 @@ interface IAutoSaveContext {
     saveStatus: ISaveStatus
     latestSaveTime: () => number | null
 }
-
-import { IDirtyEntry } from '@/_provider/auto-save/types'
 
 export const AutoSaveContext = createContext<IAutoSaveContext>({
     markDirty: () => {},
@@ -47,39 +46,56 @@ interface IAutoSaveProviderProps extends React.PropsWithChildren {
 export function AutoSaveProvider(props: IAutoSaveProviderProps) {
     const { formId, saveAction, children } = props
 
-    const saveStatus = useSaveStatus()
-    const engine = useAutoSaveEngine({
+    const {
+        saveStatus,
+        beginSave,
+        endSave,
+        trackExternalSave,
+        isActive,
+        latestSaveTime,
+    } = useSaveStatus()
+
+    const {
+        markDirty,
+        markDirtyAndFlush,
+        flushNow,
+        clearDirty,
+        retrySave,
+        hasPendingChanges,
+        cleanup: engineCleanup,
+    } = useAutoSaveEngine({
         formId,
         saveAction,
-        beginSave: saveStatus.beginSave,
-        endSave: saveStatus.endSave,
-        isActive: saveStatus.isActive,
+        beginSave,
+        endSave,
+        isActive,
     })
 
     useEffect(() => {
-        return () => {
-            engine.cleanup()
-            saveStatus.cleanup()
-        }
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+        return () => engineCleanup()
+    }, [engineCleanup])
 
     useEffect(() => {
-        const handler = (event: BeforeUnloadEvent) => {
-            if (engine.hasPendingChanges() || saveStatus.isActive()) {
+        const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+            if (hasPendingChanges() || isActive()) {
                 event.preventDefault()
             }
         }
-        window.addEventListener('beforeunload', handler)
-        return () => window.removeEventListener('beforeunload', handler)
-    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+    }, [hasPendingChanges, isActive])
 
     return (
         <AutoSaveContext
             value={{
-                ...engine.actions,
-                trackExternalSave: saveStatus.trackExternalSave,
-                saveStatus: saveStatus.saveStatus,
-                latestSaveTime: saveStatus.latestSaveTime,
+                markDirty,
+                markDirtyAndFlush,
+                flushNow,
+                clearDirty,
+                retrySave,
+                trackExternalSave,
+                saveStatus,
+                latestSaveTime,
             }}
         >
             {children}
