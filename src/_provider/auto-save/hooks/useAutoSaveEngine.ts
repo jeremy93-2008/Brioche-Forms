@@ -1,8 +1,8 @@
 import { IReturnAction } from '@/_server/_handlers/actions/types'
 import { IDirtyEntry } from '@/_provider/auto-save/types'
-import { useDebouncedCallback } from '@/_provider/auto-save/hooks/useDebouncedCallback'
-import { useDirtyTracker } from '@/_provider/auto-save/hooks/useDirtyTracker'
-import { useRetryStrategy } from '@/_provider/auto-save/hooks/useRetryStrategy'
+import { useDebouncedCallback } from '@/_provider/auto-save/hooks/useAutoSaveEngine/useDebouncedCallback'
+import { useDirtyTracker } from '@/_provider/auto-save/hooks/useAutoSaveEngine/useDirtyTracker'
+import { useRetryStrategy } from '@/_provider/auto-save/hooks/useAutoSaveEngine/useRetryStrategy'
 import { useRef } from 'react'
 
 const DEBOUNCE_MS = 1500
